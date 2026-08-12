@@ -1303,7 +1303,29 @@ function renderBilling(){
   const card=document.getElementById('planCard-'+code);if(!card)return;
   const btn=card.querySelector('.btn');
   card.classList.toggle('featured',code===plan);
-  if(code===plan&&btn){btn.textContent=uiPhrase('Current plan');btn.classList.remove('primary');btn.classList.add('secondary','currentPlanBtn');btn.onclick=null}
+  if(!btn)return;
+
+  // Reset every plan button first. This prevents a previously-active plan
+  // from keeping the "Current plan" label after a webhook changes plans.
+  btn.classList.remove('currentPlanBtn','primary','secondary');
+  btn.classList.add(code==='pro'?'primary':'secondary');
+  btn.disabled=false;
+  if(code==='free'){
+    btn.textContent=lang==='ar'?'الخطة المجانية':lang==='fr'?'Offre gratuite':'Free plan';
+    btn.onclick=null;
+    btn.disabled=true;
+  }else{
+    btn.textContent=uiPhrase(code==='pro'?'Choose Pro':'Choose Business');
+    btn.onclick=()=>openUpgradeModal(code);
+  }
+
+  if(code===plan){
+    btn.textContent=uiPhrase('Current plan');
+    btn.classList.remove('primary');
+    btn.classList.add('secondary','currentPlanBtn');
+    btn.onclick=null;
+    btn.disabled=true;
+  }
  });
  const up=document.getElementById('currentUpgradeBtn');
  if(up){
@@ -1573,7 +1595,7 @@ const uiPhrases={
  'Up to 500 clients':{fr:'Jusqu’à 500 clients',ar:'حتى 500 عميل'},
  'Commercial reports and CSV':{fr:'Rapports commerciaux et CSV',ar:'تقارير تجارية وتصدير CSV'},
  'Company branding and templates':{fr:'Identité de l’entreprise et modèles',ar:'هوية الشركة وقوالب الفواتير'},
- 'Priority product features':{fr:'Fonctionnalités produit prioritaires',ar:'ميزات منتج متقدمة ذات أولوية'},
+ 'Priority product features':{fr:'Fonctionnalités produit avancées',ar:'ميزات متقدمة وأولوية في التحديثات'},
  'Unlimited invoices':{fr:'Factures illimitées',ar:'فواتير غير محدودة'},
  'Unlimited clients':{fr:'Clients illimités',ar:'عملاء غير محدودين'},
  'All reporting features':{fr:'Toutes les fonctions de reporting',ar:'جميع ميزات التقارير'},
