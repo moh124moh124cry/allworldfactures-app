@@ -84,6 +84,23 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .signatureBox.hasAsset{color:var(--ink)}
 .signatureBox.hasAsset b{color:var(--ink)}
 .assetOnInvoiceNote{margin:8px 0 0;text-align:center;font-size:10px;color:#08766d;font-weight:800}
+.pdfBusy{position:fixed;inset:0;z-index:99999;background:#071a33aa;display:none;align-items:center;justify-content:center;padding:20px}
+.pdfBusy.show{display:flex}
+.pdfBusyCard{background:#fff;border-radius:18px;padding:22px;min-width:230px;max-width:320px;text-align:center;box-shadow:0 20px 60px #0003}
+.pdfSpinner{width:34px;height:34px;border:4px solid #dce7e7;border-top-color:#11a99e;border-radius:50%;margin:0 auto 12px;animation:pdfspin .85s linear infinite}
+@keyframes pdfspin{to{transform:rotate(360deg)}}
+.pdfExportHost{position:fixed;left:-10000px;top:0;width:194mm;background:#fff;z-index:-1}
+.pdfExportHost .directEditBar,.pdfExportHost .actions{display:none!important}
+.pdfExportHost .preview{width:194mm!important;max-width:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
+.pdfExportHost .previewtop{padding:9mm!important}
+.pdfExportHost .previewbody{padding:9mm!important}
+.pdfExportHost tr,.pdfExportHost .amountWords,.pdfExportHost .paymentBox,.pdfExportHost .dzLegalStrip,.pdfExportHost .signatureArea,.pdfExportHost .previewtotal{break-inside:avoid!important;page-break-inside:avoid!important}
+.pdfExportHost .signatureSpace{height:28mm!important}
+.pdfExportHost .signatureSpace img{max-width:42mm!important;max-height:26mm!important}
+@media(max-width:620px){
+ .pdfActionGroup{display:grid!important;grid-template-columns:1fr 1fr;width:100%}
+}
+
 .brandAssetGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .brandAssetCard{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfcfd}
 .brandAssetPreview{height:96px;border:1px dashed #cfd7df;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;color:var(--muted);font-size:12px;margin-bottom:10px}
@@ -692,8 +709,16 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+<div class="pdfBusy" id="pdfBusy" aria-live="polite">
+  <div class="pdfBusyCard">
+    <div class="pdfSpinner"></div>
+    <b id="pdfBusyTitle">Generating PDF…</b>
+    <div class="muted" id="pdfBusySub" style="margin-top:6px">Preparing the final A4 invoice.</div>
+  </div>
+</div>
 <div id="authScreen" class="authScreen hidden">
   <select id="authLanguage" class="authLang" onchange="setLanguage(this.value)">
     <option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option>
@@ -832,10 +857,10 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     <section id="invoiceEditor" class="page hidden" data-step="1">
       <div class="head">
         <div><h1 id="editorTitle">Create invoice</h1><p id="editorSubtitle">Create a professional invoice in four quick steps.</p></div>
-        <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="printInvoice()">Print / PDF</button></div>
+        <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><span class="pdfActionGroup actions" style="display:flex;gap:8px"><button class="btn secondary" onclick="printInvoice()">Print</button><button class="btn secondary" onclick="downloadInvoicePDF()">Download PDF</button></span></div>
       </div>
 
-      <div class="buildProof" id="buildProof">v1.4.0 ✓ — الختم والإمضاء داخل الفاتورة وPDF A4</div>
+      <div class="buildProof" id="buildProof">v1.5.0 ✓ — PDF A4 نهائي باسم الفاتورة</div>
 
       <div class="invoiceWizard" id="invoiceWizard">
         <button type="button" data-step="1" onclick="setInvoiceStep(1)">1 · Client</button>
@@ -968,7 +993,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
             <div class="actions" style="margin-top:15px">
               <button class="btn secondary" onclick="saveDraft()">Save draft</button>
               <button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button>
-              <button class="btn secondary" onclick="printInvoice()">Print / PDF</button>
+              <span class="pdfActionGroup actions" style="display:flex;gap:8px"><button class="btn secondary" onclick="printInvoice()">Print</button><button class="btn secondary" onclick="downloadInvoicePDF()">Download PDF</button></span>
             </div>
           </div>
         </div>
@@ -1843,8 +1868,96 @@ function collectInvoice(statusOverride){
  inv.total=invoiceTotal(inv);return inv;
 }
 
+
+function safePdfFilename(){
+ const raw=(document.getElementById('invno')?.value||'invoice').trim()||'invoice';
+ return raw.replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,'_')+'.pdf';
+}
+function setPdfBusy(show){
+ const box=document.getElementById('pdfBusy'),title=document.getElementById('pdfBusyTitle'),sub=document.getElementById('pdfBusySub');
+ if(!box)return;
+ const lang=state.settings.language||'en';
+ if(title)title.textContent=lang==='ar'?'جارٍ إنشاء ملف PDF…':lang==='fr'?'Création du PDF…':'Generating PDF…';
+ if(sub)sub.textContent=lang==='ar'?'يتم تجهيز الفاتورة النهائية بحجم A4.':lang==='fr'?'Préparation de la facture A4 finale.':'Preparing the final A4 invoice.';
+ box.classList.toggle('show',!!show);
+}
+function waitForImages(root){
+ const imgs=[...root.querySelectorAll('img')].filter(i=>i.src&&!i.complete);
+ if(!imgs.length)return Promise.resolve();
+ return Promise.all(imgs.map(img=>new Promise(resolve=>{
+  const done=()=>resolve();
+  img.addEventListener('load',done,{once:true});
+  img.addEventListener('error',done,{once:true});
+  setTimeout(done,2200);
+ })));
+}
+async function downloadInvoicePDF(){
+ const lang=state.settings.language||'en';
+ try{
+  if(document.activeElement&&typeof document.activeElement.blur==='function')document.activeElement.blur();
+  renderPreview();updateBrandAssetDisplays();
+
+  if(typeof html2pdf==='undefined'){
+   alert(lang==='ar'?'تعذر تحميل مولّد PDF. سيتم فتح نافذة الطباعة بدلاً من ذلك.':lang==='fr'?'Le générateur PDF n’est pas disponible. Ouverture de l’impression.':'PDF generator is unavailable. Opening print instead.');
+   printInvoice();return;
+  }
+
+  setPdfBusy(true);
+
+  const source=document.getElementById('previewCard');
+  if(!source)throw new Error('Preview not found');
+
+  const host=document.createElement('div');
+  host.className='pdfExportHost';
+  const clone=source.cloneNode(true);
+  clone.id='pdfExportClone';
+  clone.classList.remove('directEditMode');
+
+  clone.querySelectorAll('.directEditBar,.actions').forEach(el=>el.remove());
+  clone.querySelectorAll('[contenteditable]').forEach(el=>{
+   el.removeAttribute('contenteditable');el.style.outline='none';
+  });
+
+  host.appendChild(clone);
+  document.body.appendChild(host);
+  await waitForImages(clone);
+  await new Promise(r=>setTimeout(r,80));
+
+  const filename=safePdfFilename();
+  const options={
+   margin:[8,8,8,8],
+   filename,
+   image:{type:'jpeg',quality:0.98},
+   html2canvas:{
+    scale:2,
+    useCORS:true,
+    allowTaint:true,
+    backgroundColor:'#ffffff',
+    logging:false,
+    windowWidth:Math.max(clone.scrollWidth,900)
+   },
+   jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},
+   pagebreak:{
+    mode:['css','legacy'],
+    avoid:['tr','.amountWords','.paymentBox','.dzLegalStrip','.signatureArea','.previewtotal']
+   }
+  };
+
+  await html2pdf().set(options).from(clone).save();
+  host.remove();
+ }catch(err){
+  console.error('PDF export error',err);
+  alert(lang==='ar'?'حدث خطأ أثناء إنشاء PDF. يمكنك استعمال زر الطباعة كحل بديل.':lang==='fr'?'Erreur lors de la création du PDF. Utilisez l’impression comme solution de secours.':'Could not create the PDF. Use Print as a fallback.');
+ }finally{
+  document.querySelectorAll('.pdfExportHost').forEach(x=>x.remove());
+  setPdfBusy(false);
+ }
+}
+
 function printInvoice(){
  const lang=state.settings.language||'en';
+ const oldTitle=document.title,printName=(document.getElementById('invno')?.value||'invoice').trim()||'invoice';
+ document.title=printName;
  renderPreview();
  directEditMode=false;
  const card=document.getElementById('previewCard');
@@ -1859,7 +1972,9 @@ function printInvoice(){
   :lang==='fr'
   ?`v1.4.0 ✓ — PDF A4 prêt${stamp?' · cachet ✓':''}${sig?' · signature ✓':''}`
   :`v1.4.0 ✓ — A4 PDF ready${stamp?' · stamp ✓':''}${sig?' · signature ✓':''}`;
- setTimeout(()=>window.print(),120);
+ const restore=()=>{document.title=oldTitle;window.removeEventListener('afterprint',restore)};
+ window.addEventListener('afterprint',restore);
+ setTimeout(()=>{window.print();setTimeout(()=>{if(document.title===printName)document.title=oldTitle},1800)},120);
 }
 window.addEventListener('beforeprint',()=>{try{renderPreview();updateBrandAssetDisplays()}catch(e){}});
 function saveDraft(){saveInvoice('draft')}
@@ -2279,7 +2394,7 @@ function renderPreview(){
  if(pgrid)pgrid.innerHTML=payRows.join('');
  if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
  const proof=document.getElementById('buildProof');
- if(proof)proof.textContent=lang==='ar'?'v1.4.0 ✓ — الختم والإمضاء داخل الفاتورة وPDF A4':lang==='fr'?'v1.4.0 ✓ — cachet, signature et PDF A4':'v1.4.0 ✓ — stamp, signature and A4 PDF';
+ if(proof)proof.textContent=lang==='ar'?'v1.5.0 ✓ — PDF A4 نهائي باسم الفاتورة':lang==='fr'?'v1.5.0 ✓ — PDF A4 final':'v1.5.0 ✓ — final A4 PDF';
  const stampEl=document.querySelector('[data-edit-key="stampLabel"]'),sigEl=document.querySelector('[data-edit-key="signatureLabel"]'),footEl=document.getElementById('invoiceFooterNote');
  if(stampEl)stampEl.textContent=lang==='ar'?'ختم المؤسسة':lang==='fr'?'Cachet de l’entreprise':'Company stamp';
  if(sigEl)sigEl.textContent=lang==='ar'?'الإمضاء':lang==='fr'?'Signature autorisée':'Authorized signature';
@@ -2457,6 +2572,8 @@ const uiPhrases={
  'Save draft':{fr:'Enregistrer brouillon',ar:'حفظ كمسودة'},
  'Save invoice':{fr:'Enregistrer la facture',ar:'حفظ الفاتورة'},
  'Print / PDF':{fr:'Imprimer / PDF',ar:'طباعة / PDF'},
+ 'Print':{fr:'Imprimer',ar:'طباعة'},
+ 'Download PDF':{fr:'Télécharger PDF',ar:'تحميل PDF'},
  'Business & client':{fr:'Entreprise et client',ar:'المؤسسة والعميل'},
  'BUSINESS NAME':{fr:'NOM DE L’ENTREPRISE',ar:'اسم المؤسسة'},
  'CLIENT':{fr:'CLIENT',ar:'العميل'},
