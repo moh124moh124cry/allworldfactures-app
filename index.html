@@ -510,6 +510,76 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .billingManage .btn{width:100%}
 .phoneMode .secureCheckoutNote{font-size:10px}
 
+
+/* v0.9 — Professional Invoice Builder */
+.invoiceWizard{display:flex;gap:8px;margin:0 0 14px;overflow:auto;padding:2px}
+.invoiceWizard button{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:12px;padding:10px 13px;white-space:nowrap;font-weight:800;font-size:12px;cursor:pointer}
+.invoiceWizard button.active{background:#eaf9f7;border-color:#9edfd9;color:#087b74;box-shadow:0 4px 14px rgba(15,159,152,.08)}
+.invoiceWizard button.done{color:#087b74}
+.invoiceBuilderNote{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#f7fbfc;border:1px solid var(--line);border-radius:14px;margin-bottom:14px}
+.invoiceBuilderNote b{font-size:13px}.invoiceBuilderNote small{display:block;color:var(--muted);margin-top:3px;line-height:1.45}
+.invoiceLiveTotal{min-width:145px;text-align:end}.invoiceLiveTotal small{font-size:10px;text-transform:uppercase;font-weight:800}.invoiceLiveTotal strong{display:block;font-size:22px;color:#087b74;margin-top:2px}
+.wizardSection{scroll-margin-top:80px}
+.manualClientField.hidden{display:none!important}
+.quickDue{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.quickDue button{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:800}
+.quickDue button:hover{border-color:#9edfd9;color:#087b74}
+.invoiceWizardBottom{display:none}
+.invoiceSaveHint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:8px}
+.phoneMode #invoiceEditor{padding-bottom:82px}
+.phoneMode #invoiceEditor .head{gap:8px}
+.phoneMode #invoiceEditor .head .actions{display:none}
+.phoneMode #invoiceEditor .invoiceWizard{position:sticky;top:60px;z-index:22;background:var(--bg);margin:0 -10px 12px;padding:8px 10px;border-bottom:1px solid #e7ecef}
+.phoneMode #invoiceEditor .invoiceWizard button{flex:1;min-width:86px;padding:9px 8px;font-size:10px}
+.phoneMode #invoiceEditor .invoiceBuilderNote{padding:11px 12px;border-radius:12px}
+.phoneMode #invoiceEditor .invoiceBuilderNote>div:first-child{max-width:64%}
+.phoneMode #invoiceEditor .invoiceBuilderNote b{font-size:12px}
+.phoneMode #invoiceEditor .invoiceBuilderNote small{font-size:10px}
+.phoneMode #invoiceEditor .invoiceLiveTotal{min-width:auto}
+.phoneMode #invoiceEditor .invoiceLiveTotal strong{font-size:19px}
+.phoneMode #invoiceEditor .editor{padding:0;background:transparent;border:0;box-shadow:none}
+.phoneMode #invoiceEditor .wizardSection{display:none;background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;margin:0;box-shadow:0 8px 28px rgba(22,37,62,.05)}
+.phoneMode #invoiceEditor[data-step="1"] .wizardSection[data-invoice-step="1"],
+.phoneMode #invoiceEditor[data-step="2"] .wizardSection[data-invoice-step="2"],
+.phoneMode #invoiceEditor[data-step="3"] .wizardSection[data-invoice-step="3"]{display:block}
+.phoneMode #invoiceEditor .preview{display:none!important;margin:0;border-radius:16px}
+.phoneMode #invoiceEditor[data-step="4"] .preview{display:block!important}
+.phoneMode #invoiceEditor[data-step="4"] .editor{display:none!important}
+.phoneMode #invoiceEditor .section{border:0;padding:0;margin:0}
+.phoneMode #invoiceEditor .section h3{font-size:17px;margin-bottom:14px}
+.phoneMode #invoiceEditor .formgrid,.phoneMode #invoiceEditor .formgrid.cols3{grid-template-columns:1fr;gap:10px}
+.phoneMode #invoiceEditor .field label{font-size:10px}
+.phoneMode #invoiceEditor .input{padding:12px;border-radius:11px;font-size:14px}
+.phoneMode #invoiceEditor .lines{overflow:visible;border:0}
+.phoneMode #invoiceEditor .linehead{display:none}
+.phoneMode #invoiceEditor .linerow{min-width:0;display:grid;grid-template-columns:1fr 1fr 44px;gap:8px;background:#f9fbfc;border:1px solid var(--line);border-radius:13px;padding:10px;margin-bottom:9px}
+.phoneMode #invoiceEditor .linerow input{padding:11px;background:#fff}
+.phoneMode #invoiceEditor .linerow input:nth-child(1){grid-column:1/-1}
+.phoneMode #invoiceEditor .linerow input:nth-child(2){grid-column:1/2}
+.phoneMode #invoiceEditor .linerow input:nth-child(3){grid-column:2/3}
+.phoneMode #invoiceEditor .linerow b{grid-column:1/3;align-self:center;font-size:14px;color:#087b74;padding-inline-start:3px}
+.phoneMode #invoiceEditor .linerow .btn{grid-column:3/4;grid-row:2/4;width:42px;height:42px;padding:0;align-self:center}
+.phoneMode #invoiceEditor .summary{background:#f4fbfa;border-radius:13px;padding:12px;margin-top:12px}
+.phoneMode #invoiceEditor .sumrow.total{font-size:22px}
+.phoneMode #invoiceEditor .previewtop{padding:18px 15px;gap:10px}
+.phoneMode #invoiceEditor .previewtop>div:last-child{text-align:end!important}
+.phoneMode #invoiceEditor .previewbody{padding:15px}
+.phoneMode #invoiceEditor .previewmeta{grid-template-columns:1fr;gap:10px}
+.phoneMode #invoiceEditor .invoiceWizardBottom{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;position:fixed;left:8px;right:8px;bottom:8px;z-index:55;background:#071a33;color:#fff;border-radius:18px;padding:8px 9px;box-shadow:0 16px 36px rgba(0,21,45,.32)}
+.phoneMode #invoiceEditor .invoiceWizardBottom button{border:0;border-radius:12px;padding:11px 13px;font-weight:900}
+.phoneMode #invoiceEditor .invoiceWizardBottom .back{background:#ffffff14;color:#fff}
+.phoneMode #invoiceEditor .invoiceWizardBottom .next{background:#18b7ac;color:#fff}
+.phoneMode #invoiceEditor .invoiceWizardBottom .bottomTotal{text-align:center;min-width:0}
+.phoneMode #invoiceEditor .invoiceWizardBottom .bottomTotal small{display:block;color:#ffffff9c;font-size:9px}
+.phoneMode #invoiceEditor .invoiceWizardBottom .bottomTotal b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.phoneMode #invoiceEditor[data-step="1"] .invoiceWizardBottom .back{visibility:hidden}
+.phoneMode #invoiceEditor[data-step="4"] .invoiceWizardBottom .next{background:#fff;color:#071a33}
+.phoneMode #invoiceEditor[data-step="4"] .invoiceWizardBottom .back{visibility:visible}
+@media(min-width:821px){
+ #invoiceEditor .wizardSection{display:block!important}
+ #invoiceEditor .invoiceWizard{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -648,34 +718,48 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
       </div>
     </section>
 
-    <section id="invoiceEditor" class="page hidden">
+    <section id="invoiceEditor" class="page hidden" data-step="1">
       <div class="head">
-        <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
+        <div><h1 id="editorTitle">Create invoice</h1><p id="editorSubtitle">Create a professional invoice in four quick steps.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.7.2: billing is fully localized, mobile-friendly and connected to Lemon Squeezy subscriptions.</div>
+
+      <div class="invoiceWizard" id="invoiceWizard">
+        <button type="button" data-step="1" onclick="setInvoiceStep(1)">1 · Client</button>
+        <button type="button" data-step="2" onclick="setInvoiceStep(2)">2 · Items</button>
+        <button type="button" data-step="3" onclick="setInvoiceStep(3)">3 · Details</button>
+        <button type="button" data-step="4" onclick="setInvoiceStep(4)">4 · Review</button>
+      </div>
+
+      <div class="invoiceBuilderNote">
+        <div><b id="builderNoteTitle">Professional invoice builder</b><small id="builderNoteText">Client, items, taxes and PDF preview without a long mobile form.</small></div>
+        <div class="invoiceLiveTotal"><small id="builderTotalLabel">Total</small><strong id="wizardTotal">—</strong></div>
+      </div>
+
       <div class="invoicegrid">
         <div class="card form editor">
-          <div class="section"><h3>Business & client</h3><div class="formgrid">
-            <div class="field"><label>BUSINESS NAME</label><input id="business" class="input" oninput="renderPreview()"></div>
-            <div class="field"><label>CLIENT</label><select id="clientSelect" class="input" onchange="renderPreview()"></select></div>
-            <div class="field"><label>CLIENT EMAIL</label><input id="email" class="input" oninput="renderPreview()"></div>
-            <div class="field"><label>INVOICE NUMBER</label><input id="invno" class="input" oninput="renderPreview()"></div>
-          </div></div>
+          <div class="section wizardSection" data-invoice-step="1">
+            <h3>Business & client</h3>
+            <div class="formgrid">
+              <div class="field"><label>BUSINESS NAME</label><input id="business" class="input" oninput="renderPreview()"></div>
+              <div class="field"><label>CLIENT</label><select id="clientSelect" class="input"></select></div>
+              <div id="manualClientField" class="field manualClientField hidden"><label>CLIENT / COMPANY NAME</label><input id="manualClientName" class="input" placeholder="Client or company name" oninput="renderPreview()"></div>
+              <div class="field"><label>CLIENT EMAIL</label><input id="email" class="input" type="email" oninput="renderPreview()"></div>
+              <div class="field"><label>INVOICE NUMBER</label><input id="invno" class="input" oninput="renderPreview()"></div>
+            </div>
+            <div class="invoiceSaveHint" id="clientStepHint">Choose a saved client or enter a new client name. You can save the invoice as a draft at any time.</div>
+          </div>
 
-          <div class="section"><h3>Dates & compliance</h3><div class="formgrid cols3">
-            <div class="field"><label>ISSUE DATE</label><input id="issueDate" class="input" type="date" onchange="renderPreview()"></div>
-            <div class="field"><label>DUE DATE</label><input id="dueDate" class="input" type="date" onchange="renderPreview()"></div>
-            <div class="field"><label>COUNTRY</label><select id="country" class="input" onchange="changeCountry()"></select></div>
-            <div class="field"><label>CURRENCY</label><select id="currency" class="input" onchange="renderPreview()"></select></div>
-            <div class="field"><label>TAX RATE %</label><input id="tax" class="input" type="number" step="0.01" oninput="renderPreview()"></div>
-            <div class="field"><label>DISCOUNT %</label><input id="discount" class="input" type="number" step="0.01" oninput="renderPreview()"></div><div class="field"><label id="editorTemplateLabel">INVOICE TEMPLATE</label><select id="editorTemplate" class="input" onchange="selectTemplate(this.value)"></select></div>
-          </div></div>
-
-          <div class="section">
+          <div class="section wizardSection" data-invoice-step="2">
             <div class="toolbar"><h3 style="margin:0">Line items</h3><button class="btn secondary small" onclick="addItem()">＋ Add item</button></div>
-            <div class="lines"><div class="linehead"><span>Description</span><span>Qty</span><span>Unit price</span><span>Total</span><span></span></div><div id="items"></div></div>
-            <div class="formgrid" style="margin-top:12px"><div class="field"><label>SHIPPING / EXTRA CHARGE</label><input id="shipping" class="input" type="number" step="0.01" oninput="renderPreview()"></div><div></div></div>
+            <div class="lines">
+              <div class="linehead"><span>Description</span><span>Qty</span><span>Unit price</span><span>Total</span><span></span></div>
+              <div id="items"></div>
+            </div>
+            <div class="formgrid" style="margin-top:12px">
+              <div class="field"><label>SHIPPING / EXTRA CHARGE</label><input id="shipping" class="input" type="number" step="0.01" min="0" oninput="renderPreview()"></div>
+              <div></div>
+            </div>
             <div class="summary">
               <div class="sumrow"><span>Subtotal</span><b id="sumSubtotal"></b></div>
               <div class="sumrow"><span>Discount</span><b id="sumDiscount"></b></div>
@@ -685,10 +769,22 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
             </div>
           </div>
 
-          <div class="section"><h3>Notes & status</h3><div class="formgrid">
-            <div class="field"><label>NOTES</label><textarea id="notes" class="input" rows="4" oninput="renderPreview()"></textarea></div>
-            <div class="field"><label>STATUS</label><select id="status" class="input"><option value="draft">draft</option><option value="pending">pending</option><option value="paid">paid</option><option value="overdue">overdue</option></select></div>
-          </div></div>
+          <div class="section wizardSection" data-invoice-step="3">
+            <h3>Dates & compliance</h3>
+            <div class="formgrid cols3">
+              <div class="field"><label>ISSUE DATE</label><input id="issueDate" class="input" type="date" onchange="renderPreview()"></div>
+              <div class="field"><label>DUE DATE</label><input id="dueDate" class="input" type="date" onchange="renderPreview()"><div class="quickDue"><button type="button" onclick="setDueIn(7)">7 days</button><button type="button" onclick="setDueIn(15)">15 days</button><button type="button" onclick="setDueIn(30)">30 days</button></div></div>
+              <div class="field"><label>COUNTRY</label><select id="country" class="input" onchange="changeCountry()"></select></div>
+              <div class="field"><label>CURRENCY</label><select id="currency" class="input" onchange="renderPreview()"></select></div>
+              <div class="field"><label>TAX RATE %</label><input id="tax" class="input" type="number" min="0" step="0.01" oninput="renderPreview()"></div>
+              <div class="field"><label>DISCOUNT %</label><input id="discount" class="input" type="number" min="0" max="100" step="0.01" oninput="renderPreview()"></div>
+              <div class="field"><label id="editorTemplateLabel">INVOICE TEMPLATE</label><select id="editorTemplate" class="input" onchange="selectTemplate(this.value)"></select></div>
+            </div>
+            <div class="formgrid" style="margin-top:14px">
+              <div class="field"><label>NOTES</label><textarea id="notes" class="input" rows="4" oninput="renderPreview()"></textarea></div>
+              <div class="field"><label>STATUS</label><select id="status" class="input"><option value="draft">draft</option><option value="pending">pending</option><option value="paid">paid</option><option value="overdue">overdue</option></select></div>
+            </div>
+          </div>
         </div>
 
         <div id="previewCard" class="card preview template-modern">
@@ -705,8 +801,19 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
             </div>
             <div class="previewtotal"><span>Total due</span><span id="pTotal"></span></div>
             <p id="pNotes" style="font-size:11px;color:var(--muted)"></p>
+            <div class="actions" style="margin-top:15px">
+              <button class="btn secondary" onclick="saveDraft()">Save draft</button>
+              <button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button>
+              <button class="btn secondary" onclick="window.print()">Print / PDF</button>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div class="invoiceWizardBottom">
+        <button type="button" class="back" id="invoiceBackBtn" onclick="invoiceStepBack()">←</button>
+        <div class="bottomTotal"><small id="bottomTotalLabel">TOTAL</small><b id="bottomInvoiceTotal">—</b></div>
+        <button type="button" class="next" id="invoiceNextBtn" onclick="invoiceStepNext()">Next</button>
       </div>
     </section>
 
@@ -1110,6 +1217,7 @@ function toggleMobileDrawer(force){
 function closeMobileDrawer(){toggleMobileDrawer(false)}
 
 function showPage(id){
+ const mobileNav=document.querySelector('.mobile');if(mobileNav)mobileNav.style.removeProperty('display');
  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
  document.getElementById(id).classList.remove('hidden');
  document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
@@ -1402,10 +1510,18 @@ function refreshClientSelect(selected){
  const el=document.getElementById('clientSelect');if(!el)return;
  el.innerHTML=`<option value="">— ${uiPhrase('Manual / no saved client')} —</option>`+state.clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
  if(selected)el.value=selected;
- el.onchange=()=>{
-  const c=clientBy(el.value);if(c){document.getElementById('email').value=c.email||'';document.getElementById('country').value=c.country||state.settings.country;changeCountry(false)}
+ const syncManual=()=>{
+  const c=clientBy(el.value),manual=document.getElementById('manualClientField');
+  if(manual)manual.classList.toggle('hidden',!!c);
+  if(c){
+   document.getElementById('email').value=c.email||'';
+   document.getElementById('country').value=c.country||state.settings.country;
+   changeCountry(false);
+  }
   renderPreview();
  };
+ el.onchange=syncManual;
+ syncManual();
 }
 function generateInvoiceNumber(){return `${state.settings.prefix}${String(state.settings.nextNo).padStart(4,'0')}`}
 function newInvoice(){
@@ -1420,12 +1536,14 @@ function newInvoice(){
  return true;
 }
 function showEditor(inv){
+ const mobileNav=document.querySelector('.mobile');if(mobileNav)mobileNav.style.setProperty('display','none','important');
  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('invoiceEditor').classList.remove('hidden');document.getElementById('topTitle').textContent=t('createInvoice');
  document.getElementById('editorTitle').textContent=editingInvoiceId?'Edit invoice':'Create invoice';
  populateSelectors();
  const et=document.getElementById('editorTemplate');if(et){et.innerHTML=templateDefs.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');et.value=state.template;}
  document.getElementById('business').value=state.settings.business||'';
  document.getElementById('clientSelect').value=inv.clientId||'';
+ const manualName=document.getElementById('manualClientName');if(manualName)manualName.value=inv.clientId?'':(inv.clientName||'');
  document.getElementById('email').value=inv.clientEmail||'';
  document.getElementById('invno').value=inv.number||generateInvoiceNumber();
  document.getElementById('issueDate').value=inv.issueDate||todayISO();
@@ -1438,14 +1556,16 @@ function showEditor(inv){
  document.getElementById('notes').value=inv.notes||state.settings.notes||'';
  document.getElementById('status').value=inv.status||'draft';
  itemData=(inv.items||[]).map(i=>({...i}));
- renderItems();applyTemplate();renderPreview();window.scrollTo(0,0);
+ refreshClientSelect(inv.clientId||'');
+ setInvoiceStep(1,false);
+ renderItems();applyTemplate();renderPreview();invoiceWizardLocale();window.scrollTo(0,0);
 }
 function editInvoice(id){const inv=state.invoices.find(i=>i.id===id);if(!inv)return;editingInvoiceId=id;showEditor(inv)}
 function collectInvoice(statusOverride){
  const selected=clientBy(document.getElementById('clientSelect').value);
  const inv={
   id:editingInvoiceId||uid('inv'),number:document.getElementById('invno').value.trim()||generateInvoiceNumber(),
-  clientId:selected?.id||'',clientName:selected?.name||'Manual client',clientEmail:document.getElementById('email').value.trim(),
+  clientId:selected?.id||'',clientName:selected?.name||document.getElementById('manualClientName')?.value.trim()||'',clientEmail:document.getElementById('email').value.trim(),
   issueDate:document.getElementById('issueDate').value,dueDate:document.getElementById('dueDate').value,
   country:document.getElementById('country').value,currency:document.getElementById('currency').value,
   taxRate:Number(document.getElementById('tax').value||0),discount:Number(document.getElementById('discount').value||0),shipping:Number(document.getElementById('shipping').value||0),
@@ -1455,12 +1575,27 @@ function collectInvoice(statusOverride){
 }
 function saveDraft(){saveInvoice('draft')}
 function saveInvoice(statusOverride){
- const inv=collectInvoice(statusOverride);
- if(!inv.clientName||inv.clientName==='Manual client'){const manual=prompt('Client name for this invoice:', 'Client');if(!manual)return;inv.clientName=manual}
+ const inv=collectInvoice(statusOverride),lang=state.settings.language||'en';
+ const isDraft=(statusOverride||inv.status)==='draft';
+ if(!isDraft&&!inv.clientName){
+  alert(lang==='ar'?'أدخل اسم العميل أو اختر عميلاً محفوظاً.':lang==='fr'?'Saisissez le nom du client ou choisissez un client enregistré.':'Enter a client name or choose a saved client.');
+  setInvoiceStep(1);document.getElementById('manualClientName')?.focus();return;
+ }
+ if(!isDraft&&!itemData.some(i=>String(i.d||'').trim())){
+  alert(lang==='ar'?'أضف بنداً واحداً على الأقل إلى الفاتورة.':lang==='fr'?'Ajoutez au moins une ligne à la facture.':'Add at least one line item to the invoice.');
+  setInvoiceStep(2);return;
+ }
+ if(!isDraft&&invoiceTotal(inv)<=0){
+  alert(lang==='ar'?'أدخل سعراً للفاتورة قبل الحفظ.':lang==='fr'?'Ajoutez un prix avant d’enregistrer la facture.':'Add a price before saving the invoice.');
+  setInvoiceStep(2);return;
+ }
+ if(isDraft&&!inv.clientName)inv.clientName=lang==='ar'?'مسودة':lang==='fr'?'Brouillon':'Draft';
  const idx=state.invoices.findIndex(i=>i.id===inv.id);
  if(idx<0&&!requireCapacity('invoices'))return;
  if(idx>=0)state.invoices[idx]=inv;else{state.invoices.push(inv);state.settings.nextNo=Number(state.settings.nextNo||1)+1}
- editingInvoiceId=inv.id;persist();alert('Invoice saved ✓');showPage('invoices');
+ editingInvoiceId=inv.id;persist();
+ alert(lang==='ar'?'تم حفظ الفاتورة ✓':lang==='fr'?'Facture enregistrée ✓':'Invoice saved ✓');
+ showPage('invoices');
 }
 function duplicateInvoice(id){
  if(!requireCapacity('invoices'))return;
@@ -1471,6 +1606,45 @@ function duplicateInvoice(id){
 function markPaid(id){const i=state.invoices.find(x=>x.id===id);if(i){i.status='paid';persist();renderInvoiceList();renderDashboard()}}
 function deleteInvoice(id){if(confirm('Delete this invoice?')){state.invoices=state.invoices.filter(i=>i.id!==id);persist();renderInvoiceList();renderDashboard()}}
 
+
+let invoiceWizardStep=1;
+function invoiceWizardLocale(){
+ const lang=state.settings.language||'en';
+ const steps=lang==='ar'?['1 · العميل','2 · البنود','3 · التفاصيل','4 · المعاينة']:lang==='fr'?['1 · Client','2 · Lignes','3 · Détails','4 · Aperçu']:['1 · Client','2 · Items','3 · Details','4 · Review'];
+ document.querySelectorAll('#invoiceWizard button').forEach((b,i)=>{if(steps[i])b.textContent=steps[i]});
+ const sub=document.getElementById('editorSubtitle');if(sub)sub.textContent=lang==='ar'?'أنشئ فاتورة احترافية في أربع خطوات سريعة.':lang==='fr'?'Créez une facture professionnelle en quatre étapes rapides.':'Create a professional invoice in four quick steps.';
+ const title=document.getElementById('builderNoteTitle');if(title)title.textContent=lang==='ar'?'منشئ الفواتير الاحترافي':lang==='fr'?'Créateur de factures professionnel':'Professional invoice builder';
+ const note=document.getElementById('builderNoteText');if(note)note.textContent=lang==='ar'?'عميل، بنود، ضرائب ومعاينة PDF بدون نموذج طويل على الهاتف.':lang==='fr'?'Client, lignes, taxes et aperçu PDF sans long formulaire mobile.':'Client, items, taxes and PDF preview without a long mobile form.';
+ const total=document.getElementById('builderTotalLabel');if(total)total.textContent=lang==='ar'?'الإجمالي':lang==='fr'?'Total':'Total';
+ const btl=document.getElementById('bottomTotalLabel');if(btl)btl.textContent=lang==='ar'?'الإجمالي':lang==='fr'?'TOTAL':'TOTAL';
+ const hint=document.getElementById('clientStepHint');if(hint)hint.textContent=lang==='ar'?'اختر عميلاً محفوظاً أو أدخل اسم عميل جديد. يمكنك حفظ الفاتورة كمسودة في أي وقت.':lang==='fr'?'Choisissez un client enregistré ou saisissez un nouveau nom. Vous pouvez enregistrer un brouillon à tout moment.':'Choose a saved client or enter a new client name. You can save the invoice as a draft at any time.';
+ const manual=document.getElementById('manualClientName');if(manual)manual.placeholder=lang==='ar'?'اسم العميل أو الشركة':lang==='fr'?'Nom du client ou de l’entreprise':'Client or company name';
+ updateInvoiceWizardButtons();
+}
+function setInvoiceStep(step,scroll=true){
+ invoiceWizardStep=Math.max(1,Math.min(4,Number(step)||1));
+ const editor=document.getElementById('invoiceEditor');if(!editor)return;
+ editor.dataset.step=String(invoiceWizardStep);
+ document.querySelectorAll('#invoiceWizard button').forEach(b=>{
+  const n=Number(b.dataset.step);b.classList.toggle('active',n===invoiceWizardStep);b.classList.toggle('done',n<invoiceWizardStep);
+ });
+ updateInvoiceWizardButtons();
+ if(scroll&&document.documentElement.classList.contains('phoneMode'))window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateInvoiceWizardButtons(){
+ const lang=state.settings.language||'en',back=document.getElementById('invoiceBackBtn'),next=document.getElementById('invoiceNextBtn');
+ if(back)back.textContent=lang==='ar'?'→':lang==='fr'?'←':'←';
+ if(next)next.textContent=invoiceWizardStep===4?(lang==='ar'?'حفظ الفاتورة':lang==='fr'?'Enregistrer':'Save invoice'):(lang==='ar'?'التالي':lang==='fr'?'Suivant':'Next');
+}
+function invoiceStepBack(){if(invoiceWizardStep>1)setInvoiceStep(invoiceWizardStep-1)}
+function invoiceStepNext(){
+ if(invoiceWizardStep<4){setInvoiceStep(invoiceWizardStep+1);return}
+ saveInvoice('pending');
+}
+function setDueIn(days){
+ const issue=document.getElementById('issueDate')?.value||todayISO(),due=document.getElementById('dueDate');
+ if(due){due.value=addDays(issue,Number(days)||0);renderPreview()}
+}
 function changeCountry(force=true){
  const x=countryBy(document.getElementById('country').value);
  if(force){document.getElementById('currency').value=x.cur;document.getElementById('tax').value=x.rate}
@@ -1487,7 +1661,7 @@ function renderItems(){
  </div>`).join('');
  renderPreview();
 }
-function updItem(id,k,v){const i=itemData.find(x=>x.id===id);if(i){i[k]=(k==='d'?v:Number(v||0));renderItems()}}
+function updItem(id,k,v){const i=itemData.find(x=>x.id===id);if(i){i[k]=(k==='d'?v:Number(v||0));renderPreview()}}
 function addItem(){itemData.push({id:uid('item'),d:'New item',q:1,p:0});renderItems()}
 function delItem(id){itemData=itemData.filter(i=>i.id!==id);if(!itemData.length)addItem();else renderItems()}
 function calcCurrent(){
@@ -1501,16 +1675,19 @@ function renderPreview(){
  updateLogoDisplays();
  const c=countryBy(document.getElementById('country').value),cur=document.getElementById('currency').value,tot=calcCurrent();
  const selected=clientBy(document.getElementById('clientSelect').value);
+ const manualName=document.getElementById('manualClientName')?.value.trim()||'';
  document.getElementById('pBusiness').textContent=document.getElementById('business').value||state.settings.business;
  document.getElementById('pBusinessMeta').innerHTML=`${esc(state.settings.email)}<br>${esc(state.settings.address)}${state.settings.taxId?'<br>Tax ID: '+esc(state.settings.taxId):''}`;
  document.getElementById('pInv').textContent=document.getElementById('invno').value;
  document.getElementById('pDates').innerHTML=`Issue: ${esc(document.getElementById('issueDate').value)}<br>Due: ${esc(document.getElementById('dueDate').value)}`;
- document.getElementById('pClient').innerHTML=`${esc(selected?.name||'Client')}<br>${esc(document.getElementById('email').value)}${selected?.address?'<br>'+esc(selected.address):''}`;
+ document.getElementById('pClient').innerHTML=`${esc(selected?.name||manualName||uiPhrase('Client'))}<br>${esc(document.getElementById('email').value)}${selected?.address?'<br>'+esc(selected.address):''}`;
  document.getElementById('pCountry').innerHTML=`${c.flag} ${esc(c.name)}<br>${esc(c.tax)} · ${esc(cur)}`;
  document.getElementById('pItems').innerHTML=itemData.map(i=>`<tr><td>${esc(i.d)}</td><td>${Number(i.q)}</td><td>${money(Number(i.q)*Number(i.p),cur)}</td></tr>`).join('');
  document.getElementById('pSubtotal').textContent=money(tot.sub,cur);document.getElementById('pAdjustments').textContent=money(tot.tax-tot.disc+tot.ship,cur);document.getElementById('pTotal').textContent=money(tot.total,cur);document.getElementById('pNotes').textContent=document.getElementById('notes').value;
  document.getElementById('sumSubtotal').textContent=money(tot.sub,cur);document.getElementById('sumDiscount').textContent='- '+money(tot.disc,cur);document.getElementById('sumTax').textContent=money(tot.tax,cur);document.getElementById('sumShipping').textContent=money(tot.ship,cur);document.getElementById('sumTotal').textContent=money(tot.total,cur);document.getElementById('taxLabel').textContent=`${c.tax} (${document.getElementById('tax').value||0}%)`;
  [...document.querySelectorAll('.linerow b')].forEach((b,n)=>{if(itemData[n])b.textContent=money(Number(itemData[n].q)*Number(itemData[n].p),cur)});
+ const live=money(tot.total,cur);
+ const wt=document.getElementById('wizardTotal'),bt=document.getElementById('bottomInvoiceTotal');if(wt)wt.textContent=live;if(bt)bt.textContent=live;
 }
 
 function renderClients(){
@@ -1771,7 +1948,14 @@ const uiPhrases={
  'Selected':{fr:'Sélectionné',ar:'محدد'},
  'Tap to use':{fr:'Appuyez pour utiliser',ar:'اضغط للاستخدام'},
  'saved clients':{fr:'clients enregistrés',ar:'عملاء محفوظون'},
- 'Cloud sync':{fr:'Synchronisation cloud',ar:'مزامنة سحابية'}
+ 'Cloud sync':{fr:'Synchronisation cloud',ar:'مزامنة سحابية'},
+ 'Business & client':{fr:'Entreprise et client',ar:'الشركة والعميل'},
+ 'Dates & compliance':{fr:'Dates et conformité',ar:'التواريخ والامتثال'},
+ 'Line items':{fr:'Lignes de facture',ar:'بنود الفاتورة'},
+ '7 days':{fr:'7 jours',ar:'7 أيام'},
+ '15 days':{fr:'15 jours',ar:'15 يومًا'},
+ '30 days':{fr:'30 jours',ar:'30 يومًا'},
+ 'Review':{fr:'Aperçu',ar:'المعاينة'}
 };
 function uiPhrase(value,lang=state.settings.language||'en'){
  const v=String(value||'').trim();
@@ -1853,7 +2037,7 @@ function setLanguage(lang){
  const bh1=document.querySelector('#billing .head h1');if(bh1)bh1.textContent=pageTitle('billing');const ih1=document.querySelector('#invoices .head h1');if(ih1)ih1.textContent=t('invoices');const ch1=document.querySelector('#clients .head h1');if(ch1)ch1.textContent=t('clients');const th1=document.querySelector('#templates .head h1');if(th1)th1.textContent=t('templates');const coh1=document.querySelector('#countries .head h1');if(coh1)coh1.textContent=t('countries');const sh1=document.querySelector('#settings .head h1');if(sh1)sh1.textContent=t('settings');
  buildNav();
  const visible=[...document.querySelectorAll('.page')].find(x=>!x.classList.contains('hidden'));if(visible)document.getElementById('topTitle').textContent=visible.id==='invoiceEditor'?t('createInvoice'):pageTitle(visible.id);
- translateStaticUI();phoneLayout();
+ translateStaticUI();invoiceWizardLocale();phoneLayout();
 }
 
 async function hashPassword(value){
