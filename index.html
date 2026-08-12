@@ -58,24 +58,82 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .template-modern .previewtop{background:linear-gradient(135deg,#08213e,#0e385f)}
 .template-classic .previewtop{background:#0b2543}.template-gold .previewtop{background:linear-gradient(135deg,#3c3428,#8e6b34)}
 .template-minimal .previewtop{background:#fff;color:var(--ink);border-bottom:3px solid #9aa6b2}.template-dark .previewtop{background:#111827}.template-corporate .previewtop{background:#114e87}
+
+.authScreen{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 20% 10%,#164573 0,#071a33 42%,#04101f 100%);color:#fff}
+.authWrap{width:min(980px,100%);display:grid;grid-template-columns:1fr 430px;border:1px solid #ffffff20;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px #0006;background:#081b31}
+.authHero{padding:48px;background:linear-gradient(145deg,#0b2646,#071a33);position:relative;overflow:hidden}
+.authHero:after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:#0f9f9824;right:-140px;bottom:-140px}
+.authHero h1{font-family:Georgia,serif;font-size:40px;margin:20px 0 12px}.authHero p{color:#ffffffb5;line-height:1.7;max-width:460px}.authFeatures{display:grid;gap:12px;margin-top:32px}.authFeature{display:flex;gap:10px;align-items:center;color:#ffffffd8;font-size:13px}
+.authPanel{padding:34px;background:#fff;color:var(--ink)}.authPanel h2{margin:0 0 7px}.authPanel>p{color:var(--muted);font-size:13px;margin:0 0 20px}
+.authTabs{display:grid;grid-template-columns:1fr 1fr;background:#f2f5f7;border-radius:11px;padding:4px;margin-bottom:18px}.authTabs button{border:0;background:transparent;padding:9px;border-radius:8px;font-weight:800;color:var(--muted)}.authTabs button.active{background:#fff;color:var(--ink);box-shadow:0 3px 10px #0000000d}
+.authLang{position:absolute;top:20px;right:20px;z-index:2;background:#ffffff14;color:#fff;border:1px solid #ffffff2b;border-radius:10px;padding:8px}.authLang option{color:#111}
+.authNote{font-size:10px;color:var(--muted);line-height:1.5;margin-top:14px}.authError{display:none;margin:10px 0;padding:9px 11px;border-radius:9px;background:#fff0f2;color:#b73647;font-size:12px}.authError.show{display:block}
+.logoPreview{width:76px;height:76px;border-radius:14px;border:1px dashed #cfd7df;display:grid;place-items:center;overflow:hidden;background:#f8fafb}.logoPreview img{width:100%;height:100%;object-fit:contain}.brandLogo{width:100%;height:100%;object-fit:contain;border-radius:11px}
+.invoiceLogo{max-width:74px;max-height:46px;object-fit:contain;display:block;margin-bottom:8px}
+.profileGrid{display:grid;grid-template-columns:.75fr 1.25fr;gap:17px}.profileCard{padding:20px}.profileBadge{width:76px;height:76px;border-radius:22px;background:#dff5f2;color:#08756f;display:grid;place-items:center;font-size:25px;font-weight:900;margin-bottom:14px}.profileStats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.profileStat{padding:14px;border:1px solid var(--line);border-radius:12px}.profileStat b{display:block;font-size:20px}.profileStat small{color:var(--muted)}
+.langSelect{max-width:120px;padding:8px 9px}
+[dir="rtl"] .authLang{right:auto;left:20px}[dir="rtl"] th,[dir="rtl"] td{text-align:right}[dir="rtl"] .nav button{text-align:right}
+[dir="rtl"] .previewtop,[dir="rtl"] .top,[dir="rtl"] .head,[dir="rtl"] .toolbar{direction:rtl}
+@page{size:A4;margin:12mm}
+
 @media(max-width:1100px){.stats{grid-template-columns:1fr 1fr}.grid2,.invoicegrid{grid-template-columns:1fr}.preview{position:static}.templates{grid-template-columns:1fr 1fr}.clientcards{grid-template-columns:1fr 1fr}.formgrid.cols3{grid-template-columns:1fr 1fr}}
-@media(max-width:700px){.app{display:block}.side{display:none}.top{height:60px;padding:0 14px}.top small{display:none}.content{padding:16px 12px 82px}.head{align-items:flex-start;flex-direction:column}.formgrid,.formgrid.cols3{grid-template-columns:1fr}.templates,.clientcards{grid-template-columns:1fr}.mobile{display:flex;position:fixed;left:9px;right:9px;bottom:9px;background:var(--navy);border-radius:17px;padding:7px;z-index:30;justify-content:space-around}.mobile button{border:0;background:transparent;color:#ffffffaa;font-size:9px;padding:6px}.mobile button.active{color:#55d9d0}.country{grid-template-columns:1.35fr .85fr}.country>:nth-child(3),.country>:nth-child(4){display:none}.actions{width:100%}.actions .btn{flex:1}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:20px}}
-@media print{body{background:#fff}.side,.top,.mobile,.editor,.head,.notice{display:none!important}.app{display:block}.content{padding:0}.invoicegrid{display:block}.preview{border:0;box-shadow:none}.previewbody{padding:28px}.page:not(#invoiceEditor){display:none!important}}
+@media(max-width:700px){.authWrap{grid-template-columns:1fr}.authHero{display:none}.authPanel{padding:26px 20px}.profileGrid{grid-template-columns:1fr}.profileStats{grid-template-columns:1fr 1fr}.langSelect{max-width:94px}.app{display:block}.side{display:none}.top{height:60px;padding:0 14px}.top small{display:none}.content{padding:16px 12px 82px}.head{align-items:flex-start;flex-direction:column}.formgrid,.formgrid.cols3{grid-template-columns:1fr}.templates,.clientcards{grid-template-columns:1fr}.mobile{display:flex;position:fixed;left:9px;right:9px;bottom:9px;background:var(--navy);border-radius:17px;padding:7px;z-index:30;justify-content:space-around}.mobile button{border:0;background:transparent;color:#ffffffaa;font-size:9px;padding:6px}.mobile button.active{color:#55d9d0}.country{grid-template-columns:1.35fr .85fr}.country>:nth-child(3),.country>:nth-child(4){display:none}.actions{width:100%}.actions .btn{flex:1}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:20px}}
+@media print{html,body{background:#fff!important}.authScreen{display:none!important}body{background:#fff}.side,.top,.mobile,.editor,.head,.notice{display:none!important}.app{display:block}.content{padding:0}.invoicegrid{display:block}.preview{border:0;box-shadow:none}.previewbody{padding:28px}.page:not(#invoiceEditor){display:none!important}}
 </style>
 </head>
 <body>
-<div class="app">
+<div id="authScreen" class="authScreen hidden">
+  <select id="authLanguage" class="authLang" onchange="setLanguage(this.value)">
+    <option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option>
+  </select>
+  <div class="authWrap">
+    <div class="authHero">
+      <div class="mark" style="width:58px;height:58px;font-size:30px">▧</div>
+      <h1>AllWorld Factures</h1>
+      <p id="authHeroText">Professional invoicing made simple, multilingual and ready for businesses around the world.</p>
+      <div class="authFeatures">
+        <div class="authFeature">✓ <span id="authFeat1">Create invoices in multiple currencies</span></div>
+        <div class="authFeature">✓ <span id="authFeat2">Save clients and invoices on your device</span></div>
+        <div class="authFeature">✓ <span id="authFeat3">Print clean PDF invoices</span></div>
+      </div>
+    </div>
+    <div class="authPanel">
+      <h2 id="authTitle">Welcome</h2>
+      <p id="authSubtitle">Sign in or create your local prototype account.</p>
+      <div class="authTabs"><button id="tabLogin" class="active" onclick="switchAuth('login')">Sign in</button><button id="tabSignup" onclick="switchAuth('signup')">Create account</button></div>
+      <div id="authError" class="authError"></div>
+      <div id="loginForm">
+        <div class="field" style="margin-bottom:11px"><label id="loginEmailLabel">EMAIL</label><input id="loginEmail" class="input" type="email" autocomplete="email"></div>
+        <div class="field" style="margin-bottom:15px"><label id="loginPasswordLabel">PASSWORD</label><input id="loginPassword" class="input" type="password" autocomplete="current-password"></div>
+        <button id="loginBtn" class="btn primary" style="width:100%" onclick="loginLocal()">Sign in</button>
+      </div>
+      <div id="signupForm" class="hidden">
+        <div class="field" style="margin-bottom:11px"><label id="signupNameLabel">YOUR NAME</label><input id="signupName" class="input"></div>
+        <div class="field" style="margin-bottom:11px"><label id="signupEmailLabel">EMAIL</label><input id="signupEmail" class="input" type="email"></div>
+        <div class="field" style="margin-bottom:15px"><label id="signupPasswordLabel">PASSWORD</label><input id="signupPassword" class="input" type="password"></div>
+        <button id="signupBtn" class="btn primary" style="width:100%" onclick="signupLocal()">Create account</button>
+      </div>
+      <div id="authNote" class="authNote">Prototype authentication: account data stays in this browser only. Real cloud authentication will be added with the database phase.</div>
+    </div>
+  </div>
+</div>
+
+<div id="appRoot" class="app hidden">
 <aside class="side">
-  <div class="brand"><div class="mark">▧</div><div><b>AllWorld<br/>Factures</b><small>Invoicing without borders</small></div></div>
+  <div class="brand"><div class="mark" id="brandMark">▧</div><div><b>AllWorld<br/>Factures</b><small id="brandSub">Invoicing without borders</small></div></div>
   <div class="nav" id="sideNav"></div>
-  <button class="newbtn" onclick="newInvoice()">＋ Create invoice</button>
+  <button id="sideNewInvoice" class="newbtn" onclick="newInvoice()">＋ Create invoice</button>
   <div class="sidefoot">🌍 Global-ready architecture<br>💱 Multi-currency<br>🧾 Local invoice storage</div>
 </aside>
 
 <main class="main">
   <header class="top">
     <div><b id="topTitle">Overview</b><small>Professional invoicing for every country.</small></div>
-    <div class="topright"><button class="btn secondary small" onclick="showPage('settings')">⚙ Settings</button><div class="avatar">AW</div></div>
+    <div class="topright">
+      <select id="topLanguage" class="input langSelect" onchange="setLanguage(this.value)"><option value="en">EN</option><option value="fr">FR</option><option value="ar">AR</option></select>
+      <button id="settingsTopBtn" class="btn secondary small" onclick="showPage('settings')">⚙ Settings</button>
+      <div id="topAvatar" class="avatar" onclick="showPage('profile')" style="cursor:pointer">AW</div>
+    </div>
   </header>
 
   <div class="content">
@@ -128,7 +186,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
             <div class="field"><label>COUNTRY</label><select id="country" class="input" onchange="changeCountry()"></select></div>
             <div class="field"><label>CURRENCY</label><select id="currency" class="input" onchange="renderPreview()"></select></div>
             <div class="field"><label>TAX RATE %</label><input id="tax" class="input" type="number" step="0.01" oninput="renderPreview()"></div>
-            <div class="field"><label>DISCOUNT %</label><input id="discount" class="input" type="number" step="0.01" oninput="renderPreview()"></div>
+            <div class="field"><label>DISCOUNT %</label><input id="discount" class="input" type="number" step="0.01" oninput="renderPreview()"></div><div class="field"><label id="editorTemplateLabel">INVOICE TEMPLATE</label><select id="editorTemplate" class="input" onchange="selectTemplate(this.value)"></select></div>
           </div></div>
 
           <div class="section">
@@ -152,7 +210,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 
         <div id="previewCard" class="card preview template-modern">
           <div class="previewtop">
-            <div><small>INVOICE</small><h2 id="pBusiness"></h2><div id="pBusinessMeta" style="font-size:10px;opacity:.8;margin-top:6px"></div></div>
+            <div><img id="invoiceLogo" class="invoiceLogo hidden" alt="Logo"><small id="invoiceWord">INVOICE</small><h2 id="pBusiness"></h2><div id="pBusinessMeta" style="font-size:10px;opacity:.8;margin-top:6px"></div></div>
             <div style="text-align:right"><b id="pInv"></b><div id="pDates" style="margin-top:6px;font-size:10px;opacity:.8"></div></div>
           </div>
           <div class="previewbody">
@@ -198,6 +256,31 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
       <div id="countryList"></div>
     </section>
 
+
+    <section id="profile" class="page hidden">
+      <div class="head"><div><h1 id="profileTitle">Profile</h1><p id="profileSub">Your local account and workspace overview.</p></div><button id="logoutBtn" class="btn dangerbtn" onclick="logoutLocal()">Sign out</button></div>
+      <div class="profileGrid">
+        <div class="card profileCard">
+          <div id="profileAvatar" class="profileBadge">AW</div>
+          <h2 id="profileName" style="margin:0 0 4px">Account</h2>
+          <div id="profileEmail" class="muted"></div>
+          <div class="notice" style="margin-top:16px" id="profileLocalNote">This prototype account exists only in this browser.</div>
+        </div>
+        <div class="card profileCard">
+          <h3 id="workspaceTitle" style="margin-top:0">Workspace</h3>
+          <div class="profileStats">
+            <div class="profileStat"><b id="profileInvoiceCount">0</b><small id="profileInvoicesLabel">Invoices</small></div>
+            <div class="profileStat"><b id="profileClientCount">0</b><small id="profileClientsLabel">Clients</small></div>
+            <div class="profileStat"><b id="profileTemplateName">—</b><small id="profileTemplateLabel">Template</small></div>
+          </div>
+          <div style="height:16px"></div>
+          <div class="field"><label id="profileLanguageLabel">APP LANGUAGE</label><select id="profileLanguage" class="input" onchange="setLanguage(this.value)"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div>
+          <div style="height:12px"></div>
+          <button id="profileSettingsBtn" class="btn secondary" onclick="showPage('settings')">Open business settings</button>
+        </div>
+      </div>
+    </section>
+
     <section id="settings" class="page hidden">
       <div class="head"><div><h1>Settings</h1><p>Your business profile and invoice defaults.</p></div><button class="btn primary" onclick="saveSettings()">Save settings</button></div>
       <div class="card form">
@@ -207,7 +290,11 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
           <div class="field"><label>ADDRESS</label><textarea id="setAddress" class="input" rows="3"></textarea></div>
           <div class="field"><label>TAX / VAT ID</label><input id="setTaxId" class="input"></div>
         </div></div>
-        <div class="section"><h3>Invoice defaults</h3><div class="formgrid cols3">
+        <div class="section"><h3 id="brandingHeading">Branding</h3><div class="formgrid">
+          <div><div id="logoPreview" class="logoPreview">Logo</div></div>
+          <div><div class="field"><label id="logoLabel">COMPANY LOGO</label><input id="logoFile" class="input" type="file" accept="image/*" onchange="loadLogoFile(this.files[0])"></div><div class="actions" style="margin-top:9px"><button id="removeLogoBtn" class="btn secondary small" onclick="removeLogo()">Remove logo</button></div><div id="logoHint" class="muted" style="margin-top:8px">Stored locally in this browser. Use a small PNG/JPG.</div></div>
+        </div></div>
+        <div class="section"><h3 id="invoiceDefaultsHeading">Invoice defaults</h3><div class="formgrid cols3">
           <div class="field"><label>DEFAULT COUNTRY</label><select id="setCountry" class="input"></select></div>
           <div class="field"><label>DEFAULT LANGUAGE</label><select id="setLanguage" class="input"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div>
           <div class="field"><label>INVOICE PREFIX</label><input id="setPrefix" class="input"></div>
@@ -231,6 +318,7 @@ const pages=[
  {id:'clients',label:'Clients',icon:'♙',title:'Clients'},
  {id:'templates',label:'Templates',icon:'▤',title:'Invoice Templates'},
  {id:'countries',label:'Countries',icon:'◎',title:'Country & Compliance'},
+ {id:'profile',label:'Profile',icon:'♙',title:'Profile'},
  {id:'settings',label:'Settings',icon:'⚙',title:'Settings'}
 ];
 
@@ -265,7 +353,40 @@ const templateDefs=[
  {id:'dark',name:'Dark Pro',accent:'#10243f'}
 ];
 
-const STORAGE='awf_state_v2';
+const STORAGE='awf_state_v3';
+const LEGACY_STORAGE='awf_state_v2';
+const AUTH_STORAGE='awf_auth_v1';
+const SESSION_STORAGE='awf_session_v1';
+const translations={
+ en:{navDashboard:'Dashboard',navInvoices:'Invoices',navClients:'Clients',navTemplates:'Templates',navCountries:'Countries',navProfile:'Profile',navSettings:'Settings',
+ overview:'Overview',welcome:'Welcome back 👋',welcomeSub:'Your global invoicing command center.',newInvoice:'＋ New invoice',createInvoice:'＋ Create invoice',
+ invoices:'Invoices',clients:'Clients',templates:'Invoice Templates',countries:'Country & Compliance',profile:'Profile',settings:'Settings',
+ signOut:'Sign out',workspace:'Workspace',invoiceLabel:'Invoices',clientLabel:'Clients',templateLabel:'Template',appLanguage:'APP LANGUAGE',openSettings:'Open business settings',
+ settingsBtn:'⚙ Settings',brandSub:'Invoicing without borders',authHero:'Professional invoicing made simple, multilingual and ready for businesses around the world.',
+ authF1:'Create invoices in multiple currencies',authF2:'Save clients and invoices on your device',authF3:'Print clean PDF invoices',authTitle:'Welcome',authSub:'Sign in or create your local prototype account.',
+ signIn:'Sign in',createAccount:'Create account',email:'EMAIL',password:'PASSWORD',yourName:'YOUR NAME',
+ authNote:'Prototype authentication: account data stays in this browser only. Real cloud authentication will be added with the database phase.',
+ localNote:'This prototype account exists only in this browser.',branding:'Branding',companyLogo:'COMPANY LOGO',removeLogo:'Remove logo',logoHint:'Stored locally in this browser. Use a small PNG/JPG.',invoiceDefaults:'Invoice defaults',invoiceTemplate:'INVOICE TEMPLATE',invoiceWord:'INVOICE'},
+ fr:{navDashboard:'Tableau de bord',navInvoices:'Factures',navClients:'Clients',navTemplates:'Modèles',navCountries:'Pays',navProfile:'Profil',navSettings:'Paramètres',
+ overview:'Aperçu',welcome:'Bon retour 👋',welcomeSub:'Votre centre de gestion de facturation internationale.',newInvoice:'＋ Nouvelle facture',createInvoice:'＋ Créer une facture',
+ invoices:'Factures',clients:'Clients',templates:'Modèles de facture',countries:'Pays et conformité',profile:'Profil',settings:'Paramètres',
+ signOut:'Se déconnecter',workspace:'Espace de travail',invoiceLabel:'Factures',clientLabel:'Clients',templateLabel:'Modèle',appLanguage:"LANGUE DE L’APPLICATION",openSettings:'Ouvrir les paramètres entreprise',
+ settingsBtn:'⚙ Paramètres',brandSub:'Facturation sans frontières',authHero:'Une facturation professionnelle, simple, multilingue et pensée pour les entreprises du monde entier.',
+ authF1:'Créer des factures en plusieurs devises',authF2:'Enregistrer clients et factures sur cet appareil',authF3:'Imprimer des factures PDF propres',authTitle:'Bienvenue',authSub:'Connectez-vous ou créez votre compte prototype local.',
+ signIn:'Se connecter',createAccount:'Créer un compte',email:'E-MAIL',password:'MOT DE PASSE',yourName:'VOTRE NOM',
+ authNote:"Authentification prototype : les données du compte restent dans ce navigateur. L’authentification cloud arrivera avec la base de données.",
+ localNote:'Ce compte prototype existe uniquement dans ce navigateur.',branding:'Identité visuelle',companyLogo:'LOGO DE L’ENTREPRISE',removeLogo:'Supprimer le logo',logoHint:'Enregistré localement dans ce navigateur. Utilisez un petit PNG/JPG.',invoiceDefaults:'Paramètres de facture',invoiceTemplate:'MODÈLE DE FACTURE',invoiceWord:'FACTURE'},
+ ar:{navDashboard:'لوحة التحكم',navInvoices:'الفواتير',navClients:'العملاء',navTemplates:'القوالب',navCountries:'الدول',navProfile:'الملف الشخصي',navSettings:'الإعدادات',
+ overview:'نظرة عامة',welcome:'مرحبًا بعودتك 👋',welcomeSub:'مركز إدارة الفواتير العالمية.',newInvoice:'＋ فاتورة جديدة',createInvoice:'＋ إنشاء فاتورة',
+ invoices:'الفواتير',clients:'العملاء',templates:'قوالب الفواتير',countries:'الدول والامتثال',profile:'الملف الشخصي',settings:'الإعدادات',
+ signOut:'تسجيل الخروج',workspace:'مساحة العمل',invoiceLabel:'الفواتير',clientLabel:'العملاء',templateLabel:'القالب',appLanguage:'لغة التطبيق',openSettings:'فتح إعدادات المؤسسة',
+ settingsBtn:'⚙ الإعدادات',brandSub:'فواتير بلا حدود',authHero:'فواتير احترافية سهلة ومتعددة اللغات ومهيأة للأعمال حول العالم.',
+ authF1:'إنشاء فواتير بعملات متعددة',authF2:'حفظ العملاء والفواتير على جهازك',authF3:'طباعة فواتير PDF مرتبة',authTitle:'مرحبًا',authSub:'سجّل الدخول أو أنشئ حساب النموذج المحلي.',
+ signIn:'تسجيل الدخول',createAccount:'إنشاء حساب',email:'البريد الإلكتروني',password:'كلمة المرور',yourName:'اسمك',
+ authNote:'تسجيل الدخول في هذه النسخة تجريبي ومحلي فقط. الحساب السحابي الحقيقي سيُضاف مع مرحلة قاعدة البيانات.',
+ localNote:'هذا الحساب التجريبي موجود فقط داخل هذا المتصفح.',branding:'الهوية البصرية',companyLogo:'شعار المؤسسة',removeLogo:'حذف الشعار',logoHint:'يُحفظ محليًا في المتصفح. استخدم صورة PNG/JPG صغيرة.',invoiceDefaults:'إعدادات الفاتورة',invoiceTemplate:'قالب الفاتورة',invoiceWord:'فاتورة'}
+};
+
 const todayISO=()=>new Date().toISOString().slice(0,10);
 function addDays(dateStr,days){const d=new Date(dateStr+'T12:00:00');d.setDate(d.getDate()+Number(days||0));return d.toISOString().slice(0,10)}
 function uid(prefix='id'){return prefix+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
@@ -274,7 +395,7 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function defaultState(){
  const issue=todayISO();
  return {
-  settings:{business:'Your Business LLC',email:'billing@yourbusiness.com',address:'123 Business Avenue',taxId:'',country:'DZ',language:'en',prefix:'INV-2026-',terms:30,nextNo:1001,notes:'Thank you for your business!'},
+  settings:{business:'Your Business LLC',email:'billing@yourbusiness.com',address:'123 Business Avenue',taxId:'',country:'DZ',language:'en',prefix:'INV-2026-',terms:30,nextNo:1001,notes:'Thank you for your business!',logo:''},
   template:'modern',
   clients:[
    {id:'c1',name:'Acme Corporation',email:'billing@acmecorp.com',country:'US',address:'New York, USA',taxId:''},
@@ -289,17 +410,33 @@ function defaultState(){
  };
 }
 let state;
-try{state=JSON.parse(localStorage.getItem(STORAGE))||defaultState()}catch(e){state=defaultState()}
+try{
+ const current=localStorage.getItem(STORAGE),legacy=localStorage.getItem(LEGACY_STORAGE);
+ state=JSON.parse(current||legacy)||defaultState();
+ state.settings={...defaultState().settings,...(state.settings||{})};
+ if(!current) localStorage.setItem(STORAGE,JSON.stringify(state));
+}catch(e){state=defaultState()}
 function persist(){localStorage.setItem(STORAGE,JSON.stringify(state))}
 let editingInvoiceId=null;
+let currentUser=null;
+let authMode='login';
 let itemData=[];
 
+function t(key){const lang=state?.settings?.language||'en';return translations[lang]?.[key]||translations.en[key]||key}
+function pageLabel(id){
+ const map={dashboard:'navDashboard',invoices:'navInvoices',clients:'navClients',templates:'navTemplates',countries:'navCountries',profile:'navProfile',settings:'navSettings'};
+ return t(map[id]||id);
+}
+function pageTitle(id){
+ const map={dashboard:'overview',invoices:'invoices',clients:'clients',templates:'templates',countries:'countries',profile:'profile',settings:'settings'};
+ return t(map[id]||id);
+}
 function buildNav(){
  const s=document.getElementById('sideNav'),m=document.getElementById('mobileNav');
  s.innerHTML='';m.innerHTML='';
  pages.forEach(p=>{
-  const b=document.createElement('button');b.dataset.page=p.id;b.innerHTML=`${p.icon} &nbsp; ${p.label}`;b.onclick=()=>showPage(p.id);s.appendChild(b);
-  if(['dashboard','invoices','clients','templates','countries'].includes(p.id)){const x=document.createElement('button');x.dataset.page=p.id;x.innerHTML=`${p.icon}<br>${p.label}`;x.onclick=()=>showPage(p.id);m.appendChild(x)}
+  const b=document.createElement('button');b.dataset.page=p.id;b.innerHTML=`${p.icon} &nbsp; ${pageLabel(p.id)}`;b.onclick=()=>showPage(p.id);s.appendChild(b);
+  if(['dashboard','invoices','clients','templates','countries'].includes(p.id)){const x=document.createElement('button');x.dataset.page=p.id;x.innerHTML=`${p.icon}<br>${pageLabel(p.id)}`;x.onclick=()=>showPage(p.id);m.appendChild(x)}
  });
 }
 function showPage(id){
@@ -307,12 +444,13 @@ function showPage(id){
  document.getElementById(id).classList.remove('hidden');
  document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
  const p=pages.find(p=>p.id===id);
- document.getElementById('topTitle').textContent=p?p.title:'Create Invoice';
+ document.getElementById('topTitle').textContent=p?pageTitle(id):t('createInvoice');
  if(id==='dashboard')renderDashboard();
  if(id==='invoices')renderInvoiceList();
  if(id==='clients')renderClients();
  if(id==='templates')renderTemplates();
  if(id==='countries')renderCountries();
+ if(id==='profile')renderProfile();
  if(id==='settings')loadSettingsForm();
  window.scrollTo(0,0);
 }
@@ -371,6 +509,7 @@ function populateSelectors(){
  const cur=document.getElementById('currency');
  if(cur){const value=cur.value;const uniq=[...new Map(countries.map(c=>[c.cur,c])).values()];cur.innerHTML=uniq.map(c=>`<option value="${c.cur}">${c.cur} — ${c.currency}</option>`).join('');if(value)cur.value=value}
  refreshClientSelect();
+ const et=document.getElementById('editorTemplate');if(et){et.innerHTML=templateDefs.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');et.value=state.template}
 }
 function refreshClientSelect(selected){
  const el=document.getElementById('clientSelect');if(!el)return;
@@ -392,9 +531,10 @@ function newInvoice(){
  });
 }
 function showEditor(inv){
- document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('invoiceEditor').classList.remove('hidden');document.getElementById('topTitle').textContent='Create Invoice';
+ document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('invoiceEditor').classList.remove('hidden');document.getElementById('topTitle').textContent=t('createInvoice');
  document.getElementById('editorTitle').textContent=editingInvoiceId?'Edit invoice':'Create invoice';
  populateSelectors();
+ const et=document.getElementById('editorTemplate');if(et){et.innerHTML=templateDefs.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');et.value=state.template;}
  document.getElementById('business').value=state.settings.business||'';
  document.getElementById('clientSelect').value=inv.clientId||'';
  document.getElementById('email').value=inv.clientEmail||'';
@@ -467,6 +607,7 @@ function calcCurrent(){
 }
 function renderPreview(){
  if(!document.getElementById('currency'))return;
+ updateLogoDisplays();
  const c=countryBy(document.getElementById('country').value),cur=document.getElementById('currency').value,tot=calcCurrent();
  const selected=clientBy(document.getElementById('clientSelect').value);
  document.getElementById('pBusiness').textContent=document.getElementById('business').value||state.settings.business;
@@ -505,8 +646,8 @@ function renderTemplates(){
  const grid=document.getElementById('templateGrid');
  grid.innerHTML=templateDefs.map(t=>`<div class="card template ${state.template===t.id?'selected':''}" onclick="selectTemplate('${t.id}')"><div class="paper"><div class="paperin"><div class="bar" style="background:${t.accent}"></div><div class="pl"></div><div class="pl" style="width:55%"></div><div style="height:25px"></div><b>INVOICE</b><div class="pl"></div><div class="pl"></div><div class="pl"></div></div></div><b style="display:block;margin-top:10px">${t.name}</b><span class="muted">${state.template===t.id?'Selected':'Tap to use'}</span></div>`).join('');
 }
-function selectTemplate(id){state.template=id;persist();renderTemplates();applyTemplate()}
-function applyTemplate(){const p=document.getElementById('previewCard');if(!p)return;p.className=`card preview template-${state.template}`}
+function selectTemplate(id){state.template=id;persist();const et=document.getElementById('editorTemplate');if(et)et.value=id;renderTemplates();applyTemplate();renderProfile()}
+function applyTemplate(){const p=document.getElementById('previewCard');if(!p)return;p.className=`card preview template-${state.template}`;const et=document.getElementById('editorTemplate');if(et)et.value=state.template}
 
 function renderCountries(){
  const q=(document.getElementById('countrySearch')?.value||'').toLowerCase();
@@ -517,15 +658,84 @@ function renderCountries(){
 
 function loadSettingsForm(){
  populateSelectors();const s=state.settings;
+ updateLogoDisplays();
  document.getElementById('setBusiness').value=s.business||'';document.getElementById('setEmail').value=s.email||'';document.getElementById('setAddress').value=s.address||'';document.getElementById('setTaxId').value=s.taxId||'';document.getElementById('setCountry').value=s.country||'DZ';document.getElementById('setLanguage').value=s.language||'en';document.getElementById('setPrefix').value=s.prefix||'INV-';document.getElementById('setTerms').value=s.terms||30;document.getElementById('setNextNo').value=s.nextNo||1;document.getElementById('setNotes').value=s.notes||'';
 }
 function saveSettings(){
  state.settings={...state.settings,business:document.getElementById('setBusiness').value.trim(),email:document.getElementById('setEmail').value.trim(),address:document.getElementById('setAddress').value.trim(),taxId:document.getElementById('setTaxId').value.trim(),country:document.getElementById('setCountry').value,language:document.getElementById('setLanguage').value,prefix:document.getElementById('setPrefix').value.trim()||'INV-',terms:Number(document.getElementById('setTerms').value||30),nextNo:Number(document.getElementById('setNextNo').value||1),notes:document.getElementById('setNotes').value};
- persist();alert('Settings saved ✓');
+ persist();setLanguage(state.settings.language);updateLogoDisplays();alert('Settings saved ✓');
+}
+
+function setLanguage(lang){
+ if(!translations[lang])lang='en';
+ state.settings.language=lang;persist();
+ document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+ ['topLanguage','authLanguage','profileLanguage','setLanguage'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=lang});
+ document.getElementById('brandSub').textContent=t('brandSub');
+ document.getElementById('settingsTopBtn').textContent=t('settingsBtn');
+ document.getElementById('authHeroText').textContent=t('authHero');document.getElementById('authFeat1').textContent=t('authF1');document.getElementById('authFeat2').textContent=t('authF2');document.getElementById('authFeat3').textContent=t('authF3');
+ document.getElementById('authTitle').textContent=t('authTitle');document.getElementById('authSubtitle').textContent=t('authSub');document.getElementById('tabLogin').textContent=t('signIn');document.getElementById('tabSignup').textContent=t('createAccount');
+ document.getElementById('loginEmailLabel').textContent=t('email');document.getElementById('loginPasswordLabel').textContent=t('password');document.getElementById('signupNameLabel').textContent=t('yourName');document.getElementById('signupEmailLabel').textContent=t('email');document.getElementById('signupPasswordLabel').textContent=t('password');
+ document.getElementById('loginBtn').textContent=t('signIn');document.getElementById('signupBtn').textContent=t('createAccount');document.getElementById('authNote').textContent=t('authNote');
+ document.getElementById('profileTitle').textContent=t('profile');document.getElementById('logoutBtn').textContent=t('signOut');document.getElementById('workspaceTitle').textContent=t('workspace');document.getElementById('profileInvoicesLabel').textContent=t('invoiceLabel');document.getElementById('profileClientsLabel').textContent=t('clientLabel');document.getElementById('profileTemplateLabel').textContent=t('templateLabel');document.getElementById('profileLanguageLabel').textContent=t('appLanguage');document.getElementById('profileSettingsBtn').textContent=t('openSettings');document.getElementById('profileLocalNote').textContent=t('localNote');
+ const bh=document.getElementById('brandingHeading');if(bh)bh.textContent=t('branding');const ll=document.getElementById('logoLabel');if(ll)ll.textContent=t('companyLogo');const rb=document.getElementById('removeLogoBtn');if(rb)rb.textContent=t('removeLogo');const lh=document.getElementById('logoHint');if(lh)lh.textContent=t('logoHint');const ih=document.getElementById('invoiceDefaultsHeading');if(ih)ih.textContent=t('invoiceDefaults');const it=document.getElementById('editorTemplateLabel');if(it)it.textContent=t('invoiceTemplate');const iw=document.getElementById('invoiceWord');if(iw)iw.textContent=t('invoiceWord');
+ const sn=document.getElementById('sideNewInvoice');if(sn)sn.textContent=t('createInvoice');
+ const wh=document.querySelector('#dashboard .head h1');if(wh)wh.textContent=t('welcome');const wp=document.querySelector('#dashboard .head p');if(wp)wp.textContent=t('welcomeSub');const nb=document.querySelector('#dashboard .head .primary');if(nb)nb.textContent=t('newInvoice');
+ const ih1=document.querySelector('#invoices .head h1');if(ih1)ih1.textContent=t('invoices');const ch1=document.querySelector('#clients .head h1');if(ch1)ch1.textContent=t('clients');const th1=document.querySelector('#templates .head h1');if(th1)th1.textContent=t('templates');const coh1=document.querySelector('#countries .head h1');if(coh1)coh1.textContent=t('countries');const sh1=document.querySelector('#settings .head h1');if(sh1)sh1.textContent=t('settings');
+ buildNav();
+ const visible=[...document.querySelectorAll('.page')].find(x=>!x.classList.contains('hidden'));if(visible)document.getElementById('topTitle').textContent=visible.id==='invoiceEditor'?t('createInvoice'):pageTitle(visible.id);
+}
+
+async function hashPassword(value){
+ if(window.crypto?.subtle){const b=new TextEncoder().encode(value);const h=await crypto.subtle.digest('SHA-256',b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+ return btoa(unescape(encodeURIComponent(value)));
+}
+function authData(){try{return JSON.parse(localStorage.getItem(AUTH_STORAGE))||{accounts:[]}}catch(e){return{accounts:[]}}}
+function saveAuthData(d){localStorage.setItem(AUTH_STORAGE,JSON.stringify(d))}
+function showAuthError(msg){const e=document.getElementById('authError');e.textContent=msg;e.classList.add('show')}
+function clearAuthError(){document.getElementById('authError').classList.remove('show')}
+function switchAuth(mode){
+ authMode=mode;clearAuthError();document.getElementById('loginForm').classList.toggle('hidden',mode!=='login');document.getElementById('signupForm').classList.toggle('hidden',mode!=='signup');document.getElementById('tabLogin').classList.toggle('active',mode==='login');document.getElementById('tabSignup').classList.toggle('active',mode==='signup');
+}
+async function signupLocal(){
+ clearAuthError();const name=document.getElementById('signupName').value.trim(),email=document.getElementById('signupEmail').value.trim().toLowerCase(),password=document.getElementById('signupPassword').value;
+ if(!name||!email||password.length<4){showAuthError(state.settings.language==='ar'?'أدخل الاسم والبريد وكلمة مرور من 4 أحرف على الأقل.':state.settings.language==='fr'?'Saisissez le nom, l’e-mail et un mot de passe d’au moins 4 caractères.':'Enter name, email and a password of at least 4 characters.');return}
+ const d=authData();if(d.accounts.some(a=>a.email===email)){showAuthError(state.settings.language==='ar'?'هذا البريد مسجل بالفعل.':state.settings.language==='fr'?'Cet e-mail existe déjà.':'This email already exists.');return}
+ const account={id:uid('user'),name,email,passwordHash:await hashPassword(password),createdAt:new Date().toISOString()};d.accounts.push(account);saveAuthData(d);startSession(account);
+}
+async function loginLocal(){
+ clearAuthError();const email=document.getElementById('loginEmail').value.trim().toLowerCase(),password=document.getElementById('loginPassword').value;const d=authData(),account=d.accounts.find(a=>a.email===email);
+ if(!account||account.passwordHash!==await hashPassword(password)){showAuthError(state.settings.language==='ar'?'البريد أو كلمة المرور غير صحيحة.':state.settings.language==='fr'?'E-mail ou mot de passe incorrect.':'Incorrect email or password.');return}
+ startSession(account);
+}
+function startSession(account){currentUser=account;localStorage.setItem(SESSION_STORAGE,account.id);document.getElementById('authScreen').classList.add('hidden');document.getElementById('appRoot').classList.remove('hidden');renderProfile();updateUserUI();showPage('dashboard')}
+function logoutLocal(){localStorage.removeItem(SESSION_STORAGE);currentUser=null;document.getElementById('appRoot').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');switchAuth('login')}
+function restoreSession(){
+ const id=localStorage.getItem(SESSION_STORAGE),d=authData();currentUser=d.accounts.find(a=>a.id===id)||null;
+ if(currentUser){document.getElementById('authScreen').classList.add('hidden');document.getElementById('appRoot').classList.remove('hidden');updateUserUI();return true}
+ document.getElementById('appRoot').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');return false;
+}
+function initials(name){return String(name||'AW').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()}
+function updateUserUI(){const init=initials(currentUser?.name||state.settings.business);document.getElementById('topAvatar').textContent=init;document.getElementById('profileAvatar').textContent=init}
+function renderProfile(){
+ if(!document.getElementById('profileName'))return;updateUserUI();document.getElementById('profileName').textContent=currentUser?.name||state.settings.business||'Account';document.getElementById('profileEmail').textContent=currentUser?.email||state.settings.email||'';document.getElementById('profileInvoiceCount').textContent=state.invoices.length;document.getElementById('profileClientCount').textContent=state.clients.length;document.getElementById('profileTemplateName').textContent=templateDefs.find(x=>x.id===state.template)?.name||state.template;document.getElementById('profileLanguage').value=state.settings.language||'en';
+}
+function loadLogoFile(file){
+ if(!file)return;if(file.size>900000){alert('Please choose an image smaller than 900 KB.');return}
+ const r=new FileReader();r.onload=()=>{state.settings.logo=r.result;persist();updateLogoDisplays();};r.readAsDataURL(file);
+}
+function removeLogo(){state.settings.logo='';persist();updateLogoDisplays()}
+function updateLogoDisplays(){
+ const logo=state.settings.logo||'',preview=document.getElementById('logoPreview'),brand=document.getElementById('brandMark'),inv=document.getElementById('invoiceLogo');
+ if(preview)preview.innerHTML=logo?`<img src="${logo}" alt="Logo">`:'Logo';
+ if(brand)brand.innerHTML=logo?`<img class="brandLogo" src="${logo}" alt="Logo">`:'▧';
+ if(inv){inv.src=logo||'';inv.classList.toggle('hidden',!logo)}
 }
 function resetDemoData(){if(confirm('Reset invoices, clients and settings stored on this device?')){state=defaultState();persist();populateSelectors();loadSettingsForm();renderDashboard();alert('Local data reset.')}}
 
-buildNav();populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();showPage('dashboard');
+populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();updateLogoDisplays();setLanguage(state.settings.language||'en');
+if(restoreSession()){showPage('dashboard')}else{switchAuth('login')}
+
 </script>
 </body>
 </html>
