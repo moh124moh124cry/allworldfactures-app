@@ -69,6 +69,38 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .preview.directEditMode [data-edit-key]:focus{outline:2px solid #0e9f94;background:#f4fffd}
 .preview [data-edit-key][contenteditable="true"]{caret-color:#08766d}
 .editableMultiline{white-space:pre-line}
+.dzLegalStrip{display:none;margin-top:13px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.dzLegalStrip.show{display:grid;grid-template-columns:repeat(4,1fr)}
+.dzLegalCell{padding:9px 10px;border-inline-end:1px solid var(--line);min-width:0}
+.dzLegalCell:last-child{border-inline-end:0}
+.dzLegalCell small{display:block;color:var(--muted);font-size:8.5px;font-weight:900;letter-spacing:.05em;margin-bottom:3px}
+.dzLegalCell b{display:block;font-size:10px;overflow-wrap:anywhere}
+.signatureArea{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:18px;min-height:82px}
+.signatureBox{border-top:1px solid var(--line);padding-top:8px;text-align:center;color:var(--muted);font-size:10px}
+.signatureSpace{height:46px}
+.invoiceFooterNote{margin-top:14px;padding-top:9px;border-top:1px solid var(--line);text-align:center;font-size:8.5px;color:var(--muted)}
+.preview.a4Ready{background:#fff}
+@media(max-width:620px){
+ .dzLegalStrip.show{grid-template-columns:1fr 1fr}
+ .dzLegalCell:nth-child(2){border-inline-end:0}
+ .dzLegalCell:nth-child(-n+2){border-bottom:1px solid var(--line)}
+ .signatureArea{gap:10px}
+}
+@page{size:A4;margin:8mm}
+@media print{
+ html,body{width:210mm;min-height:297mm}
+ body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ #previewCard.preview{width:194mm;min-height:281mm;margin:0 auto!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
+ #previewCard .previewbody{padding:10mm 9mm 8mm!important}
+ #previewCard .previewtop{padding:9mm!important}
+ #previewCard .tablewrap{overflow:visible!important}
+ #previewCard table{width:100%!important}
+ #previewCard tr{break-inside:avoid}
+ #previewCard .actions{display:none!important}
+ #previewCard .signatureArea{break-inside:avoid}
+ #previewCard .amountWords,#previewCard .paymentBox,#previewCard .dzLegalStrip{break-inside:avoid}
+}
+
 @media(max-width:620px){
  .directEditBar{align-items:flex-start;flex-direction:column}
  .directEditBar .actionsMini{width:100%}
@@ -829,7 +861,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
           </div>
         </div>
 
-        <div id="previewCard" class="card preview template-modern">
+        <div id="previewCard" class="card preview template-modern a4Ready">
           <div class="directEditBar" id="directEditBar">
             <div class="left">
               <span>✎</span>
@@ -846,6 +878,12 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
           </div>
           <div class="previewbody">
             <div class="previewmeta"><div><b data-edit-key="billToLabel">Bill to</b><br><span id="pClient" class="editableMultiline" data-edit-key="clientBlock"></span></div><div><b data-edit-key="complianceLabel">Compliance</b><br><span id="pCountry" class="editableMultiline" data-edit-key="complianceBlock"></span></div></div>
+            <div class="dzLegalStrip" id="dzLegalStrip">
+              <div class="dzLegalCell"><small data-edit-key="dzRcLabel">RC</small><b id="pDzRc" data-edit-key="dzRcValue">—</b></div>
+              <div class="dzLegalCell"><small data-edit-key="dzNifLabel">NIF</small><b id="pDzNif" data-edit-key="dzNifValue">—</b></div>
+              <div class="dzLegalCell"><small data-edit-key="dzNisLabel">NIS</small><b id="pDzNis" data-edit-key="dzNisValue">—</b></div>
+              <div class="dzLegalCell"><small data-edit-key="dzAiLabel">AI</small><b id="pDzAi" data-edit-key="dzAiValue">—</b></div>
+            </div>
             <div class="tablewrap" style="margin-top:14px"><table style="min-width:0"><thead><tr><th data-edit-key="itemHeader">Item</th><th data-edit-key="qtyHeader">Qty</th><th data-edit-key="itemTotalHeader">Total</th></tr></thead><tbody id="pItems"></tbody></table></div>
             <div style="margin-top:14px;font-size:11px">
               <div class="sumrow"><span id="pSubtotalLabel" data-edit-key="subtotalLabel">Subtotal</span><b id="pSubtotal" data-edit-key="subtotalValue"></b></div>
@@ -864,6 +902,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
               <div class="paymentGrid" id="pPaymentGrid"></div>
               <div class="paymentInstructions hidden editableMultiline" id="pPaymentInstructions" data-edit-key="paymentInstructions"></div>
             </div>
+            <div class="signatureArea" id="signatureArea">
+              <div class="signatureBox"><div class="signatureSpace"></div><b data-edit-key="stampLabel">Company stamp</b></div>
+              <div class="signatureBox"><div class="signatureSpace"></div><b data-edit-key="signatureLabel">Authorized signature</b></div>
+            </div>
+            <div class="invoiceFooterNote editableMultiline" data-edit-key="invoiceFooterNote" id="invoiceFooterNote">Thank you for your business.</div>
             <div class="actions" style="margin-top:15px">
               <button class="btn secondary" onclick="saveDraft()">Save draft</button>
               <button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button>
@@ -1647,7 +1690,12 @@ function refreshClientSelect(selected){
  el.onchange=syncManual;
  syncManual();
 }
-function generateInvoiceNumber(){return `${state.settings.prefix}${String(state.settings.nextNo).padStart(4,'0')}`}
+function generateInvoiceNumber(){
+ const prefix=state.settings.prefix||'INV-',used=new Set((state.invoices||[]).map(i=>String(i.number||'').trim().toLowerCase()));
+ let n=Math.max(1,Number(state.settings.nextNo||1)),candidate='';
+ do{candidate=`${prefix}${String(n).padStart(4,'0')}`;n++}while(used.has(candidate.toLowerCase()));
+ return candidate;
+}
 function newInvoice(){
  if(!requireCapacity('invoices'))return false;
  editingInvoiceId=null;
@@ -1737,6 +1785,11 @@ function saveInvoice(statusOverride){
   setInvoiceStep(2);return;
  }
  if(isDraft&&!inv.clientName)inv.clientName=lang==='ar'?'مسودة':lang==='fr'?'Brouillon':'Draft';
+ const duplicateNumber=state.invoices.some(i=>i.id!==inv.id&&String(i.number||'').trim().toLowerCase()===String(inv.number||'').trim().toLowerCase());
+ if(duplicateNumber){
+  alert(lang==='ar'?'رقم الفاتورة مستخدم بالفعل. اختر رقماً آخر.':lang==='fr'?'Ce numéro de facture existe déjà. Choisissez un autre numéro.':'This invoice number already exists. Choose another number.');
+  setInvoiceStep(1);document.getElementById('invno')?.focus();return;
+ }
  const idx=state.invoices.findIndex(i=>i.id===inv.id);
  if(idx<0&&!requireCapacity('invoices'))return;
  if(idx>=0)state.invoices[idx]=inv;else{state.invoices.push(inv);state.settings.nextNo=Number(state.settings.nextNo||1)+1}
@@ -2073,7 +2126,9 @@ function renderPreview(){
   taxId:snap.companyTaxId||state.settings.taxId||'',registrationNumber:snap.companyRegistrationNumber||state.settings.registrationNumber||'',statisticalId:snap.companyStatisticalId||state.settings.statisticalId||'',secondaryTaxId:snap.companySecondaryTaxId||state.settings.secondaryTaxId||''
  };
  document.getElementById('pBusiness').textContent=companyForPreview.business;
- const companyRows=[companyForPreview.email,companyForPreview.phone,companyForPreview.address].filter(Boolean).map(esc).concat(invoiceLegalMeta(companyForPreview,document.getElementById('country').value,state.settings.language||'en'));
+ const invoiceCountry=document.getElementById('country').value;
+ const companyRows=[companyForPreview.email,companyForPreview.phone,companyForPreview.address].filter(Boolean).map(esc)
+  .concat(invoiceCountry==='DZ'?[]:invoiceLegalMeta(companyForPreview,invoiceCountry,state.settings.language||'en'));
  document.getElementById('pBusinessMeta').innerHTML=companyRows.join('<br>');
  document.getElementById('pInv').textContent=document.getElementById('invno').value;
  document.getElementById('pDates').innerHTML=`Issue: ${esc(document.getElementById('issueDate').value)}<br>Due: ${esc(document.getElementById('dueDate').value)}`;
@@ -2084,6 +2139,17 @@ function renderPreview(){
  if(clientReg)clientRows.push(`${esc(cp.reg)}: ${esc(clientReg)}`);
  document.getElementById('pClient').innerHTML=clientRows.join('<br>');
  document.getElementById('pCountry').innerHTML=`${c.flag} ${esc(c.name)}<br>${esc(c.tax)} · ${esc(cur)}`;
+ const dzStrip=document.getElementById('dzLegalStrip');
+ if(dzStrip){
+  const showDz=invoiceCountry==='DZ';
+  dzStrip.classList.toggle('show',showDz);
+  if(showDz){
+   document.getElementById('pDzRc').textContent=companyForPreview.registrationNumber||'—';
+   document.getElementById('pDzNif').textContent=companyForPreview.taxId||'—';
+   document.getElementById('pDzNis').textContent=companyForPreview.statisticalId||'—';
+   document.getElementById('pDzAi').textContent=companyForPreview.secondaryTaxId||'—';
+  }
+ }
  document.getElementById('pItems').innerHTML=itemData.map(i=>`<tr><td data-edit-key="itemDesc:${i.id}">${esc(i.d)}</td><td data-edit-key="itemQty:${i.id}">${Number(i.q)}</td><td data-edit-key="itemTotal:${i.id}">${money(Number(i.q)*Number(i.p),cur)}</td></tr>`).join('');
  const rate=Number(document.getElementById('tax').value||0),lang=state.settings.language||'en',lbl=invoicePreviewLabels(c,rate,lang);
  document.getElementById('pSubtotalLabel').textContent=lbl.subtotal;
@@ -2118,6 +2184,10 @@ function renderPreview(){
  if(pbox){pbox.classList.toggle('hidden',!payRows.length&&!ps.paymentInstructions);document.getElementById('pPaymentTitle').textContent=pl.title}
  if(pgrid)pgrid.innerHTML=payRows.join('');
  if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
+ const stampEl=document.querySelector('[data-edit-key="stampLabel"]'),sigEl=document.querySelector('[data-edit-key="signatureLabel"]'),footEl=document.getElementById('invoiceFooterNote');
+ if(stampEl)stampEl.textContent=lang==='ar'?'ختم المؤسسة':lang==='fr'?'Cachet de l’entreprise':'Company stamp';
+ if(sigEl)sigEl.textContent=lang==='ar'?'الإمضاء':lang==='fr'?'Signature autorisée':'Authorized signature';
+ if(footEl)footEl.textContent=lang==='ar'?'شكراً لتعاملكم معنا.':lang==='fr'?'Merci pour votre confiance.':'Thank you for your business.';
  applyPreviewOverrides();
 }
 
