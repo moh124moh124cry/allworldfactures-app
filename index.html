@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#071a33"/>
+<title>AllWorld Factures</title>
+<style>
+:root{--navy:#071a33;--navy2:#0d2949;--teal:#0f9f98;--teal2:#17b9ad;--gold:#d7b16a;--ink:#14233b;--muted:#708097;--line:#e7ebf0;--bg:#f5f7fa;--card:#fff;--danger:#d84b5b;--success:#12856f;--shadow:0 12px 30px rgba(22,37,62,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{background:linear-gradient(180deg,#071a33,#09213d);color:#fff;padding:22px 16px;position:sticky;top:0;height:100vh}.brand{display:flex;gap:12px;align-items:center;padding:2px 7px 24px}.mark{width:46px;height:46px;border:1px solid rgba(215,177,106,.45);border-radius:14px;display:grid;place-items:center;color:var(--gold);font-size:24px}.brand b{font-family:Georgia,serif;font-size:20px;line-height:1}.brand small{display:block;opacity:.6;margin-top:5px}.nav button{width:100%;border:0;background:transparent;color:#ffffffb8;padding:11px 12px;border-radius:11px;text-align:left;margin:3px 0}.nav button.active,.nav button:hover{background:#0f9f9830;color:#fff}.newbtn{width:100%;margin-top:18px;border:0;border-radius:11px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;padding:12px;font-weight:800}.main{min-width:0}.top{height:68px;background:#fffffff0;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 25px;position:sticky;top:0;z-index:5}.top b{font-size:18px}.top small{display:block;color:var(--muted)}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#dff5f2;color:#0a726d;font-weight:900}.content{padding:25px;max-width:1450px;margin:auto}.head{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:20px}.head h1{margin:0 0 5px;font-size:27px}.head p{margin:0;color:var(--muted);font-size:14px}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800}.primary{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff}.secondary{background:#fff;border:1px solid var(--line);color:var(--ink)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}.stat{padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:24px;margin:9px 0 6px}.trend{font-size:11px;color:var(--success)}.danger{color:var(--danger)}.grid2{display:grid;grid-template-columns:1.3fr .7fr;gap:17px;margin-top:17px}.panel{padding:18px}.panel h2{margin:0 0 13px;font-size:16px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:620px}th{text-align:left;color:var(--muted);font-size:10px;padding:10px;border-bottom:1px solid var(--line)}td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}.badge{padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800}.paid{background:#e4f6f1;color:#08765e}.pending{background:#fff2d9;color:#9a6718}.overdue{background:#fee8eb;color:#b23a49}.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:15px;text-align:left}.quick b{display:block;margin-bottom:5px}.quick small{color:var(--muted)}.form{padding:20px}.section{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section h3{font-size:15px;margin:0 0 13px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:10px;color:var(--muted);font-weight:800;margin-bottom:5px}.input{width:100%;padding:10px;border:1px solid #dfe5eb;border-radius:9px;background:#fff}.invoicegrid{display:grid;grid-template-columns:1.25fr .75fr;gap:17px}.lines{border:1px solid var(--line);border-radius:10px;overflow:auto}.linerow,.linehead{display:grid;grid-template-columns:2fr .55fr .8fr .8fr 32px;gap:7px;min-width:650px;align-items:center;padding:8px}.linehead{background:#f8fafb;font-size:10px;color:var(--muted);font-weight:800}.linerow{border-top:1px solid var(--line)}.linerow input{padding:8px;border:1px solid var(--line);border-radius:8px;width:100%}.summary{margin-top:12px;display:grid;gap:7px;font-size:13px}.sumrow{display:flex;justify-content:space-between}.sumrow.total{border-top:1px solid var(--line);padding-top:11px;font-size:20px;color:#0b7772;font-weight:900}.preview{overflow:hidden;position:sticky;top:86px}.previewtop{background:linear-gradient(135deg,#08213e,#0e385f);color:#fff;padding:22px;display:flex;justify-content:space-between}.previewtop h2{font-family:Georgia,serif;margin:4px 0 0}.previewbody{padding:20px}.previewmeta{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px}.previewmeta span{color:var(--muted)}.previewtotal{margin-top:15px;background:#f2fbfa;padding:12px;border-radius:10px;display:flex;justify-content:space-between;font-weight:900;color:#096f69}.country{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:8px;padding:12px 14px;border:1px solid var(--line);background:#fff;border-radius:11px;margin:8px 0}.country small{color:var(--muted)}.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.template{padding:14px}.paper{height:230px;background:#fafafa;border:1px solid var(--line);padding:15px}.paperin{height:100%;background:#fff;border:1px solid #e5e8ec;padding:12px}.bar{height:8px;background:var(--teal);width:42%;border-radius:4px}.pl{height:4px;background:#e7ebef;border-radius:3px;margin:7px 0}.hidden{display:none!important}.notice{padding:12px 14px;background:#edf8f7;border:1px solid #d6efec;color:#146b66;border-radius:11px;font-size:12px;margin-bottom:14px}.mobile{display:none}
+@media(max-width:950px){.stats{grid-template-columns:1fr 1fr}.grid2,.invoicegrid{grid-template-columns:1fr}.preview{position:static}.templates{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.app{display:block}.side{display:none}.top{height:60px;padding:0 14px}.top small{display:none}.content{padding:16px 12px 80px}.head{align-items:flex-start;flex-direction:column}.formgrid{grid-template-columns:1fr}.templates{grid-template-columns:1fr}.mobile{display:flex;position:fixed;left:9px;right:9px;bottom:9px;background:var(--navy);border-radius:17px;padding:7px;z-index:20;justify-content:space-around}.mobile button{border:0;background:transparent;color:#ffffffaa;font-size:10px;padding:6px}.mobile button.active{color:#55d9d0}.country{grid-template-columns:1.3fr .9fr}.country>:last-child{display:none}}
+@media print{.side,.top,.mobile,.editor,.head{display:none!important}.app{display:block}.content{padding:0}.invoicegrid{display:block}.preview{border:0;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><div class="mark">▧</div><div><b>AllWorld<br/>Factures</b><small>Invoicing without borders</small></div></div>
+  <div class="nav" id="sideNav"></div>
+  <button class="newbtn" onclick="showPage('invoice')">＋ Create invoice</button>
+</aside>
+<main class="main">
+  <header class="top"><div><b id="topTitle">Overview</b><small>Professional invoicing for every country.</small></div><div class="avatar">AW</div></header>
+  <div class="content">
+    <section id="dashboard" class="page">
+      <div class="head"><div><h1>Welcome back 👋</h1><p>Your global invoicing command center.</p></div><button class="btn primary" onclick="showPage('invoice')">＋ New invoice</button></div>
+      <div class="stats">
+        <div class="card stat"><small>TOTAL INVOICES</small><strong>128</strong><span class="trend">▲ 18% vs last month</span></div>
+        <div class="card stat"><small>PAID</small><strong>$24,560</strong><span class="trend">▲ 24%</span></div>
+        <div class="card stat"><small>PENDING</small><strong>$8,320</strong><span class="trend">14 invoices</span></div>
+        <div class="card stat"><small>OVERDUE</small><strong>$3,120</strong><span class="trend danger">6 need attention</span></div>
+      </div>
+      <div class="grid2">
+        <div class="card panel"><h2>Recent invoices</h2><div class="tablewrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Total</th><th>Status</th></tr></thead><tbody id="invoiceTable"></tbody></table></div></div>
+        <div class="card panel"><h2>Quick actions</h2><div class="quick"><button onclick="showPage('invoice')"><b>＋ Create invoice</b><small>Professional billing</small></button><button onclick="showPage('clients')"><b>👤 Clients</b><small>Manage customers</small></button><button onclick="showPage('templates')"><b>▤ Templates</b><small>Choose a style</small></button><button onclick="showPage('countries')"><b>🌍 Countries</b><small>Currency & tax</small></button></div></div>
+      </div>
+    </section>
+
+    <section id="invoice" class="page hidden">
+      <div class="head"><div><h1>Create invoice</h1><p>Live totals with country, currency and tax profile.</p></div><div><button class="btn secondary" onclick="saveDraft()">Save draft</button> <button class="btn primary" onclick="window.print()">Print / PDF</button></div></div>
+      <div class="notice">This first version stores the draft on your device. Cloud accounts/database come in the next version.</div>
+      <div class="invoicegrid">
+        <div class="card form editor">
+          <div class="section"><h3>Business & client</h3><div class="formgrid">
+            <div class="field"><label>BUSINESS NAME</label><input id="business" class="input" value="Your Business LLC" oninput="renderPreview()"></div>
+            <div class="field"><label>CLIENT NAME</label><input id="client" class="input" value="Acme Corporation" oninput="renderPreview()"></div>
+            <div class="field"><label>CLIENT EMAIL</label><input id="email" class="input" value="billing@acmecorp.com" oninput="renderPreview()"></div>
+            <div class="field"><label>INVOICE NUMBER</label><input id="invno" class="input" value="INV-2026-1059" oninput="renderPreview()"></div>
+          </div></div>
+          <div class="section"><h3>Country & compliance</h3><div class="formgrid">
+            <div class="field"><label>COUNTRY</label><select id="country" class="input" onchange="changeCountry()"></select></div>
+            <div class="field"><label>CURRENCY</label><select id="currency" class="input" onchange="renderPreview()"></select></div>
+            <div class="field"><label>TAX RATE %</label><input id="tax" class="input" type="number" value="19" oninput="renderPreview()"></div>
+            <div class="field"><label>DISCOUNT %</label><input id="discount" class="input" type="number" value="0" oninput="renderPreview()"></div>
+          </div></div>
+          <div class="section"><h3>Line items</h3><div class="lines"><div class="linehead"><span>Description</span><span>Qty</span><span>Unit price</span><span>Total</span><span></span></div><div id="items"></div></div><button class="btn secondary" style="margin-top:10px" onclick="addItem()">＋ Add item</button></div>
+          <div class="section"><h3>Notes</h3><textarea id="notes" class="input" rows="4" oninput="renderPreview()">Thank you for your business!</textarea></div>
+        </div>
+        <div class="card preview">
+          <div class="previewtop"><div><small>INVOICE PREVIEW</small><h2 id="pBusiness"></h2></div><div style="text-align:right"><b>INVOICE</b><div id="pInv" style="margin-top:6px;font-size:11px"></div></div></div>
+          <div class="previewbody">
+            <div class="previewmeta"><div><b>Bill to</b><br><span id="pClient"></span></div><div><b>Compliance</b><br><span id="pCountry"></span></div></div>
+            <div class="tablewrap" style="margin-top:14px"><table style="min-width:0"><thead><tr><th>Item</th><th>Qty</th><th>Total</th></tr></thead><tbody id="pItems"></tbody></table></div>
+            <div class="previewtotal"><span>Total due</span><span id="pTotal"></span></div>
+            <p id="pNotes" style="font-size:11px;color:var(--muted)"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="clients" class="page hidden"><div class="head"><div><h1>Clients</h1><p>Reusable customer profiles.</p></div><button class="btn primary">＋ Add client</button></div><div class="card panel"><div class="tablewrap"><table><thead><tr><th>Client</th><th>Email</th><th>Country</th><th>Billed</th></tr></thead><tbody><tr><td><b>Acme Corporation</b></td><td>billing@acmecorp.com</td><td>United States</td><td>$6,200</td></tr><tr><td><b>Globex LLC</b></td><td>billing@globex.com</td><td>France</td><td>€2,450</td></tr><tr><td><b>Oran Digital</b></td><td>contact@orandigital.dz</td><td>Algeria</td><td>82,500 DA</td></tr></tbody></table></div></div></section>
+
+    <section id="templates" class="page hidden"><div class="head"><div><h1>Invoice Templates</h1><p>Professional styles for every client.</p></div></div><div class="templates" id="templateGrid"></div></section>
+
+    <section id="countries" class="page hidden"><div class="head"><div><h1>Country & Compliance</h1><p>Starter country profiles; expandable to 200+ countries.</p></div></div><div class="notice">Tax/legal rules in production should be maintained from authoritative country sources.</div><div id="countryList"></div></section>
+
+    <section id="settings" class="page hidden"><div class="head"><div><h1>Settings</h1><p>Business and invoice defaults.</p></div></div><div class="card form"><div class="formgrid"><div class="field"><label>BUSINESS NAME</label><input class="input" value="Your Business LLC"></div><div class="field"><label>LANGUAGE</label><select class="input"><option>English</option><option>Français</option><option>العربية</option></select></div><div class="field"><label>DEFAULT COUNTRY</label><select class="input"><option>🇩🇿 Algeria</option><option>🇫🇷 France</option><option>🇺🇸 United States</option></select></div><div class="field"><label>INVOICE PREFIX</label><input class="input" value="INV-2026-"></div></div><button class="btn primary" style="margin-top:15px">Save settings</button></div></section>
+  </div>
+</main>
+</div>
+<div class="mobile" id="mobileNav"></div>
+
+<script>
+const pages=[
+ {id:'dashboard',label:'Dashboard',icon:'⌂',title:'Overview'},
+ {id:'invoice',label:'Invoices',icon:'▧',title:'Create Invoice'},
+ {id:'clients',label:'Clients',icon:'♙',title:'Clients'},
+ {id:'templates',label:'Templates',icon:'▤',title:'Invoice Templates'},
+ {id:'countries',label:'Countries',icon:'◎',title:'Country & Compliance'},
+ {id:'settings',label:'Settings',icon:'⚙',title:'Settings'}
+];
+const countries=[
+ {code:'DZ',name:'Algeria',flag:'🇩🇿',cur:'DZD',currency:'Algerian Dinar',tax:'TVA',rate:19},
+ {code:'US',name:'United States',flag:'🇺🇸',cur:'USD',currency:'US Dollar',tax:'Sales Tax',rate:0},
+ {code:'FR',name:'France',flag:'🇫🇷',cur:'EUR',currency:'Euro',tax:'TVA',rate:20},
+ {code:'AE',name:'United Arab Emirates',flag:'🇦🇪',cur:'AED',currency:'UAE Dirham',tax:'VAT',rate:5},
+ {code:'GB',name:'United Kingdom',flag:'🇬🇧',cur:'GBP',currency:'British Pound',tax:'VAT',rate:20},
+ {code:'IN',name:'India',flag:'🇮🇳',cur:'INR',currency:'Indian Rupee',tax:'GST',rate:18},
+ {code:'JP',name:'Japan',flag:'🇯🇵',cur:'JPY',currency:'Japanese Yen',tax:'Consumption Tax',rate:10},
+ {code:'BR',name:'Brazil',flag:'🇧🇷',cur:'BRL',currency:'Brazilian Real',tax:'ICMS',rate:18},
+ {code:'MA',name:'Morocco',flag:'🇲🇦',cur:'MAD',currency:'Moroccan Dirham',tax:'TVA',rate:20}
+];
+const symbols={DZD:'DA',USD:'$',EUR:'€',AED:'د.إ',GBP:'£',INR:'₹',JPY:'¥',BRL:'R$',MAD:'DH'};
+let itemData=[{id:1,d:'Website design',q:1,p:120000},{id:2,d:'Hosting (1 year)',q:1,p:15000}];
+
+function buildNav(){
+ const s=document.getElementById('sideNav'),m=document.getElementById('mobileNav');
+ pages.forEach(p=>{
+  const b=document.createElement('button');b.dataset.page=p.id;b.innerHTML=`${p.icon} &nbsp; ${p.label}`;b.onclick=()=>showPage(p.id);s.appendChild(b);
+  if(p.id!=='settings'){const x=document.createElement('button');x.dataset.page=p.id;x.innerHTML=`${p.icon}<br>${p.label}`;x.onclick=()=>showPage(p.id);m.appendChild(x)}
+ });
+}
+function showPage(id){
+ document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
+ document.getElementById(id).classList.remove('hidden');
+ document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+ document.getElementById('topTitle').textContent=pages.find(p=>p.id===id).title;
+ window.scrollTo(0,0);
+}
+function buildCountries(){
+ const c=document.getElementById('country'),cur=document.getElementById('currency');
+ countries.forEach(x=>{c.innerHTML+=`<option value="${x.code}">${x.flag} ${x.name}</option>`});
+ [...new Map(countries.map(x=>[x.cur,x])).values()].forEach(x=>cur.innerHTML+=`<option value="${x.cur}">${x.cur} — ${x.currency}</option>`);
+ c.value='DZ';cur.value='DZD';
+ document.getElementById('countryList').innerHTML=countries.map(x=>`<div class="country"><div><b>${x.flag} ${x.name}</b><br><small>${x.code}</small></div><div><b>${x.cur}</b><br><small>${x.currency}</small></div><div><b>${x.tax}</b><br><small>Default ${x.rate}%</small></div></div>`).join('');
+}
+function changeCountry(){
+ const x=countries.find(x=>x.code===document.getElementById('country').value);
+ document.getElementById('currency').value=x.cur;document.getElementById('tax').value=x.rate;renderPreview();
+}
+function money(v){
+ const cur=document.getElementById('currency').value;return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(v)+' '+(symbols[cur]||cur);
+}
+function renderItems(){
+ const box=document.getElementById('items');
+ box.innerHTML=itemData.map(i=>`<div class="linerow"><input value="${i.d}" oninput="upd(${i.id},'d',this.value)"><input type="number" value="${i.q}" oninput="upd(${i.id},'q',+this.value)"><input type="number" value="${i.p}" oninput="upd(${i.id},'p',+this.value)"><b>${money(i.q*i.p)}</b><button class="btn secondary" style="padding:5px" onclick="delItem(${i.id})">×</button></div>`).join('');
+ renderPreview(false);
+}
+function upd(id,k,v){itemData=itemData.map(i=>i.id===id?({...i,[k]:v}):i);renderItems()}
+function addItem(){itemData.push({id:Date.now(),d:'New service',q:1,p:0});renderItems()}
+function delItem(id){itemData=itemData.filter(i=>i.id!==id);renderItems()}
+function renderPreview(rerender=true){
+ const c=countries.find(x=>x.code===document.getElementById('country').value);
+ const sub=itemData.reduce((a,i)=>a+i.q*i.p,0),disc=sub*(+document.getElementById('discount').value||0)/100,tax=(sub-disc)*(+document.getElementById('tax').value||0)/100,total=sub-disc+tax;
+ document.getElementById('pBusiness').textContent=document.getElementById('business').value;
+ document.getElementById('pInv').textContent=document.getElementById('invno').value;
+ document.getElementById('pClient').innerHTML=document.getElementById('client').value+'<br>'+document.getElementById('email').value;
+ document.getElementById('pCountry').innerHTML=c.flag+' '+c.name+'<br>'+c.tax+' · '+document.getElementById('currency').value;
+ document.getElementById('pItems').innerHTML=itemData.map(i=>`<tr><td>${i.d}</td><td>${i.q}</td><td>${money(i.q*i.p)}</td></tr>`).join('');
+ document.getElementById('pTotal').textContent=money(total);
+ document.getElementById('pNotes').textContent=document.getElementById('notes').value;
+ if(rerender) document.querySelectorAll('.linerow b').forEach((b,n)=>b.textContent=money(itemData[n].q*itemData[n].p));
+}
+function saveDraft(){
+ const d={business:business.value,client:client.value,email:email.value,invno:invno.value,country:country.value,currency:currency.value,tax:tax.value,discount:discount.value,notes:notes.value,items:itemData};
+ localStorage.setItem('awf_draft',JSON.stringify(d));alert('Draft saved on this device ✓');
+}
+function loadDraft(){
+ try{const d=JSON.parse(localStorage.getItem('awf_draft'));if(!d)return;['business','client','email','invno','country','currency','tax','discount','notes'].forEach(k=>document.getElementById(k).value=d[k]);itemData=d.items||itemData}catch(e){}
+}
+function buildTemplates(){
+ const names=[['Modern Teal','#0f9f98'],['Classic Navy','#0a3158'],['Minimalist Light','#9aa6b2'],['Corporate Blue','#1b5d9b'],['Elegant Gold','#c6a15f'],['Dark Pro','#10243f']];
+ document.getElementById('templateGrid').innerHTML=names.map(n=>`<div class="card template"><div class="paper"><div class="paperin"><div class="bar" style="background:${n[1]}"></div><div class="pl"></div><div class="pl" style="width:55%"></div><div style="height:25px"></div><b>INVOICE</b><div class="pl"></div><div class="pl"></div><div class="pl"></div></div></div><b style="display:block;margin-top:10px">${n[0]}</b></div>`).join('');
+}
+function buildDashboard(){
+ document.getElementById('invoiceTable').innerHTML=[
+ ['INV-2026-1058','Acme Corporation','$6,200.00','paid'],['INV-2026-1057','Globex LLC','$2,450.00','pending'],['INV-2026-1056','Blue Horizon Ltd.','$1,120.00','overdue'],['INV-2026-1055','Oran Digital','82,500 DA','paid']
+ ].map(i=>`<tr><td><b>${i[0]}</b></td><td>${i[1]}</td><td><b>${i[2]}</b></td><td><span class="badge ${i[3]}">${i[3]}</span></td></tr>`).join('');
+}
+buildNav();buildCountries();buildTemplates();buildDashboard();loadDraft();renderItems();showPage('dashboard');
+</script>
+</body>
+</html>
