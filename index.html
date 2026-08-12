@@ -117,7 +117,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
       <p id="authHeroText">Professional invoicing made simple, multilingual and ready for businesses around the world.</p>
       <div class="authFeatures">
         <div class="authFeature">✓ <span id="authFeat1">Create invoices in multiple currencies</span></div>
-        <div class="authFeature">✓ <span id="authFeat2">Save clients and invoices on your device</span></div>
+        <div class="authFeature">✓ <span id="authFeat2">Sync clients and invoices across devices</span></div>
         <div class="authFeature">✓ <span id="authFeat3">Print clean PDF invoices</span></div>
       </div>
     </div>
@@ -142,7 +142,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
         <button id="signupBtn" class="btn primary" style="width:100%" onclick="signupLocal()">Create account</button>
         <div id="firstSetupHint" class="firstSetupHint">After account creation, we will open your company settings.</div>
       </div>
-      <div id="authNote" class="authNote">Prototype authentication: account data stays in this browser only. Real cloud authentication will be added with the database phase.</div>
+      <div id="authNote" class="authNote">Cloud authentication powered by Supabase. Your invoices and clients can follow you across devices.</div>
     </div>
   </div>
 </div>
@@ -152,7 +152,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
   <div class="brand"><div class="mark" id="brandMark">▧</div><div><b>AllWorld<br/>Factures</b><small id="brandSub">Invoicing without borders</small></div></div>
   <div class="nav" id="sideNav"></div>
   <button id="sideNewInvoice" class="newbtn" onclick="newInvoice()">＋ Create invoice</button>
-  <div class="sidefoot">🌍 Global-ready architecture<br>💱 Multi-currency<br>🧾 Local invoice storage</div>
+  <div class="sidefoot">☁ Supabase cloud sync<br>🌍 Global-ready architecture<br>💱 Multi-currency</div>
 </aside>
 
 <main class="main">
@@ -199,7 +199,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.3.1: multilingual local account, company setup, logo branding and invoice management are active. Cloud sync comes in the database phase.</div>
+      <div class="notice">Version 0.4: real Supabase accounts and cloud workspace sync are active. Local browser storage remains as an offline mirror.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -293,7 +293,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
           <div id="profileAvatar" class="profileBadge">AW</div>
           <h2 id="profileName" style="margin:0 0 4px">Account</h2>
           <div id="profileEmail" class="muted"></div>
-          <div class="notice" style="margin-top:16px" id="profileLocalNote">This prototype account exists only in this browser.</div>
+          <div class="notice" style="margin-top:16px" id="profileLocalNote">This account is connected to the cloud workspace.</div>
         </div>
         <div class="card profileCard">
           <h3 id="workspaceTitle" style="margin-top:0">Workspace</h3>
@@ -340,7 +340,11 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 <div class="mobile" id="mobileNav"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL='https://nbhlouxcaelroaxhgrdq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable__8sb14vGy7VMOXaRoP1X6g_CGxtc3u9';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const pages=[
  {id:'dashboard',label:'Dashboard',icon:'⌂',title:'Overview'},
  {id:'invoices',label:'Invoices',icon:'▧',title:'Invoices'},
@@ -392,10 +396,10 @@ const translations={
  invoices:'Invoices',clients:'Clients',templates:'Invoice Templates',countries:'Country & Compliance',profile:'Profile',settings:'Settings',
  signOut:'Sign out',workspace:'Workspace',invoiceLabel:'Invoices',clientLabel:'Clients',templateLabel:'Template',appLanguage:'APP LANGUAGE',openSettings:'Open business settings',
  settingsBtn:'⚙ Settings',brandSub:'Invoicing without borders',authHero:'Professional invoicing made simple, multilingual and ready for businesses around the world.',
- authF1:'Create invoices in multiple currencies',authF2:'Save clients and invoices on your device',authF3:'Print clean PDF invoices',authTitle:'Welcome',authSub:'Sign in or create your local prototype account.',
+ authF1:'Create invoices in multiple currencies',authF2:'Sync clients and invoices across devices',authF3:'Print clean PDF invoices',authTitle:'Welcome',authSub:'Sign in or create your local prototype account.',
  signIn:'Sign in',createAccount:'Create account',email:'EMAIL',password:'PASSWORD',yourName:'YOUR NAME',companyName:'COMPANY NAME',firstSetup:'After account creation, we will open your company settings.',
- authNote:'Prototype authentication: account data stays in this browser only. Real cloud authentication will be added with the database phase.',
- localNote:'This prototype account exists only in this browser.',branding:'Branding',companyLogo:'COMPANY LOGO',removeLogo:'Remove logo',logoHint:'Stored locally in this browser. Use a small PNG/JPG.',invoiceDefaults:'Invoice defaults',invoiceTemplate:'INVOICE TEMPLATE',invoiceWord:'INVOICE'},
+ authNote:'Cloud authentication powered by Supabase. Your invoices and clients can follow you across devices.',
+ localNote:'This account is connected to the cloud workspace.',branding:'Branding',companyLogo:'COMPANY LOGO',removeLogo:'Remove logo',logoHint:'Stored locally in this browser. Use a small PNG/JPG.',invoiceDefaults:'Invoice defaults',invoiceTemplate:'INVOICE TEMPLATE',invoiceWord:'INVOICE'},
  fr:{navDashboard:'Tableau de bord',navInvoices:'Factures',navClients:'Clients',navTemplates:'Modèles',navCountries:'Pays',navProfile:'Profil',navSettings:'Paramètres',
  overview:'Aperçu',welcome:'Bon retour 👋',welcomeSub:'Votre centre de gestion de facturation internationale.',newInvoice:'＋ Nouvelle facture',createInvoice:'＋ Créer une facture',
  invoices:'Factures',clients:'Clients',templates:'Modèles de facture',countries:'Pays et conformité',profile:'Profil',settings:'Paramètres',
@@ -445,7 +449,11 @@ try{
  state.settings={...defaultState().settings,...(state.settings||{})};
  if(!current) localStorage.setItem(STORAGE,JSON.stringify(state));
 }catch(e){state=defaultState()}
-function persist(){localStorage.setItem(STORAGE,JSON.stringify(state))}
+let cloudReady=false,cloudHydrating=false,cloudSyncTimer=null;
+function persist(){
+  localStorage.setItem(STORAGE,JSON.stringify(state));
+  if(cloudReady&&!cloudHydrating){clearTimeout(cloudSyncTimer);cloudSyncTimer=setTimeout(()=>syncWorkspaceCloud(),700)}
+}
 let editingInvoiceId=null;
 let currentUser=null;
 let authMode='login';
@@ -720,31 +728,113 @@ async function hashPassword(value){
  return btoa(unescape(encodeURIComponent(value)));
 }
 function togglePassword(id,btn){const e=document.getElementById(id);if(!e)return;e.type=e.type==='password'?'text':'password';btn.textContent=e.type==='password'?'◉':'○'}
-function authData(){try{return JSON.parse(localStorage.getItem(AUTH_STORAGE))||{accounts:[]}}catch(e){return{accounts:[]}}}
-function saveAuthData(d){localStorage.setItem(AUTH_STORAGE,JSON.stringify(d))}
 function showAuthError(msg){const e=document.getElementById('authError');e.textContent=msg;e.classList.add('show')}
 function clearAuthError(){document.getElementById('authError').classList.remove('show')}
 function switchAuth(mode){
  authMode=mode;clearAuthError();document.getElementById('loginForm').classList.toggle('hidden',mode!=='login');document.getElementById('signupForm').classList.toggle('hidden',mode!=='signup');document.getElementById('tabLogin').classList.toggle('active',mode==='login');document.getElementById('tabSignup').classList.toggle('active',mode==='signup');document.getElementById('firstSetupHint').style.display=mode==='signup'?'block':'none';
 }
+function accountFromUser(user){
+ const meta=user?.user_metadata||{};
+ return {id:user?.id||'',name:meta.full_name||meta.name||user?.email?.split('@')[0]||'Account',company:meta.company_name||state.settings.business||'',email:user?.email||''}
+}
 async function signupLocal(){
- clearAuthError();const name=document.getElementById('signupName').value.trim(),company=document.getElementById('signupCompany').value.trim(),email=document.getElementById('signupEmail').value.trim().toLowerCase(),password=document.getElementById('signupPassword').value;
- if(!name||!company||!email||password.length<4){showAuthError(state.settings.language==='ar'?'أدخل الاسم واسم المؤسسة والبريد وكلمة مرور من 4 أحرف على الأقل.':state.settings.language==='fr'?'Saisissez le nom, l’entreprise, l’e-mail et un mot de passe d’au moins 4 caractères.':'Enter your name, company, email and a password of at least 4 characters.');return}
- const d=authData();if(d.accounts.some(a=>a.email===email)){showAuthError(state.settings.language==='ar'?'هذا البريد مسجل بالفعل.':state.settings.language==='fr'?'Cet e-mail existe déjà.':'This email already exists.');return}
- const account={id:uid('user'),name,company,email,passwordHash:await hashPassword(password),createdAt:new Date().toISOString()};d.accounts.push(account);saveAuthData(d);
- state.settings.business=company;state.settings.email=email;persist();startSession(account,true);
+ clearAuthError();
+ const name=document.getElementById('signupName').value.trim(),company=document.getElementById('signupCompany').value.trim(),email=document.getElementById('signupEmail').value.trim().toLowerCase(),password=document.getElementById('signupPassword').value;
+ if(!name||!company||!email||password.length<6){showAuthError(state.settings.language==='ar'?'أدخل الاسم واسم المؤسسة والبريد وكلمة مرور من 6 أحرف على الأقل.':state.settings.language==='fr'?'Saisissez le nom, l’entreprise, l’e-mail et un mot de passe d’au moins 6 caractères.':'Enter your name, company, email and a password of at least 6 characters.');return}
+ const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name,company_name:company}}});
+ if(error){showAuthError(error.message);return}
+ state.settings.business=company;state.settings.email=email;persist();
+ if(data.session){await startCloudSession(data.session.user,true)}
+ else{
+  showAuthError(state.settings.language==='ar'?'تم إنشاء الحساب. افتح رسالة Supabase في بريدك لتأكيد الحساب، ثم ارجع وسجّل الدخول.':state.settings.language==='fr'?'Compte créé. Confirmez votre e-mail Supabase, puis revenez vous connecter.':'Account created. Confirm the Supabase email, then return and sign in.');
+  switchAuth('login');document.getElementById('loginEmail').value=email;
+ }
 }
 async function loginLocal(){
- clearAuthError();const email=document.getElementById('loginEmail').value.trim().toLowerCase(),password=document.getElementById('loginPassword').value;const d=authData(),account=d.accounts.find(a=>a.email===email);
- if(!account||account.passwordHash!==await hashPassword(password)){showAuthError(state.settings.language==='ar'?'البريد أو كلمة المرور غير صحيحة.':state.settings.language==='fr'?'E-mail ou mot de passe incorrect.':'Incorrect email or password.');return}
- startSession(account);
+ clearAuthError();
+ const email=document.getElementById('loginEmail').value.trim().toLowerCase(),password=document.getElementById('loginPassword').value;
+ const {data,error}=await sb.auth.signInWithPassword({email,password});
+ if(error){showAuthError(error.message);return}
+ await startCloudSession(data.user,false);
 }
-function startSession(account,firstSetup=false){currentUser=account;localStorage.setItem(SESSION_STORAGE,account.id);document.getElementById('authScreen').classList.add('hidden');document.getElementById('appRoot').classList.remove('hidden');renderProfile();updateUserUI();if(firstSetup){loadSettingsForm();showPage('settings')}else showPage('dashboard')}
-function logoutLocal(){localStorage.removeItem(SESSION_STORAGE);currentUser=null;document.getElementById('appRoot').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');switchAuth('login')}
-function restoreSession(){
- const id=localStorage.getItem(SESSION_STORAGE),d=authData();currentUser=d.accounts.find(a=>a.id===id)||null;
- if(currentUser){document.getElementById('authScreen').classList.add('hidden');document.getElementById('appRoot').classList.remove('hidden');updateUserUI();return true}
- document.getElementById('appRoot').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');return false;
+async function startCloudSession(user,firstSetup=false){
+ currentUser=accountFromUser(user);
+ document.getElementById('authScreen').classList.add('hidden');document.getElementById('appRoot').classList.remove('hidden');
+ await loadCloudWorkspace(user.id);
+ cloudReady=true;
+ renderProfile();updateUserUI();updateLogoDisplays();
+ if(firstSetup){loadSettingsForm();showPage('settings')}else showPage('dashboard');
+}
+async function logoutLocal(){
+ cloudReady=false;await sb.auth.signOut();currentUser=null;
+ document.getElementById('appRoot').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');switchAuth('login')
+}
+function isUuid(v){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(v||''))}
+function normalizeCloudIds(){
+ const clientMap={};
+ state.clients=state.clients.map(c=>{const old=c.id;const id=isUuid(old)?old:crypto.randomUUID();clientMap[old]=id;return {...c,id}});
+ state.invoices=state.invoices.map(i=>({...i,id:isUuid(i.id)?i.id:crypto.randomUUID(),clientId:i.clientId?(clientMap[i.clientId]||i.clientId):''}));
+}
+function workspacePayload(){
+ normalizeCloudIds();
+ const profile={
+  full_name:currentUser?.name||'',company_name:state.settings.business||currentUser?.company||'',business_email:state.settings.email||currentUser?.email||'',
+  address:state.settings.address||'',tax_id:state.settings.taxId||'',country_code:state.settings.country||'DZ',language:state.settings.language||'en',
+  invoice_prefix:state.settings.prefix||'INV-',payment_terms:Number(state.settings.terms||30),next_invoice_number:Number(state.settings.nextNo||1),default_notes:state.settings.notes||''
+ };
+ const clients=state.clients.map(c=>({id:c.id,name:c.name,email:c.email||'',country_code:c.country||'DZ',address:c.address||'',tax_id:c.taxId||''}));
+ const invoices=state.invoices.map(inv=>{
+  const sub=(inv.items||[]).reduce((a,i)=>a+Number(i.q||0)*Number(i.p||0),0),disc=sub*Number(inv.discount||0)/100,tax=(sub-disc)*Number(inv.taxRate||0)/100,total=sub-disc+tax+Number(inv.shipping||0);
+  return {id:inv.id,number:inv.number,client_id:inv.clientId||'',client_name:inv.clientName||'',client_email:inv.clientEmail||'',issue_date:inv.issueDate||todayISO(),due_date:inv.dueDate||'',
+   country_code:inv.country||'DZ',currency_code:inv.currency||'DZD',tax_rate:Number(inv.taxRate||0),discount_rate:Number(inv.discount||0),shipping:Number(inv.shipping||0),
+   status:inv.status||'draft',notes:inv.notes||'',template_id:inv.template||state.template||'modern',subtotal:sub,tax_amount:tax,discount_amount:disc,total,
+   items:(inv.items||[]).map((x,n)=>({description:x.d||'',quantity:Number(x.q||0),unit_price:Number(x.p||0),line_total:Number(x.q||0)*Number(x.p||0),sort_order:n}))
+  }
+ });
+ return {profile,clients,invoices};
+}
+async function syncWorkspaceCloud(){
+ if(!cloudReady||!currentUser)return;
+ try{
+  normalizeCloudIds();localStorage.setItem(STORAGE,JSON.stringify(state));
+  const {error}=await sb.rpc('sync_workspace',{p_workspace:workspacePayload()});
+  if(error)console.error('Cloud sync error',error);
+ }catch(e){console.error('Cloud sync error',e)}
+}
+async function loadCloudWorkspace(userId){
+ cloudHydrating=true;
+ try{
+  const [{data:profile,error:pe},{data:clients,error:ce},{data:invoices,error:ie},{data:items,error:iteme}]=await Promise.all([
+   sb.from('profiles').select('*').eq('id',userId).maybeSingle(),
+   sb.from('clients').select('*').eq('user_id',userId).order('created_at',{ascending:true}),
+   sb.from('invoices').select('*').eq('user_id',userId).order('created_at',{ascending:true}),
+   sb.from('invoice_items').select('*').eq('user_id',userId).order('sort_order',{ascending:true})
+  ]);
+  if(pe||ce||ie||iteme)throw pe||ce||ie||iteme;
+  const hasCloudData=(clients&&clients.length)||(invoices&&invoices.length);
+  if(hasCloudData){
+   const itemGroups={};(items||[]).forEach(x=>(itemGroups[x.invoice_id]||(itemGroups[x.invoice_id]=[])).push(x));
+   state.clients=(clients||[]).map(c=>({id:c.id,name:c.name,email:c.email||'',country:c.country_code||'DZ',address:c.address||'',taxId:c.tax_id||''}));
+   state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
+  }
+  if(profile){
+   state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',address:profile.address||'',taxId:profile.tax_id||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
+   currentUser.name=profile.full_name||currentUser.name;currentUser.company=profile.company_name||currentUser.company;
+  }
+  if(!hasCloudData && (state.clients.length||state.invoices.length)){
+   normalizeCloudIds();
+   cloudHydrating=false;cloudReady=true;await syncWorkspaceCloud();cloudReady=false;cloudHydrating=true;
+  }
+  localStorage.setItem(STORAGE,JSON.stringify(state));
+  setLanguage(state.settings.language||'en');
+  populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();
+ }catch(e){console.error('Cloud load error',e)}
+ finally{cloudHydrating=false}
+}
+async function restoreSession(){
+ const {data:{session}}=await sb.auth.getSession();
+ if(session?.user){await startCloudSession(session.user,false);return true}
+ document.getElementById('appRoot').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');return false
 }
 function initials(name){return String(name||'AW').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()}
 function updateUserUI(){const init=initials(currentUser?.name||state.settings.business);document.getElementById('topAvatar').textContent=init;document.getElementById('profileAvatar').textContent=init}
@@ -762,10 +852,13 @@ function updateLogoDisplays(){
  if(brand)brand.innerHTML=logo?`<img class="brandLogo" src="${logo}" alt="Logo">`:'▧';
  if(inv){inv.src=logo||'';inv.classList.toggle('hidden',!logo)}
 }
-function resetDemoData(){if(confirm('Reset invoices, clients and settings stored on this device?')){state=defaultState();persist();populateSelectors();loadSettingsForm();renderDashboard();alert('Local data reset.')}}
+async function resetDemoData(){if(confirm('Reset invoices, clients and cloud workspace data?')){state=defaultState();persist();await syncWorkspaceCloud();populateSelectors();loadSettingsForm();renderDashboard();alert('Workspace reset.')}}
 
-populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();updateLogoDisplays();setLanguage(state.settings.language||'en');
-if(restoreSession()){showPage('dashboard')}else{switchAuth('login')}
+async function boot(){
+ populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();updateLogoDisplays();setLanguage(state.settings.language||'en');
+ const restored=await restoreSession();if(!restored)switchAuth('login');
+}
+boot();
 
 </script>
 </body>
