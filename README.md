@@ -7,3 +7,4 @@ Files:
 - `vercel.json` — Vercel SPA routing
 
 Import the repository in Vercel with Framework Preset: **Other**.
+Deployment trigger
