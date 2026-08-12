@@ -402,6 +402,66 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   .phoneMode .quick button{min-height:92px!important}
 }
 
+
+/* v0.6.2 — mobile menu redesign + compact phone dashboard */
+.menuBtn{display:none;border:1px solid var(--line);background:#fff;border-radius:12px;width:44px;height:44px;align-items:center;justify-content:center;flex-direction:column;gap:5px;box-shadow:0 8px 20px #00203a10}
+.menuBtn span{display:block;width:18px;height:2px;background:var(--navy);border-radius:99px}
+.drawerOverlay{position:fixed;inset:60px 0 0;background:rgba(4,16,33,.28);z-index:85;padding:10px 10px 24px;backdrop-filter:blur(2px)}
+.drawerOverlay.hidden{display:none!important}
+.drawerPanel{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 22px 50px #00152d22;overflow:hidden;max-width:460px;margin-inline:auto}
+.drawerHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 16px 12px;background:linear-gradient(180deg,#f9fcff,#f2f7fa)}
+.drawerHead b{display:block;font-size:16px}.drawerHead small{display:block;color:var(--muted);margin-top:3px}
+.drawerClose{border:0;background:#eef3f6;color:var(--navy);width:38px;height:38px;border-radius:11px;font-size:24px;line-height:1}
+.drawerBody{padding:14px}
+.drawerNew{width:100%;margin:0 0 12px}
+.drawerNav{display:grid;gap:8px}
+.drawerNav button{width:100%;display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px 14px;text-align:left;color:var(--ink)}
+.drawerNav button .ico{width:28px;height:28px;border-radius:10px;background:#eff8f7;color:#0b7c75;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto}
+.drawerNav button.active{background:linear-gradient(135deg,#f2fbfa,#eaf9f7);border-color:#bdebe6;color:#08323a}
+.drawerNav button .txt{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.drawerNav button .txt b{font-size:14px;font-weight:800}
+.drawerNav button .txt small{font-size:11px;color:var(--muted);margin-top:2px}
+.phoneMode .menuBtn{display:inline-flex!important}
+.phoneMode .top{height:64px!important;padding:0 10px!important}
+.phoneMode .top>div:first-child{min-width:0;flex:1}
+.phoneMode .top b{font-size:17px!important}
+.phoneMode .topright{gap:8px;display:flex;align-items:center}
+.phoneMode .topright #settingsTopBtn{display:none!important}
+.phoneMode .mobile{display:none!important}
+.phoneMode .content{padding:12px 10px 24px!important}
+.phoneMode .head{margin-bottom:14px!important;gap:10px!important}
+.phoneMode .head h1{font-size:22px!important;margin-bottom:6px}
+.phoneMode .head p{font-size:12px!important}
+.phoneMode .head .btn.primary{width:100%;min-height:48px}
+.phoneMode .stats{gap:10px!important;margin-bottom:12px!important}
+.phoneMode .stat{padding:16px 14px!important;border-radius:18px!important;min-height:auto!important}
+.phoneMode .stat small{font-size:10px!important}
+.phoneMode .stat strong{font-size:18px!important}
+.phoneMode .grid2{gap:12px!important;margin-top:12px!important}
+.phoneMode .panel{padding:14px!important;border-radius:18px!important}
+.phoneMode .toolbar{gap:8px!important;margin-bottom:10px!important}
+.phoneMode .quick{grid-template-columns:1fr 1fr!important;gap:8px!important}
+.phoneMode .quick button{padding:12px 10px!important;min-height:84px!important;border-radius:14px!important}
+.phoneMode .quick b{font-size:13px!important;line-height:1.35}
+.phoneMode .quick small{font-size:10px!important}
+.phoneMode #dashboard .tablewrap{overflow:visible!important}
+.phoneMode #dashboard table{min-width:0!important;width:100%!important}
+.phoneMode #dashboard thead{display:none}
+.phoneMode #dashboard tbody tr{display:block;border-top:1px solid var(--line);padding:10px 0}
+.phoneMode #dashboard tbody tr:first-child{border-top:0;padding-top:0}
+.phoneMode #dashboard tbody td{display:block;padding:2px 0;font-size:12px;border:0}
+.phoneMode #dashboard tbody td:first-child{font-weight:800;font-size:13px;color:var(--navy)}
+.phoneMode #dashboard tbody td:last-child{padding-top:4px}
+.phoneMode .drawerOverlay{inset:64px 0 0!important;padding:8px 8px 20px!important}
+.phoneMode .drawerPanel{border-radius:20px!important}
+.phoneMode .drawerHead{padding:14px 14px 10px!important}
+.phoneMode .drawerBody{padding:12px!important}
+.phoneMode[dir="rtl"] .drawerNav button{text-align:right}
+.phoneMode[dir="rtl"] .drawerNav button .txt{align-items:flex-end}
+.phoneMode[dir="rtl"] .drawerHead{direction:rtl}
+@keyframes drawerDrop{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.phoneMode .drawerPanel{animation:drawerDrop .18s ease}
+
 </style>
 </head>
 <body>
@@ -480,11 +540,25 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   <header class="top">
     <div><b id="topTitle">Overview</b><small>Professional invoicing for every country.</small></div>
     <div class="topright">
+      <button id="menuToggleBtn" class="menuBtn" type="button" onclick="toggleMobileDrawer()" aria-label="Menu"><span></span><span></span><span></span></button>
       <select id="topLanguage" class="input langSelect" onchange="setLanguage(this.value)"><option value="en">EN</option><option value="fr">FR</option><option value="ar">AR</option></select>
       <button id="settingsTopBtn" class="btn secondary small" onclick="showPage('settings')">⚙ Settings</button>
       <div id="topAvatar" class="avatar" onclick="showPage('profile')" style="cursor:pointer">AW</div>
     </div>
   </header>
+
+  <div id="mobileDrawer" class="drawerOverlay hidden" onclick="if(event.target===this)closeMobileDrawer()">
+    <div class="drawerPanel" onclick="event.stopPropagation()">
+      <div class="drawerHead">
+        <div><b id="drawerTitle">Navigation</b><small id="drawerSub">Quick access to all sections</small></div>
+        <button class="drawerClose" type="button" onclick="closeMobileDrawer()">×</button>
+      </div>
+      <div class="drawerBody">
+        <button id="drawerNewInvoice" class="newbtn drawerNew" onclick="closeMobileDrawer();newInvoice()">＋ Create invoice</button>
+        <div class="drawerNav" id="drawerNav"></div>
+      </div>
+    </div>
+  </div>
 
   <div class="content">
 
@@ -520,7 +594,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.6.1: commercial reports plus a robust Android/mobile responsive hotfix are active.</div>
+      <div class="notice">Version 0.6.2: mobile navigation redesigned with a hamburger dropdown, compact dashboard spacing and a cleaner phone experience.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -841,13 +915,33 @@ function pageTitle(id){
  return t(map[id]||id);
 }
 function buildNav(){
- const s=document.getElementById('sideNav'),m=document.getElementById('mobileNav');
- s.innerHTML='';m.innerHTML='';
+ const s=document.getElementById('sideNav'),m=document.getElementById('mobileNav'),d=document.getElementById('drawerNav');
+ s.innerHTML='';if(m)m.innerHTML='';if(d)d.innerHTML='';
  pages.forEach(p=>{
-  const b=document.createElement('button');b.dataset.page=p.id;b.innerHTML=`${p.icon} &nbsp; ${pageLabel(p.id)}`;b.onclick=()=>showPage(p.id);s.appendChild(b);
-  if(['dashboard','invoices','clients','reports','templates'].includes(p.id)){const x=document.createElement('button');x.dataset.page=p.id;x.innerHTML=`${p.icon}<br>${pageLabel(p.id)}`;x.onclick=()=>showPage(p.id);m.appendChild(x)}
+  const sideBtn=document.createElement('button');
+  sideBtn.dataset.page=p.id;
+  sideBtn.innerHTML=`${p.icon} &nbsp; ${pageLabel(p.id)}`;
+  sideBtn.onclick=()=>showPage(p.id);
+  s.appendChild(sideBtn);
+
+  if(d){
+   const drawerBtn=document.createElement('button');
+   drawerBtn.dataset.page=p.id;
+   drawerBtn.innerHTML=`<span class="ico">${p.icon}</span><span class="txt"><b>${pageLabel(p.id)}</b><small>${pageTitle(p.id)}</small></span>`;
+   drawerBtn.onclick=()=>showPage(p.id);
+   d.appendChild(drawerBtn);
+  }
  });
 }
+function toggleMobileDrawer(force){
+ const drawer=document.getElementById('mobileDrawer');
+ if(!drawer)return;
+ const open=typeof force==='boolean'?force:drawer.classList.contains('hidden');
+ drawer.classList.toggle('hidden',!open);
+ document.body.style.overflow=open?'hidden':'';
+}
+function closeMobileDrawer(){toggleMobileDrawer(false)}
+
 function showPage(id){
  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
  document.getElementById(id).classList.remove('hidden');
@@ -862,7 +956,7 @@ function showPage(id){
  if(id==='countries')renderCountries();
  if(id==='profile')renderProfile();
  if(id==='settings')loadSettingsForm();
- translateStaticUI();phoneLayout();window.scrollTo(0,0);
+ closeMobileDrawer();translateStaticUI();phoneLayout();window.scrollTo(0,0);
 }
 function countryBy(code){return countries.find(x=>x.code===code)||countries[0]}
 function clientBy(id){return state.clients.find(c=>c.id===id)}
@@ -1414,6 +1508,7 @@ function phoneLayout(){
  const narrow=(window.innerWidth<=820)||(screen.width<=820);
  const phone=mobileUA||narrow||(touch&&coarse)||(touch&&noHover);
  document.documentElement.classList.toggle('phoneMode',phone);
+ if(!phone)closeMobileDrawer();
 }
 phoneLayout();
 window.addEventListener('resize',phoneLayout);
@@ -1433,6 +1528,9 @@ function setLanguage(lang){
  document.getElementById('profileTitle').textContent=t('profile');document.getElementById('logoutBtn').textContent=t('signOut');document.getElementById('workspaceTitle').textContent=t('workspace');document.getElementById('profileInvoicesLabel').textContent=t('invoiceLabel');document.getElementById('profileClientsLabel').textContent=t('clientLabel');document.getElementById('profileTemplateLabel').textContent=t('templateLabel');document.getElementById('profileLanguageLabel').textContent=t('appLanguage');document.getElementById('profileSettingsBtn').textContent=t('openSettings');document.getElementById('profileLocalNote').textContent=t('localNote');
  const bh=document.getElementById('brandingHeading');if(bh)bh.textContent=t('branding');const ll=document.getElementById('logoLabel');if(ll)ll.textContent=t('companyLogo');const rb=document.getElementById('removeLogoBtn');if(rb)rb.textContent=t('removeLogo');const lh=document.getElementById('logoHint');if(lh)lh.textContent=t('logoHint');const ih=document.getElementById('invoiceDefaultsHeading');if(ih)ih.textContent=t('invoiceDefaults');const it=document.getElementById('editorTemplateLabel');if(it)it.textContent=t('invoiceTemplate');const iw=document.getElementById('invoiceWord');if(iw)iw.textContent=t('invoiceWord');
  const sn=document.getElementById('sideNewInvoice');if(sn)sn.textContent=t('createInvoice');
+ const dn=document.getElementById('drawerNewInvoice');if(dn)dn.textContent=t('createInvoice');
+ const dt=document.getElementById('drawerTitle');if(dt)dt.textContent=(state.settings.language==='ar'?'القائمة':state.settings.language==='fr'?'Menu':'Menu');
+ const ds=document.getElementById('drawerSub');if(ds)ds.textContent=(state.settings.language==='ar'?'وصول سريع إلى كل الأقسام':state.settings.language==='fr'?'Accès rapide à toutes les sections':'Quick access to all sections');
  const wh=document.querySelector('#dashboard .head h1');if(wh)wh.textContent=t('welcome');const wp=document.querySelector('#dashboard .head p');if(wp)wp.textContent=t('welcomeSub');const nb=document.querySelector('#dashboard .head .primary');if(nb)nb.textContent=t('newInvoice');
  const ih1=document.querySelector('#invoices .head h1');if(ih1)ih1.textContent=t('invoices');const ch1=document.querySelector('#clients .head h1');if(ch1)ch1.textContent=t('clients');const th1=document.querySelector('#templates .head h1');if(th1)th1.textContent=t('templates');const coh1=document.querySelector('#countries .head h1');if(coh1)coh1.textContent=t('countries');const sh1=document.querySelector('#settings .head h1');if(sh1)sh1.textContent=t('settings');
  buildNav();
