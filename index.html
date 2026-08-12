@@ -257,27 +257,150 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .phoneMode #reports .head .actions{width:100%}
 
 
-/* v0.7 — subscriptions / company billing */
-.planMini{display:inline-flex;align-items:center;justify-content:center;padding:6px 9px;border-radius:999px;background:#e8f8f5;color:#087568;font-size:9px;font-weight:900;letter-spacing:.5px;border:1px solid #cfeee8}
-.billingHero{padding:20px;display:grid;grid-template-columns:1.35fr .65fr;gap:18px;align-items:center;margin-bottom:16px}
-.billingHero h2{margin:0 0 6px;font-size:22px}.billingHero p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
-.currentPlanBox{border:1px solid var(--line);border-radius:15px;padding:15px;background:#fbfdfd}
-.currentPlanBox small{display:block;color:var(--muted);font-size:10px;font-weight:800}.currentPlanBox strong{display:block;font-size:25px;margin:5px 0}.currentPlanBox span{font-size:11px}
-.usageGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.usageCard{padding:16px}.usageTop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.usageTop b{font-size:13px}.usageTop span{font-size:11px;color:var(--muted)}
-.usageTrack{height:8px;border-radius:999px;background:#edf1f4;overflow:hidden}.usageFill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--teal2));width:0}
-.planGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
-.planCard{padding:19px;position:relative;overflow:hidden}.planCard.current{border:2px solid var(--teal)}.planCard.featured:before{content:"PRO";position:absolute;top:13px;inset-inline-end:-28px;transform:rotate(40deg);background:var(--teal);color:#fff;font-size:9px;font-weight:900;padding:5px 34px}
-.planName{display:flex;align-items:center;gap:9px;margin-bottom:8px}.planIcon{width:36px;height:36px;border-radius:11px;background:#edf8f7;display:grid;place-items:center;font-weight:900;color:#087568}.planName h3{margin:0;font-size:17px}
-.planLimit{font-size:26px;font-weight:900;margin:13px 0 4px}.planLimit small{font-size:11px;color:var(--muted);font-weight:600}.planFeatures{display:grid;gap:8px;margin:15px 0 18px;font-size:11px;color:#4e5a68}.planFeatures span:before{content:"✓";color:var(--teal);font-weight:900;margin-inline-end:7px}
-.planCard .btn{width:100%}.planLock{padding:13px 15px;border-radius:12px;background:#eef7fb;color:#315c75;font-size:11px;line-height:1.55}
-.billingStatus{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#eaf7ef;color:#27794a;font-size:10px;font-weight:900}
-.billingStatus.past_due{background:#fff3df;color:#9b6814}.billingStatus.canceled{background:#feecef;color:#a93649}
-.phoneMode .planMini{display:none}
-.phoneMode .billingHero{grid-template-columns:1fr;padding:15px}
-.phoneMode .usageGrid{grid-template-columns:1fr}
-.phoneMode .planGrid{grid-template-columns:1fr}
-.phoneMode .planCard{padding:16px}
+/* v0.6.1 — robust Android / in-app browser mobile hotfix */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.phoneMode body{width:100vw!important;max-width:100vw!important;overflow-x:hidden!important}
+.phoneMode .app{
+  display:block!important;
+  grid-template-columns:none!important;
+  width:100vw!important;
+  max-width:100vw!important;
+  min-width:0!important;
+  margin:0!important;
+}
+.phoneMode .side{display:none!important;width:0!important}
+.phoneMode .main{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+.phoneMode .top{
+  width:100%!important;
+  max-width:100%!important;
+  inset-inline:0!important;
+  margin:0!important;
+}
+.phoneMode .content{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:14px 12px 94px!important;
+}
+.phoneMode .page,
+.phoneMode .card,
+.phoneMode .panel,
+.phoneMode .grid2,
+.phoneMode .stats,
+.phoneMode .quick,
+.phoneMode .profileGrid,
+.phoneMode .reportGrid,
+.phoneMode .reportStats{
+  max-width:100%!important;
+  min-width:0!important;
+}
+.phoneMode .head{width:100%!important}
+.phoneMode .head>div{max-width:100%}
+.phoneMode .head h1{font-size:25px!important}
+.phoneMode .head p{font-size:13px!important;line-height:1.6}
+.phoneMode .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.phoneMode .quick{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.phoneMode .quick button{min-width:0!important;width:100%!important;padding:14px 12px!important}
+.phoneMode .quick b{font-size:14px}
+.phoneMode .quick small{font-size:11px;line-height:1.45}
+.phoneMode .grid2{grid-template-columns:1fr!important}
+.phoneMode #dashboard .panel{width:100%!important;overflow:hidden}
+.phoneMode #dashboard .tablewrap{width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+.phoneMode #dashboard table{min-width:520px!important}
+.phoneMode .form,
+.phoneMode .profileCard,
+.phoneMode .chartCard{width:100%!important}
+.phoneMode .input,
+.phoneMode input,
+.phoneMode select,
+.phoneMode textarea{max-width:100%!important}
+.phoneMode .invoicegrid{grid-template-columns:1fr!important}
+.phoneMode .lines{width:100%!important;max-width:100%!important;overflow-x:auto!important}
+.phoneMode .preview{width:100%!important;max-width:100%!important}
+.phoneMode .templates,
+.phoneMode .clientcards{grid-template-columns:1fr!important}
+.phoneMode .country{grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr)!important}
+
+/* Recovery modal: always centered and fully inside the phone viewport */
+.phoneMode .modalOverlay{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100dvh!important;
+  min-height:100vh!important;
+  padding:12px!important;
+  display:grid;
+  place-items:center!important;
+  overflow-y:auto!important;
+}
+.phoneMode .modalOverlay.hidden{display:none!important}
+.phoneMode .modalCard{
+  width:calc(100vw - 24px)!important;
+  max-width:420px!important;
+  max-height:calc(100dvh - 24px)!important;
+  margin:auto!important;
+  padding:22px 17px!important;
+  overflow-y:auto!important;
+  border-radius:20px!important;
+}
+.phoneMode .modalCard h3{font-size:22px}
+.phoneMode .modalCard .btn{min-height:46px}
+
+/* Bottom navigation: use logical insets, not a computed fixed width */
+.phoneMode .mobile{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  position:fixed!important;
+  inset-inline:8px!important;
+  left:8px!important;
+  right:8px!important;
+  width:auto!important;
+  max-width:none!important;
+  bottom:max(8px,env(safe-area-inset-bottom))!important;
+  margin:0!important;
+  border-radius:18px!important;
+  padding:7px 5px!important;
+  overflow:hidden!important;
+  z-index:80!important;
+}
+.phoneMode .mobile button{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  padding:6px 2px!important;
+  font-size:9px!important;
+  line-height:1.35!important;
+  text-align:center!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+/* Force the phone layout on touch-first devices even if the embedded browser reports ~980px */
+@media (hover:none) and (pointer:coarse){
+  .app{display:block!important;grid-template-columns:none!important;width:100%!important}
+  .side{display:none!important}
+  .main,.content{width:100%!important;max-width:100%!important;min-width:0!important}
+}
+@media (max-device-width:1400px) and (hover:none){
+  .app{display:block!important;grid-template-columns:none!important}
+  .side{display:none!important}
+}
+@media (max-width:430px){
+  .phoneMode .content{padding-inline:10px!important}
+  .phoneMode .stat{padding:13px 11px!important}
+  .phoneMode .stat strong{font-size:19px!important}
+  .phoneMode .panel{padding:14px!important}
+  .phoneMode .quick button{min-height:92px!important}
+}
 
 </style>
 </head>
@@ -357,7 +480,6 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
   <header class="top">
     <div><b id="topTitle">Overview</b><small>Professional invoicing for every country.</small></div>
     <div class="topright">
-      <span id="topPlanBadge" class="planMini">FREE</span>
       <select id="topLanguage" class="input langSelect" onchange="setLanguage(this.value)"><option value="en">EN</option><option value="fr">FR</option><option value="ar">AR</option></select>
       <button id="settingsTopBtn" class="btn secondary small" onclick="showPage('settings')">⚙ Settings</button>
       <div id="topAvatar" class="avatar" onclick="showPage('profile')" style="cursor:pointer">AW</div>
@@ -398,7 +520,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.7: secure company plans, usage limits and billing workspace are active.</div>
+      <div class="notice">Version 0.6.1: commercial reports plus a robust Android/mobile responsive hotfix are active.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -535,78 +657,6 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
     </section>
 
 
-
-    <section id="billing" class="page hidden">
-      <div class="head">
-        <div><h1>Billing & Plan</h1><p>Manage your company plan, limits and subscription status.</p></div>
-        <button class="btn secondary" onclick="showPage('profile')">Account</button>
-      </div>
-
-      <div class="card billingHero">
-        <div>
-          <span class="syncPill">🔒 Server controlled</span>
-          <h2 style="margin-top:10px">Your AllWorld Factures plan</h2>
-          <p>Plan changes are protected on the server. The browser cannot upgrade itself. Online payment will be connected in the next billing step.</p>
-        </div>
-        <div class="currentPlanBox">
-          <small>CURRENT PLAN</small>
-          <strong id="billingCurrentPlan">Free</strong>
-          <span id="billingStatus" class="billingStatus">Active</span>
-        </div>
-      </div>
-
-      <div class="usageGrid">
-        <div class="card usageCard">
-          <div class="usageTop"><b>Invoice usage</b><span id="invoiceUsageText">0 / 30</span></div>
-          <div class="usageTrack"><div id="invoiceUsageFill" class="usageFill"></div></div>
-        </div>
-        <div class="card usageCard">
-          <div class="usageTop"><b>Client usage</b><span id="clientUsageText">0 / 20</span></div>
-          <div class="usageTrack"><div id="clientUsageFill" class="usageFill"></div></div>
-        </div>
-      </div>
-
-      <div class="planGrid">
-        <div id="planCardFree" class="card planCard">
-          <div class="planName"><div class="planIcon">F</div><div><h3>Free</h3><small>For testing and small activity</small></div></div>
-          <div class="planLimit">30 <small>invoices / workspace</small></div>
-          <div class="planFeatures">
-            <span>20 saved clients</span>
-            <span>Cloud synchronization</span>
-            <span>PDF printing</span>
-            <span>Reports & CSV</span>
-          </div>
-          <button id="planBtnFree" class="btn secondary" onclick="requestUpgrade('free')">Current plan</button>
-        </div>
-
-        <div id="planCardPro" class="card planCard featured">
-          <div class="planName"><div class="planIcon">P</div><div><h3>Pro</h3><small>For professionals and growing companies</small></div></div>
-          <div class="planLimit">1,000 <small>invoices / workspace</small></div>
-          <div class="planFeatures">
-            <span>500 saved clients</span>
-            <span>Everything in Free</span>
-            <span>Higher commercial limits</span>
-            <span>Priority features</span>
-          </div>
-          <button id="planBtnPro" class="btn primary" onclick="requestUpgrade('pro')">Upgrade to Pro</button>
-        </div>
-
-        <div id="planCardBusiness" class="card planCard">
-          <div class="planName"><div class="planIcon">B</div><div><h3>Business</h3><small>For teams and larger organizations</small></div></div>
-          <div class="planLimit">∞ <small>workspace limits</small></div>
-          <div class="planFeatures">
-            <span>Unlimited invoices</span>
-            <span>Unlimited clients</span>
-            <span>Company-ready plan</span>
-            <span>Team features coming next</span>
-          </div>
-          <button id="planBtnBusiness" class="btn secondary" onclick="requestUpgrade('business')">Choose Business</button>
-        </div>
-      </div>
-
-      <div id="billingMessage" class="planLock">🔐 Subscription upgrades are not simulated in the browser. This protects the commercial version from users changing their own plan. The next step will connect a real payment provider or an admin-controlled company license.</div>
-    </section>
-
     <section id="profile" class="page hidden">
       <div class="head"><div><h1 id="profileTitle">Profile</h1><p id="profileSub">Your local account and workspace overview.</p></div><button id="logoutBtn" class="btn dangerbtn" onclick="logoutLocal()">Sign out</button></div>
       <div class="profileGrid">
@@ -614,7 +664,6 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
           <div id="profileAvatar" class="profileBadge">AW</div>
           <h2 id="profileName" style="margin:0 0 4px">Account</h2>
           <div id="profileEmail" class="muted"></div>
-          <div style="margin-top:12px"><span id="profilePlanBadge" class="planMini">FREE</span></div>
           <div class="notice" style="margin-top:16px" id="profileLocalNote">This account is connected to the cloud workspace.</div>
         </div>
         <div class="card profileCard">
@@ -627,7 +676,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
           <div style="height:16px"></div>
           <div class="field"><label id="profileLanguageLabel">APP LANGUAGE</label><select id="profileLanguage" class="input" onchange="setLanguage(this.value)"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div>
           <div style="height:12px"></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="profileSettingsBtn" class="btn secondary" onclick="showPage('settings')">Open business settings</button><button id="profileBillingBtn" class="btn primary" onclick="showPage('billing')">Manage plan</button></div>
+          <button id="profileSettingsBtn" class="btn secondary" onclick="showPage('settings')">Open business settings</button>
         </div>
       </div>
     </section>
@@ -675,7 +724,6 @@ const pages=[
  {id:'templates',label:'Templates',icon:'▤',title:'Invoice Templates'},
  {id:'countries',label:'Countries',icon:'◎',title:'Country & Compliance'},
  {id:'profile',label:'Profile',icon:'♙',title:'Profile'},
- {id:'billing',label:'Billing',icon:'◇',title:'Billing & Plan'},
  {id:'settings',label:'Settings',icon:'⚙',title:'Settings'}
 ];
 
@@ -715,27 +763,27 @@ const LEGACY_STORAGE='awf_state_v2';
 const AUTH_STORAGE='awf_auth_v1';
 const SESSION_STORAGE='awf_session_v1';
 const translations={
- en:{navDashboard:'Dashboard',navInvoices:'Invoices',navClients:'Clients',navReports:'Reports',navTemplates:'Templates',navCountries:'Countries',navProfile:'Profile',navBilling:'Billing',navSettings:'Settings',
+ en:{navDashboard:'Dashboard',navInvoices:'Invoices',navClients:'Clients',navReports:'Reports',navTemplates:'Templates',navCountries:'Countries',navProfile:'Profile',navSettings:'Settings',
  overview:'Overview',welcome:'Welcome back 👋',welcomeSub:'Your global invoicing command center.',newInvoice:'＋ New invoice',createInvoice:'＋ Create invoice',
- invoices:'Invoices',clients:'Clients',reports:'Reports',templates:'Invoice Templates',countries:'Country & Compliance',profile:'Profile',billing:'Billing & Plan',settings:'Settings',
+ invoices:'Invoices',clients:'Clients',reports:'Reports',templates:'Invoice Templates',countries:'Country & Compliance',profile:'Profile',settings:'Settings',
  signOut:'Sign out',workspace:'Workspace',invoiceLabel:'Invoices',clientLabel:'Clients',templateLabel:'Template',appLanguage:'APP LANGUAGE',openSettings:'Open business settings',
  settingsBtn:'⚙ Settings',brandSub:'Invoicing without borders',authHero:'Professional invoicing made simple, multilingual and ready for businesses around the world.',
  authF1:'Create invoices in multiple currencies',authF2:'Sync clients and invoices across devices',authF3:'Print clean PDF invoices',authTitle:'Welcome',authSub:'Sign in or create your cloud account.',
  signIn:'Sign in',createAccount:'Create account',email:'EMAIL',password:'PASSWORD',yourName:'YOUR NAME',companyName:'COMPANY NAME',firstSetup:'After account creation, we will open your company settings.',
  authNote:'Cloud authentication powered by Supabase. Your invoices and clients can follow you across devices.',
  localNote:'This account is connected to the cloud workspace.',branding:'Branding',companyLogo:'COMPANY LOGO',removeLogo:'Remove logo',logoHint:'Use a small PNG/JPG logo. Cloud logo storage will be added separately.',invoiceDefaults:'Invoice defaults',invoiceTemplate:'INVOICE TEMPLATE',invoiceWord:'INVOICE'},
- fr:{navDashboard:'Tableau de bord',navInvoices:'Factures',navClients:'Clients',navReports:'Rapports',navTemplates:'Modèles',navCountries:'Pays',navProfile:'Profil',navBilling:'Abonnement',navSettings:'Paramètres',
+ fr:{navDashboard:'Tableau de bord',navInvoices:'Factures',navClients:'Clients',navReports:'Rapports',navTemplates:'Modèles',navCountries:'Pays',navProfile:'Profil',navSettings:'Paramètres',
  overview:'Aperçu',welcome:'Bon retour 👋',welcomeSub:'Votre centre de gestion de facturation internationale.',newInvoice:'＋ Nouvelle facture',createInvoice:'＋ Créer une facture',
- invoices:'Factures',clients:'Clients',reports:'Rapports',templates:'Modèles de facture',countries:'Pays et conformité',profile:'Profil',billing:'Abonnement et offre',settings:'Paramètres',
+ invoices:'Factures',clients:'Clients',reports:'Rapports',templates:'Modèles de facture',countries:'Pays et conformité',profile:'Profil',settings:'Paramètres',
  signOut:'Se déconnecter',workspace:'Espace de travail',invoiceLabel:'Factures',clientLabel:'Clients',templateLabel:'Modèle',appLanguage:"LANGUE DE L’APPLICATION",openSettings:'Ouvrir les paramètres entreprise',
  settingsBtn:'⚙ Paramètres',brandSub:'Facturation sans frontières',authHero:'Une facturation professionnelle, simple, multilingue et pensée pour les entreprises du monde entier.',
  authF1:'Créer des factures en plusieurs devises',authF2:'Synchroniser clients et factures entre vos appareils',authF3:'Imprimer des factures PDF propres',authTitle:'Bienvenue',authSub:'Connectez-vous ou créez votre compte cloud.',
  signIn:'Se connecter',createAccount:'Créer un compte',email:'E-MAIL',password:'MOT DE PASSE',yourName:'VOTRE NOM',companyName:'NOM DE L’ENTREPRISE',firstSetup:'Après la création du compte, nous ouvrirons les paramètres de votre entreprise.',
  authNote:'Authentification cloud activée. Une confirmation par e-mail peut être demandée lors de l’inscription.',
  localNote:'Ce compte est connecté à votre espace cloud.',branding:'Identité visuelle',companyLogo:'LOGO DE L’ENTREPRISE',removeLogo:'Supprimer le logo',logoHint:'Utilisez un petit logo PNG/JPG. Le stockage cloud du logo sera ajouté séparément.',invoiceDefaults:'Paramètres de facture',invoiceTemplate:'MODÈLE DE FACTURE',invoiceWord:'FACTURE'},
- ar:{navDashboard:'لوحة التحكم',navInvoices:'الفواتير',navClients:'العملاء',navReports:'التقارير',navTemplates:'القوالب',navCountries:'الدول',navProfile:'الملف الشخصي',navBilling:'الاشتراك',navSettings:'الإعدادات',
+ ar:{navDashboard:'لوحة التحكم',navInvoices:'الفواتير',navClients:'العملاء',navReports:'التقارير',navTemplates:'القوالب',navCountries:'الدول',navProfile:'الملف الشخصي',navSettings:'الإعدادات',
  overview:'نظرة عامة',welcome:'مرحبًا بعودتك 👋',welcomeSub:'مركز إدارة الفواتير العالمية.',newInvoice:'＋ فاتورة جديدة',createInvoice:'＋ إنشاء فاتورة',
- invoices:'الفواتير',clients:'العملاء',reports:'التقارير',templates:'قوالب الفواتير',countries:'الدول والامتثال',profile:'الملف الشخصي',billing:'الاشتراك والخطة',settings:'الإعدادات',
+ invoices:'الفواتير',clients:'العملاء',reports:'التقارير',templates:'قوالب الفواتير',countries:'الدول والامتثال',profile:'الملف الشخصي',settings:'الإعدادات',
  signOut:'تسجيل الخروج',workspace:'مساحة العمل',invoiceLabel:'الفواتير',clientLabel:'العملاء',templateLabel:'القالب',appLanguage:'لغة التطبيق',openSettings:'فتح إعدادات المؤسسة',
  settingsBtn:'⚙ الإعدادات',brandSub:'فواتير بلا حدود',authHero:'فواتير احترافية سهلة ومتعددة اللغات ومهيأة للأعمال حول العالم.',
  authF1:'إنشاء فواتير بعملات متعددة',authF2:'مزامنة العملاء والفواتير بين أجهزتك',authF3:'طباعة فواتير PDF مرتبة',authTitle:'مرحبًا',authSub:'سجّل الدخول أو أنشئ حسابك السحابي.',
@@ -780,91 +828,16 @@ function persist(){
 }
 let editingInvoiceId=null;
 let currentUser=null;
-let accountPlan={code:'free',status:'active',startedAt:null,trialEndsAt:null};
 let authMode='login';
 let itemData=[];
 
-
-const PLAN_DEFS={
- free:{code:'free',name:'Free',invoiceLimit:30,clientLimit:20},
- pro:{code:'pro',name:'Pro',invoiceLimit:1000,clientLimit:500},
- business:{code:'business',name:'Business',invoiceLimit:null,clientLimit:null}
-};
-function activePlan(){return PLAN_DEFS[accountPlan?.code]||PLAN_DEFS.free}
-function limitLabel(v){return v==null?'∞':new Intl.NumberFormat(state.settings.language==='ar'?'ar-DZ':state.settings.language==='fr'?'fr-FR':'en-US').format(v)}
-function canAddResource(type,show=true){
- const p=activePlan(),count=type==='invoice'?state.invoices.length:state.clients.length,limit=type==='invoice'?p.invoiceLimit:p.clientLimit;
- if(limit==null||count<limit)return true;
- if(show){
-  const lang=state.settings.language||'en';
-  const msg=lang==='ar'
-   ?`لقد وصلت إلى حد خطة ${p.name}: ${limitLabel(limit)} ${type==='invoice'?'فاتورة':'عميل'}. افتح صفحة الاشتراك للترقية.`
-   :lang==='fr'
-   ?`Vous avez atteint la limite de l’offre ${p.name} : ${limitLabel(limit)} ${type==='invoice'?'factures':'clients'}. Ouvrez la page Abonnement pour évoluer.`
-   :`You reached the ${p.name} plan limit: ${limitLabel(limit)} ${type==='invoice'?'invoices':'clients'}. Open Billing to upgrade.`;
-  alert(msg);showPage('billing');
- }
- return false;
-}
-function planUsagePercent(count,limit){return limit==null?0:Math.min(100,Math.max(0,count/Math.max(1,limit)*100))}
-function planNameLocalized(code){
- const lang=state.settings.language||'en';
- if(code==='business')return lang==='ar'?'Business للشركات':lang==='fr'?'Business':'Business';
- if(code==='pro')return 'Pro';
- return lang==='ar'?'مجانية':lang==='fr'?'Gratuite':'Free';
-}
-function planStatusLocalized(status){
- const lang=state.settings.language||'en';
- const m={
-  active:{en:'Active',fr:'Active',ar:'نشطة'},
-  trialing:{en:'Trial',fr:'Essai',ar:'تجريبية'},
-  past_due:{en:'Past due',fr:'Paiement en retard',ar:'الدفع متأخر'},
-  canceled:{en:'Canceled',fr:'Annulée',ar:'ملغاة'}
- };
- return m[status]?.[lang]||m.active[lang];
-}
-function renderPlanBadges(){
- const code=accountPlan?.code||'free',text=code.toUpperCase();
- ['topPlanBadge','profilePlanBadge'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=text});
-}
-function renderBilling(){
- const p=activePlan(),status=accountPlan?.status||'active';
- const current=document.getElementById('billingCurrentPlan');if(!current)return;
- current.textContent=planNameLocalized(p.code);
- const st=document.getElementById('billingStatus');st.textContent=planStatusLocalized(status);st.className='billingStatus '+status;
- document.getElementById('invoiceUsageText').textContent=`${state.invoices.length} / ${limitLabel(p.invoiceLimit)}`;
- document.getElementById('clientUsageText').textContent=`${state.clients.length} / ${limitLabel(p.clientLimit)}`;
- document.getElementById('invoiceUsageFill').style.width=planUsagePercent(state.invoices.length,p.invoiceLimit)+'%';
- document.getElementById('clientUsageFill').style.width=planUsagePercent(state.clients.length,p.clientLimit)+'%';
- ['free','pro','business'].forEach(code=>{
-  const card=document.getElementById('planCard'+code[0].toUpperCase()+code.slice(1));
-  if(card)card.classList.toggle('current',code===p.code);
-  const btn=document.getElementById('planBtn'+code[0].toUpperCase()+code.slice(1));
-  if(btn){
-   if(code===p.code){btn.textContent=uiPhrase('Current plan');btn.className='btn secondary';btn.disabled=true}
-   else{btn.disabled=false;btn.className=code==='pro'?'btn primary':'btn secondary';btn.textContent=code==='pro'?uiPhrase('Upgrade to Pro'):code==='business'?uiPhrase('Choose Business'):uiPhrase('Choose Free')}
-  }
- });
- renderPlanBadges();translateStaticUI();
-}
-function requestUpgrade(code){
- if(code===(accountPlan?.code||'free'))return;
- const lang=state.settings.language||'en';
- const msg=lang==='ar'
-  ?'تغيير الخطة محمي على الخادم ولا يمكن للمستخدم ترقية نفسه من المتصفح. سنربط الدفع الحقيقي أو ترخيص الشركات في الخطوة التالية.'
-  :lang==='fr'
-  ?"Le changement d’offre est protégé côté serveur. Un utilisateur ne peut pas s’auto-promouvoir depuis le navigateur. Le paiement réel sera connecté à l’étape suivante."
-  :'Plan changes are protected on the server. A user cannot self-upgrade from the browser. Real payment or company licensing will be connected next.';
- const box=document.getElementById('billingMessage');if(box)box.textContent='🔐 '+msg;else alert(msg);
-}
-
 function t(key){const lang=state?.settings?.language||'en';return translations[lang]?.[key]||translations.en[key]||key}
 function pageLabel(id){
- const map={dashboard:'navDashboard',invoices:'navInvoices',clients:'navClients',reports:'navReports',templates:'navTemplates',countries:'navCountries',profile:'navProfile',billing:'navBilling',settings:'navSettings'};
+ const map={dashboard:'navDashboard',invoices:'navInvoices',clients:'navClients',reports:'navReports',templates:'navTemplates',countries:'navCountries',profile:'navProfile',settings:'navSettings'};
  return t(map[id]||id);
 }
 function pageTitle(id){
- const map={dashboard:'overview',invoices:'invoices',clients:'clients',reports:'reports',templates:'templates',countries:'countries',profile:'profile',billing:'billing',settings:'settings'};
+ const map={dashboard:'overview',invoices:'invoices',clients:'clients',reports:'reports',templates:'templates',countries:'countries',profile:'profile',settings:'settings'};
  return t(map[id]||id);
 }
 function buildNav(){
@@ -888,7 +861,6 @@ function showPage(id){
  if(id==='templates')renderTemplates();
  if(id==='countries')renderCountries();
  if(id==='profile')renderProfile();
- if(id==='billing')renderBilling();
  if(id==='settings')loadSettingsForm();
  translateStaticUI();phoneLayout();window.scrollTo(0,0);
 }
@@ -1077,7 +1049,6 @@ function refreshClientSelect(selected){
 }
 function generateInvoiceNumber(){return `${state.settings.prefix}${String(state.settings.nextNo).padStart(4,'0')}`}
 function newInvoice(){
- if(!canAddResource('invoice'))return;
  editingInvoiceId=null;
  const issue=todayISO();
  itemData=[{id:uid('item'),d:'Service or product',q:1,p:0}];
@@ -1125,11 +1096,10 @@ function saveInvoice(statusOverride){
  const inv=collectInvoice(statusOverride);
  if(!inv.clientName||inv.clientName==='Manual client'){const manual=prompt('Client name for this invoice:', 'Client');if(!manual)return;inv.clientName=manual}
  const idx=state.invoices.findIndex(i=>i.id===inv.id);
- if(idx>=0)state.invoices[idx]=inv;else{if(!canAddResource('invoice'))return;state.invoices.push(inv);state.settings.nextNo=Number(state.settings.nextNo||1)+1}
+ if(idx>=0)state.invoices[idx]=inv;else{state.invoices.push(inv);state.settings.nextNo=Number(state.settings.nextNo||1)+1}
  editingInvoiceId=inv.id;persist();alert('Invoice saved ✓');showPage('invoices');
 }
 function duplicateInvoice(id){
- if(!canAddResource('invoice'))return;
  const src=state.invoices.find(i=>i.id===id);if(!src)return;
  const issue=todayISO();const copy={...src,id:uid('inv'),number:generateInvoiceNumber(),issueDate:issue,dueDate:addDays(issue,state.settings.terms),status:'draft',items:src.items.map(i=>({...i,id:uid('item')}))};
  state.invoices.push(copy);state.settings.nextNo++;persist();renderInvoiceList();
@@ -1190,7 +1160,7 @@ function saveClient(){
  const id=document.getElementById('clientId').value||uid('client'),name=document.getElementById('clientName').value.trim();
  if(!name){alert('Enter a client name.');return}
  const c={id,name,email:document.getElementById('clientEmail').value.trim(),country:document.getElementById('clientCountry').value,address:document.getElementById('clientAddress').value.trim(),taxId:document.getElementById('clientTaxId').value.trim()};
- const idx=state.clients.findIndex(x=>x.id===id);if(idx>=0)state.clients[idx]=c;else{if(!canAddResource('client'))return;state.clients.push(c)}persist();resetClientForm();renderClients();
+ const idx=state.clients.findIndex(x=>x.id===id);if(idx>=0)state.clients[idx]=c;else state.clients.push(c);persist();resetClientForm();renderClients();
 }
 function editClient(id){
  const c=clientBy(id);if(!c)return;document.getElementById('clientId').value=c.id;document.getElementById('clientName').value=c.name;document.getElementById('clientEmail').value=c.email||'';document.getElementById('clientCountry').value=c.country||state.settings.country;document.getElementById('clientAddress').value=c.address||'';document.getElementById('clientTaxId').value=c.taxId||'';document.getElementById('clientFormTitle').textContent='Edit client';window.scrollTo(0,0);
@@ -1242,37 +1212,6 @@ const uiPhrases={
  'Status':{fr:'Statut',ar:'الحالة'},
  'Quick actions':{fr:'Actions rapides',ar:'إجراءات سريعة'},
  'Reports':{fr:'Rapports',ar:'التقارير'},
- 'Billing & Plan':{fr:'Abonnement et offre',ar:'الاشتراك والخطة'},
- 'Manage your company plan, limits and subscription status.':{fr:"Gérez l’offre de votre entreprise, ses limites et l’état de l’abonnement.",ar:'أدر خطة مؤسستك وحدود الاستخدام وحالة الاشتراك.'},
- 'Account':{fr:'Compte',ar:'الحساب'},
- 'Server controlled':{fr:'Contrôlé par le serveur',ar:'محمي من الخادم'},
- 'Your AllWorld Factures plan':{fr:'Votre offre AllWorld Factures',ar:'خطتك في AllWorld Factures'},
- 'Plan changes are protected on the server. The browser cannot upgrade itself. Online payment will be connected in the next billing step.':{fr:"Les changements d’offre sont protégés côté serveur. Le navigateur ne peut pas s’auto-promouvoir. Le paiement en ligne sera connecté à l’étape suivante.",ar:'تغيير الخطة محمي على الخادم، ولا يستطيع المتصفح ترقية الحساب بنفسه. سنربط الدفع الإلكتروني في خطوة الفوترة التالية.'},
- 'CURRENT PLAN':{fr:'OFFRE ACTUELLE',ar:'الخطة الحالية'},
- 'Invoice usage':{fr:'Utilisation des factures',ar:'استخدام الفواتير'},
- 'Client usage':{fr:'Utilisation des clients',ar:'استخدام العملاء'},
- 'For testing and small activity':{fr:'Pour les tests et petites activités',ar:'للتجربة والنشاط الصغير'},
- 'invoices / workspace':{fr:'factures / espace',ar:'فاتورة / مساحة عمل'},
- '20 saved clients':{fr:'20 clients enregistrés',ar:'20 عميلاً محفوظًا'},
- 'Cloud synchronization':{fr:'Synchronisation cloud',ar:'مزامنة سحابية'},
- 'PDF printing':{fr:'Impression PDF',ar:'طباعة PDF'},
- 'Reports & CSV':{fr:'Rapports et CSV',ar:'تقارير وCSV'},
- 'Current plan':{fr:'Offre actuelle',ar:'الخطة الحالية'},
- 'For professionals and growing companies':{fr:'Pour professionnels et entreprises en croissance',ar:'للمحترفين والشركات النامية'},
- '500 saved clients':{fr:'500 clients enregistrés',ar:'500 عميل محفوظ'},
- 'Everything in Free':{fr:"Tout ce qui est dans l’offre gratuite",ar:'كل مزايا الخطة المجانية'},
- 'Higher commercial limits':{fr:'Limites commerciales supérieures',ar:'حدود تجارية أعلى'},
- 'Priority features':{fr:'Fonctions prioritaires',ar:'مزايا ذات أولوية'},
- 'Upgrade to Pro':{fr:'Passer à Pro',ar:'الترقية إلى Pro'},
- 'For teams and larger organizations':{fr:'Pour les équipes et grandes organisations',ar:'للفرق والمؤسسات الأكبر'},
- 'workspace limits':{fr:"limites de l’espace",ar:'حدود مساحة العمل'},
- 'Unlimited invoices':{fr:'Factures illimitées',ar:'فواتير غير محدودة'},
- 'Unlimited clients':{fr:'Clients illimités',ar:'عملاء غير محدودين'},
- 'Company-ready plan':{fr:'Offre pensée pour les entreprises',ar:'خطة مهيأة للشركات'},
- 'Team features coming next':{fr:"Fonctions d’équipe bientôt disponibles",ar:'مزايا الفريق في المرحلة القادمة'},
- 'Choose Business':{fr:'Choisir Business',ar:'اختيار Business'},
- 'Choose Free':{fr:"Choisir l’offre gratuite",ar:'اختيار المجانية'},
- 'Manage plan':{fr:"Gérer l’abonnement",ar:'إدارة الخطة'},
  'Revenue, collections, overdue balances and client performance from your cloud invoices.':{fr:'Revenus, encaissements, impayés et performance des clients à partir de vos factures cloud.',ar:'الإيرادات والتحصيل والمبالغ المتأخرة وأداء العملاء انطلاقًا من فواتيرك السحابية.'},
  'This year':{fr:'Cette année',ar:'هذه السنة'},
  'Export CSV':{fr:'Exporter CSV',ar:'تصدير CSV'},
@@ -1467,10 +1406,18 @@ function translateStaticUI(){
 function statusLabel(status){return uiPhrase(status,state.settings.language||'en')}
 function actionLabel(x){return uiPhrase(x,state.settings.language||'en')}
 function phoneLayout(){
- const phone=(screen.width<=820)||(window.innerWidth<=820)||(navigator.maxTouchPoints>0&&screen.width<=1100);
+ const ua=navigator.userAgent||'';
+ const mobileUA=/Android|iPhone|iPad|iPod|Mobile|IEMobile|Opera Mini/i.test(ua);
+ const coarse=window.matchMedia?window.matchMedia('(pointer: coarse)').matches:false;
+ const noHover=window.matchMedia?window.matchMedia('(hover: none)').matches:false;
+ const touch=(navigator.maxTouchPoints||0)>0;
+ const narrow=(window.innerWidth<=820)||(screen.width<=820);
+ const phone=mobileUA||narrow||(touch&&coarse)||(touch&&noHover);
  document.documentElement.classList.toggle('phoneMode',phone);
 }
-phoneLayout();window.addEventListener('resize',phoneLayout);
+phoneLayout();
+window.addEventListener('resize',phoneLayout);
+window.addEventListener('orientationchange',()=>setTimeout(phoneLayout,100));
 
 function setLanguage(lang){
  if(!translations[lang])lang='en';
@@ -1483,7 +1430,7 @@ function setLanguage(lang){
  document.getElementById('authTitle').textContent=t('authTitle');document.getElementById('authSubtitle').textContent=t('authSub');document.getElementById('tabLogin').textContent=t('signIn');document.getElementById('tabSignup').textContent=t('createAccount');
  document.getElementById('loginEmailLabel').textContent=t('email');document.getElementById('loginPasswordLabel').textContent=t('password');document.getElementById('signupNameLabel').textContent=t('yourName');document.getElementById('signupEmailLabel').textContent=t('email');document.getElementById('signupPasswordLabel').textContent=t('password');
  document.getElementById('signupCompanyLabel').textContent=t('companyName');document.getElementById('firstSetupHint').textContent=t('firstSetup');document.getElementById('loginBtn').textContent=t('signIn');document.getElementById('signupBtn').textContent=t('createAccount');document.getElementById('authNote').textContent=t('authNote');
- document.getElementById('profileTitle').textContent=t('profile');document.getElementById('logoutBtn').textContent=t('signOut');document.getElementById('workspaceTitle').textContent=t('workspace');document.getElementById('profileInvoicesLabel').textContent=t('invoiceLabel');document.getElementById('profileClientsLabel').textContent=t('clientLabel');document.getElementById('profileTemplateLabel').textContent=t('templateLabel');document.getElementById('profileLanguageLabel').textContent=t('appLanguage');document.getElementById('profileSettingsBtn').textContent=t('openSettings');document.getElementById('profileLocalNote').textContent=t('localNote');const pb=document.getElementById('profileBillingBtn');if(pb)pb.textContent=uiPhrase('Manage plan');renderPlanBadges();
+ document.getElementById('profileTitle').textContent=t('profile');document.getElementById('logoutBtn').textContent=t('signOut');document.getElementById('workspaceTitle').textContent=t('workspace');document.getElementById('profileInvoicesLabel').textContent=t('invoiceLabel');document.getElementById('profileClientsLabel').textContent=t('clientLabel');document.getElementById('profileTemplateLabel').textContent=t('templateLabel');document.getElementById('profileLanguageLabel').textContent=t('appLanguage');document.getElementById('profileSettingsBtn').textContent=t('openSettings');document.getElementById('profileLocalNote').textContent=t('localNote');
  const bh=document.getElementById('brandingHeading');if(bh)bh.textContent=t('branding');const ll=document.getElementById('logoLabel');if(ll)ll.textContent=t('companyLogo');const rb=document.getElementById('removeLogoBtn');if(rb)rb.textContent=t('removeLogo');const lh=document.getElementById('logoHint');if(lh)lh.textContent=t('logoHint');const ih=document.getElementById('invoiceDefaultsHeading');if(ih)ih.textContent=t('invoiceDefaults');const it=document.getElementById('editorTemplateLabel');if(it)it.textContent=t('invoiceTemplate');const iw=document.getElementById('invoiceWord');if(iw)iw.textContent=t('invoiceWord');
  const sn=document.getElementById('sideNewInvoice');if(sn)sn.textContent=t('createInvoice');
  const wh=document.querySelector('#dashboard .head h1');if(wh)wh.textContent=t('welcome');const wp=document.querySelector('#dashboard .head p');if(wp)wp.textContent=t('welcomeSub');const nb=document.querySelector('#dashboard .head .primary');if(nb)nb.textContent=t('newInvoice');
@@ -1530,7 +1477,7 @@ async function updateRecoveredPassword(){
  const {error}=await sb.auth.updateUser({password:p});
  if(error){box.innerHTML=`<div class="authError show">${esc(error.message)}</div>`;return}
  box.innerHTML=`<div class="resetSuccess">${state.settings.language==='ar'?'تم تحديث كلمة المرور بنجاح.':state.settings.language==='fr'?'Mot de passe mis à jour avec succès.':'Password updated successfully.'}</div>`;
- setTimeout(()=>closeResetModal(),1000);
+ setTimeout(()=>{closeResetModal();phoneLayout();window.scrollTo(0,0)},700);
 }
 
 async function signupLocal(){
@@ -1594,14 +1541,7 @@ async function syncWorkspaceCloud(){
  try{
   normalizeCloudIds();localStorage.setItem(STORAGE,JSON.stringify(state));
   const {error}=await sb.rpc('sync_workspace',{p_workspace:workspacePayload()});
-  if(error){
-   console.error('Cloud sync error',error);
-   if(String(error.message||'').includes('PLAN_LIMIT_')){
-    const lang=state.settings.language||'en';
-    const msg=lang==='ar'?'تعذر الحفظ السحابي لأن الحساب تجاوز حدود الخطة الحالية. افتح صفحة الاشتراك.':lang==='fr'?"La synchronisation cloud a été bloquée car la limite de l’offre actuelle est dépassée. Ouvrez Abonnement.":'Cloud sync was blocked because the current plan limit was exceeded. Open Billing.';
-    alert(msg);showPage('billing');
-   }
-  }
+  if(error)console.error('Cloud sync error',error);
  }catch(e){console.error('Cloud sync error',e)}
 }
 async function loadCloudWorkspace(userId){
@@ -1623,7 +1563,6 @@ async function loadCloudWorkspace(userId){
   if(profile){
    state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',address:profile.address||'',taxId:profile.tax_id||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
    currentUser.name=profile.full_name||currentUser.name;currentUser.company=profile.company_name||currentUser.company;
-   accountPlan={code:profile.plan_code||'free',status:profile.subscription_status||'active',startedAt:profile.subscription_started_at||null,trialEndsAt:profile.trial_ends_at||null};
   }
   if(!hasCloudData && (state.clients.length||state.invoices.length)){
    normalizeCloudIds();
@@ -1631,7 +1570,7 @@ async function loadCloudWorkspace(userId){
   }
   localStorage.setItem(STORAGE,JSON.stringify(state));
   setLanguage(state.settings.language||'en');
-  populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();renderPlanBadges();
+  populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();
  }catch(e){console.error('Cloud load error',e)}
  finally{cloudHydrating=false}
 }
@@ -1643,7 +1582,7 @@ async function restoreSession(){
 function initials(name){return String(name||'AW').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()}
 function updateUserUI(){const init=initials(currentUser?.name||state.settings.business);document.getElementById('topAvatar').textContent=init;document.getElementById('profileAvatar').textContent=init}
 function renderProfile(){
- if(!document.getElementById('profileName'))return;updateUserUI();document.getElementById('profileName').textContent=currentUser?.name||state.settings.business||'Account';document.getElementById('profileEmail').textContent=currentUser?.email||state.settings.email||'';document.getElementById('profileInvoiceCount').textContent=state.invoices.length;document.getElementById('profileClientCount').textContent=state.clients.length;document.getElementById('profileTemplateName').textContent=templateDefs.find(x=>x.id===state.template)?.name||state.template;document.getElementById('profileLanguage').value=state.settings.language||'en';renderPlanBadges();
+ if(!document.getElementById('profileName'))return;updateUserUI();document.getElementById('profileName').textContent=currentUser?.name||state.settings.business||'Account';document.getElementById('profileEmail').textContent=currentUser?.email||state.settings.email||'';document.getElementById('profileInvoiceCount').textContent=state.invoices.length;document.getElementById('profileClientCount').textContent=state.clients.length;document.getElementById('profileTemplateName').textContent=templateDefs.find(x=>x.id===state.template)?.name||state.template;document.getElementById('profileLanguage').value=state.settings.language||'en';
 }
 function loadLogoFile(file){
  if(!file)return;if(file.size>900000){alert('Please choose an image smaller than 900 KB.');return}
