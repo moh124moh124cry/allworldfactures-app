@@ -47,8 +47,9 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .sumrow.total{border-top:1px solid var(--line);padding-top:11px;font-size:20px;color:#0b7772;font-weight:900}.preview{overflow:hidden;position:sticky;top:86px}
 .previewtop{background:linear-gradient(135deg,#08213e,#0e385f);color:#fff;padding:22px;display:flex;justify-content:space-between}.previewtop h2{font-family:Georgia,serif;margin:4px 0 0}.previewbody{padding:20px}
 .previewmeta{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px}.previewmeta span{color:var(--muted)}.previewtotal{margin-top:15px;background:#f2fbfa;padding:12px;border-radius:10px;display:flex;justify-content:space-between;font-weight:900;color:#096f69}
-.amountWords{margin-top:10px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;background:#fff;font-size:10.5px;line-height:1.75;color:var(--ink)}
-.amountWords b{display:block;margin-bottom:2px;color:var(--muted);font-size:9.5px;text-transform:uppercase;letter-spacing:.03em}
+.amountWords{margin-top:16px;padding:13px 14px;border-top:1.5px solid var(--line);border-radius:10px;background:#f8fbfc;font-size:11px;line-height:1.8;color:var(--ink)}
+.amountWords b{display:block;margin-bottom:4px;color:#096f69;font-size:10px;font-weight:900}
+.amountWords span{font-weight:800}
 .previewTaxRow.hidden,.previewDiscountRow.hidden,.previewShippingRow.hidden{display:none}
 
 .notice{padding:12px 14px;background:#edf8f7;border:1px solid #d6efec;color:#146b66;border-radius:11px;font-size:12px;margin-bottom:14px}
@@ -806,8 +807,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
               <div class="sumrow previewShippingRow" id="pShippingRow"><span id="pShippingLabel">Shipping</span><b id="pShipping"></b></div>
             </div>
             <div class="previewtotal"><span id="pTotalLabel">Total due</span><span id="pTotal"></span></div>
-            <div class="amountWords" id="pAmountWordsBox"><b id="pAmountWordsTitle">Amount in words</b><span id="pAmountWords"></span></div>
             <p id="pNotes" style="font-size:11px;color:var(--muted)"></p>
+            <div class="amountWords" id="pAmountWordsBox">
+              <b id="pAmountWordsTitle">Total amount in words</b>
+              <span id="pAmountWords"></span>
+            </div>
             <div class="actions" style="margin-top:15px">
               <button class="btn secondary" onclick="saveDraft()">Save draft</button>
               <button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button>
@@ -1833,7 +1837,7 @@ function invoicePreviewLabels(c,rate,lang){
    tax:`${c.tax} (${rate}%)`,
    shipping:'الشحن / رسوم إضافية',
    total:isTVA?'الإجمالي مع الرسم (TTC)':'الإجمالي المستحق',
-   words:'المبلغ بالحروف'
+   words:'المبلغ الإجمالي بالحروف'
   };
  }
  if(lang==='fr'){
@@ -1843,7 +1847,7 @@ function invoicePreviewLabels(c,rate,lang){
    tax:`${c.tax} (${rate} %)`,
    shipping:'Livraison / frais',
    total:isTVA?'Total TTC':'Total à payer',
-   words:'Montant en lettres'
+   words:'Montant total en lettres'
   };
  }
  return {
@@ -1852,7 +1856,7 @@ function invoicePreviewLabels(c,rate,lang){
   tax:`${c.tax} (${rate}%)`,
   shipping:'Shipping / extra charge',
   total:isTVA?'Total incl. tax (TTC)':'Total due',
-  words:'Amount in words'
+  words:'Total amount in words'
  };
 }
 
@@ -1881,7 +1885,9 @@ function renderPreview(){
  document.getElementById('pTax').textContent=money(tot.tax,cur);
  document.getElementById('pShipping').textContent=money(tot.ship,cur);
  document.getElementById('pTotal').textContent=money(tot.total,cur);
- document.getElementById('pAmountWords').textContent=amountInWords(tot.total,cur,lang);
+ const wordsValue=amountInWords(tot.total,cur,lang);
+ const wordsPrefix=lang==='ar'?'أوقفت هذه الفاتورة عند مبلغ: ':lang==='fr'?'Arrêtée la présente facture à la somme de : ':'This invoice is issued for the total sum of: ';
+ document.getElementById('pAmountWords').textContent=wordsPrefix+wordsValue;
  document.getElementById('pDiscountRow').classList.toggle('hidden',tot.disc<=0);
  document.getElementById('pTaxRow').classList.toggle('hidden',rate<=0);
  document.getElementById('pShippingRow').classList.toggle('hidden',tot.ship<=0);
