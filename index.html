@@ -57,7 +57,8 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .paymentGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px}
 .paymentGrid div{min-width:0;overflow-wrap:anywhere}
 .paymentInstructions{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);color:var(--muted)}
-.directEditBar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcfd}
+.buildProof{margin:10px 0 14px;padding:11px 14px;border-radius:12px;background:#e9faf7;border:1px solid #bcebe4;color:#08766d;font-weight:900;font-size:13px;text-align:center}
+.directEditBar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;border:2px solid #17a89d;border-radius:12px;margin:10px;background:#f0fffc}
 .directEditBar .left{display:flex;align-items:center;gap:8px;min-width:0}
 .directEditBar small{color:var(--muted);font-size:10px;line-height:1.4}
 .directEditBar .actionsMini{display:flex;gap:6px;flex:0 0 auto}
@@ -793,6 +794,8 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
         <div><h1 id="editorTitle">Create invoice</h1><p id="editorSubtitle">Create a professional invoice in four quick steps.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
+
+      <div class="buildProof" id="buildProof">v1.2.1 ✓ — التعديل المباشر الكامل للفاتورة</div>
 
       <div class="invoiceWizard" id="invoiceWizard">
         <button type="button" data-step="1" onclick="setInvoiceStep(1)">1 · Client</button>
@@ -2054,12 +2057,12 @@ function directEditLocale(){
  const lang=state.settings.language||'en';
  const btn=document.getElementById('directEditToggle'),reset=document.getElementById('directEditReset'),hint=document.getElementById('directEditHint');
  if(btn)btn.textContent=directEditMode
-  ?(lang==='ar'?'إنهاء التعديل':lang==='fr'?'Terminer la modification':'Finish editing')
-  :(lang==='ar'?'تعديل مباشر':lang==='fr'?'Modifier directement':'Direct edit');
+  ?(lang==='ar'?'إنهاء تعديل الفاتورة':lang==='fr'?'Terminer la modification':'Finish invoice editing')
+  :(lang==='ar'?'✎ تعديل جميع مواضع الفاتورة':lang==='fr'?'✎ Modifier toute la facture':'✎ Edit entire invoice');
  if(reset)reset.textContent=lang==='ar'?'إلغاء التعديلات':lang==='fr'?'Réinitialiser':'Reset edits';
  if(hint)hint.textContent=directEditMode
-  ?(lang==='ar'?'اضغط على أي نص داخل الفاتورة وعدّله مباشرة.':lang==='fr'?'Touchez n’importe quel texte de la facture pour le modifier.':'Tap any invoice text to edit it directly.')
-  :(lang==='ar'?'يمكنك تعديل أي نص ظاهر داخل الفاتورة مباشرة.':lang==='fr'?'Vous pouvez modifier directement tout texte visible sur la facture.':'You can edit any visible text directly on the invoice.');
+  ?(lang==='ar'?'الآن اضغط على الاسم، العميل، الرقم، التاريخ، البنود، TVA، الإجمالي، المبلغ بالحروف أو بيانات الدفع وعدّلها مباشرة.':lang==='fr'?'Touchez le nom, le client, le numéro, les dates, les lignes, la TVA, le total ou le paiement pour modifier.':'Tap the company, client, number, dates, items, tax, total, words or payment details to edit.')
+  :(lang==='ar'?'اضغط الزر ثم يمكنك تعديل كل النصوص الظاهرة في الفاتورة.':lang==='fr'?'Appuyez sur le bouton pour modifier tous les textes visibles de la facture.':'Press the button to edit all visible invoice text.');
  const bar=document.getElementById('directEditBar');
  if(bar)bar.classList.toggle('editing',directEditMode);
  if(btn)btn.classList.toggle('active',directEditMode);
@@ -2184,6 +2187,8 @@ function renderPreview(){
  if(pbox){pbox.classList.toggle('hidden',!payRows.length&&!ps.paymentInstructions);document.getElementById('pPaymentTitle').textContent=pl.title}
  if(pgrid)pgrid.innerHTML=payRows.join('');
  if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
+ const proof=document.getElementById('buildProof');
+ if(proof)proof.textContent=lang==='ar'?'v1.2.1 ✓ — التعديل المباشر الكامل للفاتورة':lang==='fr'?'v1.2.1 ✓ — modification complète de la facture':'v1.2.1 ✓ — full direct invoice editing';
  const stampEl=document.querySelector('[data-edit-key="stampLabel"]'),sigEl=document.querySelector('[data-edit-key="signatureLabel"]'),footEl=document.getElementById('invoiceFooterNote');
  if(stampEl)stampEl.textContent=lang==='ar'?'ختم المؤسسة':lang==='fr'?'Cachet de l’entreprise':'Company stamp';
  if(sigEl)sigEl.textContent=lang==='ar'?'الإمضاء':lang==='fr'?'Signature autorisée':'Authorized signature';
