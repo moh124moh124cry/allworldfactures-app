@@ -47,6 +47,10 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .sumrow.total{border-top:1px solid var(--line);padding-top:11px;font-size:20px;color:#0b7772;font-weight:900}.preview{overflow:hidden;position:sticky;top:86px}
 .previewtop{background:linear-gradient(135deg,#08213e,#0e385f);color:#fff;padding:22px;display:flex;justify-content:space-between}.previewtop h2{font-family:Georgia,serif;margin:4px 0 0}.previewbody{padding:20px}
 .previewmeta{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px}.previewmeta span{color:var(--muted)}.previewtotal{margin-top:15px;background:#f2fbfa;padding:12px;border-radius:10px;display:flex;justify-content:space-between;font-weight:900;color:#096f69}
+.amountWords{margin-top:10px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;background:#fff;font-size:10.5px;line-height:1.75;color:var(--ink)}
+.amountWords b{display:block;margin-bottom:2px;color:var(--muted);font-size:9.5px;text-transform:uppercase;letter-spacing:.03em}
+.previewTaxRow.hidden,.previewDiscountRow.hidden,.previewShippingRow.hidden{display:none}
+
 .notice{padding:12px 14px;background:#edf8f7;border:1px solid #d6efec;color:#146b66;border-radius:11px;font-size:12px;margin-bottom:14px}
 .warn{background:#fff8e9;border-color:#f5e1b7;color:#8a651f}.country{display:grid;grid-template-columns:1.35fr .85fr .8fr .8fr;gap:8px;padding:12px 14px;border:1px solid var(--line);background:#fff;border-radius:11px;margin:8px 0}.country small{color:var(--muted)}
 .templates{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.template{padding:14px;cursor:pointer;position:relative}.template.selected{outline:2px solid var(--teal);box-shadow:0 0 0 4px #0f9f9812}
@@ -796,10 +800,13 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
             <div class="previewmeta"><div><b>Bill to</b><br><span id="pClient"></span></div><div><b>Compliance</b><br><span id="pCountry"></span></div></div>
             <div class="tablewrap" style="margin-top:14px"><table style="min-width:0"><thead><tr><th>Item</th><th>Qty</th><th>Total</th></tr></thead><tbody id="pItems"></tbody></table></div>
             <div style="margin-top:14px;font-size:11px">
-              <div class="sumrow"><span>Subtotal</span><b id="pSubtotal"></b></div>
-              <div class="sumrow"><span>Tax & adjustments</span><b id="pAdjustments"></b></div>
+              <div class="sumrow"><span id="pSubtotalLabel">Subtotal</span><b id="pSubtotal"></b></div>
+              <div class="sumrow previewDiscountRow" id="pDiscountRow"><span id="pDiscountLabel">Discount</span><b id="pDiscount"></b></div>
+              <div class="sumrow previewTaxRow" id="pTaxRow"><span id="pTaxLabel">Tax</span><b id="pTax"></b></div>
+              <div class="sumrow previewShippingRow" id="pShippingRow"><span id="pShippingLabel">Shipping</span><b id="pShipping"></b></div>
             </div>
-            <div class="previewtotal"><span>Total due</span><span id="pTotal"></span></div>
+            <div class="previewtotal"><span id="pTotalLabel">Total due</span><span id="pTotal"></span></div>
+            <div class="amountWords" id="pAmountWordsBox"><b id="pAmountWordsTitle">Amount in words</b><span id="pAmountWords"></span></div>
             <p id="pNotes" style="font-size:11px;color:var(--muted)"></p>
             <div class="actions" style="margin-top:15px">
               <button class="btn secondary" onclick="saveDraft()">Save draft</button>
@@ -1670,6 +1677,185 @@ function calcCurrent(){
  const taxable=sub-disc;const tax=taxable*Number(document.getElementById('tax').value||0)/100;
  const ship=Number(document.getElementById('shipping').value||0);return{sub,disc,tax,ship,total:taxable+tax+ship}
 }
+
+const CURRENCY_WORDS={
+ DZD:{ar:['دينار جزائري','سنتيم'],en:['Algerian dinar','centime'],fr:['dinar algérien','centime']},
+ EUR:{ar:['يورو','سنت'],en:['euro','cent'],fr:['euro','centime']},
+ USD:{ar:['دولار أمريكي','سنت'],en:['US dollar','cent'],fr:['dollar américain','cent']},
+ GBP:{ar:['جنيه إسترليني','بنس'],en:['British pound','penny'],fr:['livre sterling','penny']},
+ AED:{ar:['درهم إماراتي','فلس'],en:['UAE dirham','fils'],fr:['dirham des EAU','fils']},
+ SAR:{ar:['ريال سعودي','هللة'],en:['Saudi riyal','halala'],fr:['riyal saoudien','halala']},
+ MAD:{ar:['درهم مغربي','سنتيم'],en:['Moroccan dirham','centime'],fr:['dirham marocain','centime']},
+ TND:{ar:['دينار تونسي','مليم'],en:['Tunisian dinar','millime'],fr:['dinar tunisien','millime']},
+ EGP:{ar:['جنيه مصري','قرش'],en:['Egyptian pound','piastre'],fr:['livre égyptienne','piastre']},
+ CAD:{ar:['دولار كندي','سنت'],en:['Canadian dollar','cent'],fr:['dollar canadien','cent']},
+ CHF:{ar:['فرنك سويسري','رابن'],en:['Swiss franc','rappen'],fr:['franc suisse','rappen']},
+ TRY:{ar:['ليرة تركية','قرش'],en:['Turkish lira','kuruş'],fr:['livre turque','kuruş']},
+ INR:{ar:['روبية هندية','بيسة'],en:['Indian rupee','paise'],fr:['roupie indienne','paisa']},
+ JPY:{ar:['ين ياباني','سن'],en:['Japanese yen','sen'],fr:['yen japonais','sen']},
+ BRL:{ar:['ريال برازيلي','سنتافو'],en:['Brazilian real','centavo'],fr:['réal brésilien','centavo']}
+};
+
+function wordsCurrency(cur,lang){
+ const x=CURRENCY_WORDS[cur]||{ar:[cur,'جزء'],en:[cur,'cent'],fr:[cur,'centime']};
+ return x[lang]||x.en;
+}
+
+function intToEnglish(n){
+ n=Math.floor(Math.abs(Number(n)||0));
+ if(n===0)return 'zero';
+ const ones=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+ const tens=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+ const scales=[[1e12,'trillion'],[1e9,'billion'],[1e6,'million'],[1000,'thousand']];
+ function under1000(x){
+  let a=[];
+  if(x>=100){a.push(ones[Math.floor(x/100)]+' hundred');x%=100}
+  if(x>=20){a.push(tens[Math.floor(x/10)]+(x%10?'-'+ones[x%10]:''))}
+  else if(x>0)a.push(ones[x]);
+  return a.join(' ');
+ }
+ let out=[];
+ for(const [v,name] of scales){
+  if(n>=v){const q=Math.floor(n/v);out.push(intToEnglish(q)+' '+name);n%=v}
+ }
+ if(n)out.push(under1000(n));
+ return out.join(' ').trim();
+}
+
+function intToFrench(n){
+ n=Math.floor(Math.abs(Number(n)||0));
+ if(n===0)return 'zéro';
+ const u=['','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize'];
+ function below100(x){
+  if(x<17)return u[x];
+  if(x<20)return 'dix-'+u[x-10];
+  if(x<70){
+   const t=Math.floor(x/10),r=x%10,tn={2:'vingt',3:'trente',4:'quarante',5:'cinquante',6:'soixante'}[t];
+   if(r===0)return tn;
+   if(r===1)return tn+' et un';
+   return tn+'-'+below100(r);
+  }
+  if(x<80){
+   if(x===71)return 'soixante et onze';
+   return 'soixante-'+below100(x-60);
+  }
+  if(x===80)return 'quatre-vingts';
+  return 'quatre-vingt-'+below100(x-80);
+ }
+ function below1000(x){
+  if(x<100)return below100(x);
+  const h=Math.floor(x/100),r=x%100;
+  let s=h===1?'cent':u[h]+' cent';
+  if(r===0&&h>1)s+='s';
+  return r?s+' '+below100(r):s;
+ }
+ function chunk(q,name,singularName){
+  if(q===0)return '';
+  if(name==='mille')return (q===1?'mille':intToFrench(q)+' mille');
+  return intToFrench(q)+' '+(q===1?singularName:name);
+ }
+ let out=[];
+ const scales=[
+  [1e12,'billions','billion'],
+  [1e9,'milliards','milliard'],
+  [1e6,'millions','million'],
+  [1000,'mille','mille']
+ ];
+ for(const [v,p,s] of scales){
+  if(n>=v){const q=Math.floor(n/v);out.push(chunk(q,p,s));n%=v}
+ }
+ if(n)out.push(below1000(n));
+ return out.join(' ').trim();
+}
+
+function intToArabic(n){
+ n=Math.floor(Math.abs(Number(n)||0));
+ if(n===0)return 'صفر';
+ const ones=['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة','أحد عشر','اثنا عشر','ثلاثة عشر','أربعة عشر','خمسة عشر','ستة عشر','سبعة عشر','ثمانية عشر','تسعة عشر'];
+ const tens=['','','عشرون','ثلاثون','أربعون','خمسون','ستون','سبعون','ثمانون','تسعون'];
+ const hundreds=['','مائة','مائتان','ثلاثمائة','أربعمائة','خمسمائة','ستمائة','سبعمائة','ثمانمائة','تسعمائة'];
+ function under100(x){
+  if(x<20)return ones[x];
+  const t=Math.floor(x/10),r=x%10;
+  return r?ones[r]+' و'+tens[t]:tens[t];
+ }
+ function under1000(x){
+  if(x<100)return under100(x);
+  const h=Math.floor(x/100),r=x%100;
+  return r?hundreds[h]+' و'+under100(r):hundreds[h];
+ }
+ function arabicScale(q,forms){
+  if(q===1)return forms[0];
+  if(q===2)return forms[1];
+  if(q>=3&&q<=10)return intToArabic(q)+' '+forms[2];
+  return intToArabic(q)+' '+forms[3];
+ }
+ const scales=[
+  [1e12,['تريليون','تريليونان','تريليونات','تريليونًا']],
+  [1e9,['مليار','ملياران','مليارات','مليارًا']],
+  [1e6,['مليون','مليونان','ملايين','مليونًا']],
+  [1000,['ألف','ألفان','آلاف','ألفًا']]
+ ];
+ let out=[];
+ for(const [v,forms] of scales){
+  if(n>=v){const q=Math.floor(n/v);out.push(arabicScale(q,forms));n%=v}
+ }
+ if(n)out.push(under1000(n));
+ return out.join(' و').trim();
+}
+
+function amountInWords(amount,cur,lang){
+ const value=Math.max(0,Number(amount)||0);
+ const major=Math.floor(value+1e-9),minor=Math.round((value-major)*100);
+ const [majorName,minorName]=wordsCurrency(cur,lang);
+ if(lang==='ar'){
+  let s=`${intToArabic(major)} ${majorName}`;
+  if(minor)s+=` و${intToArabic(minor)} ${minorName}`;
+  return s+' فقط لا غير';
+ }
+ if(lang==='fr'){
+  let s=`${intToFrench(major)} ${majorName}`;
+  if(major!==1&&['euro'].includes(majorName))s+='s';
+  if(minor)s+=` et ${intToFrench(minor)} ${minorName}${minor!==1?'s':''}`;
+  return (s+' seulement').replace(/\s+/g,' ').trim();
+ }
+ let s=`${intToEnglish(major)} ${majorName}${major!==1&&!majorName.endsWith('s')?'s':''}`;
+ if(minor)s+=` and ${intToEnglish(minor)} ${minorName}${minor!==1?'s':''}`;
+ return (s+' only').replace(/\s+/g,' ').trim();
+}
+
+function invoicePreviewLabels(c,rate,lang){
+ const isTVA=String(c.tax||'').toUpperCase()==='TVA';
+ if(lang==='ar'){
+  return {
+   subtotal:isTVA?'المجموع خارج الرسم (HT)':'المجموع الفرعي',
+   discount:'الخصم',
+   tax:`${c.tax} (${rate}%)`,
+   shipping:'الشحن / رسوم إضافية',
+   total:isTVA?'الإجمالي مع الرسم (TTC)':'الإجمالي المستحق',
+   words:'المبلغ بالحروف'
+  };
+ }
+ if(lang==='fr'){
+  return {
+   subtotal:isTVA?'Total HT':'Sous-total',
+   discount:'Remise',
+   tax:`${c.tax} (${rate} %)`,
+   shipping:'Livraison / frais',
+   total:isTVA?'Total TTC':'Total à payer',
+   words:'Montant en lettres'
+  };
+ }
+ return {
+  subtotal:isTVA?'Subtotal excl. tax (HT)':'Subtotal',
+  discount:'Discount',
+  tax:`${c.tax} (${rate}%)`,
+  shipping:'Shipping / extra charge',
+  total:isTVA?'Total incl. tax (TTC)':'Total due',
+  words:'Amount in words'
+ };
+}
+
 function renderPreview(){
  if(!document.getElementById('currency'))return;
  updateLogoDisplays();
@@ -1683,8 +1869,24 @@ function renderPreview(){
  document.getElementById('pClient').innerHTML=`${esc(selected?.name||manualName||uiPhrase('Client'))}<br>${esc(document.getElementById('email').value)}${selected?.address?'<br>'+esc(selected.address):''}`;
  document.getElementById('pCountry').innerHTML=`${c.flag} ${esc(c.name)}<br>${esc(c.tax)} · ${esc(cur)}`;
  document.getElementById('pItems').innerHTML=itemData.map(i=>`<tr><td>${esc(i.d)}</td><td>${Number(i.q)}</td><td>${money(Number(i.q)*Number(i.p),cur)}</td></tr>`).join('');
- document.getElementById('pSubtotal').textContent=money(tot.sub,cur);document.getElementById('pAdjustments').textContent=money(tot.tax-tot.disc+tot.ship,cur);document.getElementById('pTotal').textContent=money(tot.total,cur);document.getElementById('pNotes').textContent=document.getElementById('notes').value;
- document.getElementById('sumSubtotal').textContent=money(tot.sub,cur);document.getElementById('sumDiscount').textContent='- '+money(tot.disc,cur);document.getElementById('sumTax').textContent=money(tot.tax,cur);document.getElementById('sumShipping').textContent=money(tot.ship,cur);document.getElementById('sumTotal').textContent=money(tot.total,cur);document.getElementById('taxLabel').textContent=`${c.tax} (${document.getElementById('tax').value||0}%)`;
+ const rate=Number(document.getElementById('tax').value||0),lang=state.settings.language||'en',lbl=invoicePreviewLabels(c,rate,lang);
+ document.getElementById('pSubtotalLabel').textContent=lbl.subtotal;
+ document.getElementById('pDiscountLabel').textContent=lbl.discount;
+ document.getElementById('pTaxLabel').textContent=lbl.tax;
+ document.getElementById('pShippingLabel').textContent=lbl.shipping;
+ document.getElementById('pTotalLabel').textContent=lbl.total;
+ document.getElementById('pAmountWordsTitle').textContent=lbl.words;
+ document.getElementById('pSubtotal').textContent=money(tot.sub,cur);
+ document.getElementById('pDiscount').textContent='- '+money(tot.disc,cur);
+ document.getElementById('pTax').textContent=money(tot.tax,cur);
+ document.getElementById('pShipping').textContent=money(tot.ship,cur);
+ document.getElementById('pTotal').textContent=money(tot.total,cur);
+ document.getElementById('pAmountWords').textContent=amountInWords(tot.total,cur,lang);
+ document.getElementById('pDiscountRow').classList.toggle('hidden',tot.disc<=0);
+ document.getElementById('pTaxRow').classList.toggle('hidden',rate<=0);
+ document.getElementById('pShippingRow').classList.toggle('hidden',tot.ship<=0);
+ document.getElementById('pNotes').textContent=document.getElementById('notes').value;
+ document.getElementById('sumSubtotal').textContent=money(tot.sub,cur);document.getElementById('sumDiscount').textContent='- '+money(tot.disc,cur);document.getElementById('sumTax').textContent=money(tot.tax,cur);document.getElementById('sumShipping').textContent=money(tot.ship,cur);document.getElementById('sumTotal').textContent=money(tot.total,cur);document.getElementById('taxLabel').textContent=`${c.tax} (${rate}%)`;
  [...document.querySelectorAll('.linerow b')].forEach((b,n)=>{if(itemData[n])b.textContent=money(Number(itemData[n].q)*Number(itemData[n].p),cur)});
  const live=money(tot.total,cur);
  const wt=document.getElementById('wizardTotal'),bt=document.getElementById('bottomInvoiceTotal');if(wt)wt.textContent=live;if(bt)bt.textContent=live;
