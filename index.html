@@ -79,6 +79,30 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 @media(max-width:1100px){.stats{grid-template-columns:1fr 1fr}.grid2,.invoicegrid{grid-template-columns:1fr}.preview{position:static}.templates{grid-template-columns:1fr 1fr}.clientcards{grid-template-columns:1fr 1fr}.formgrid.cols3{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.authWrap{grid-template-columns:1fr}.authHero{display:none}.authPanel{padding:26px 20px}.profileGrid{grid-template-columns:1fr}.profileStats{grid-template-columns:1fr 1fr}.langSelect{max-width:94px}.app{display:block}.side{display:none}.top{height:60px;padding:0 14px}.top small{display:none}.content{padding:16px 12px 82px}.head{align-items:flex-start;flex-direction:column}.formgrid,.formgrid.cols3{grid-template-columns:1fr}.templates,.clientcards{grid-template-columns:1fr}.mobile{display:flex;position:fixed;left:9px;right:9px;bottom:9px;background:var(--navy);border-radius:17px;padding:7px;z-index:30;justify-content:space-around}.mobile button{border:0;background:transparent;color:#ffffffaa;font-size:9px;padding:6px}.mobile button.active{color:#55d9d0}.country{grid-template-columns:1.35fr .85fr}.country>:nth-child(3),.country>:nth-child(4){display:none}.actions{width:100%}.actions .btn{flex:1}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:20px}}
 @media print{html,body{background:#fff!important}.authScreen{display:none!important}body{background:#fff}.side,.top,.mobile,.editor,.head,.notice{display:none!important}.app{display:block}.content{padding:0}.invoicegrid{display:block}.preview{border:0;box-shadow:none}.previewbody{padding:28px}.page:not(#invoiceEditor){display:none!important}}
+
+/* v0.3.1 auth/mobile polish */
+.passwordWrap{position:relative}
+.passwordWrap .input{padding-inline-end:48px}
+.passwordToggle{position:absolute;inset-inline-end:7px;bottom:6px;width:38px;height:34px;border:0;border-radius:8px;background:#f2f5f7;color:#536175;font-weight:800}
+.authScreen .mobile{display:none!important}
+.authWelcomeBrand{display:none;font-family:Georgia,serif;font-size:23px;font-weight:800;margin-bottom:18px;color:var(--navy)}
+.signupGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.firstSetupHint{display:none;margin:10px 0 0;padding:9px 11px;border-radius:9px;background:#edf8f7;color:#146b66;font-size:11px}
+@media(max-width:700px){
+  .authScreen{padding:84px 14px 22px;place-items:start center}
+  .authWrap{border-radius:22px;box-shadow:0 22px 55px #0007}
+  .authPanel{padding:28px 20px 24px}
+  .authWelcomeBrand{display:block}
+  .authPanel h2{font-size:30px}
+  .authPanel>p{font-size:14px;line-height:1.6}
+  .authTabs button{padding:12px 8px}
+  .authLang{top:20px;inset-inline-start:20px;inset-inline-end:auto;min-width:122px;font-size:15px}
+  .signupGrid{grid-template-columns:1fr}
+  .topright #settingsTopBtn{display:none}
+  .topright{gap:6px}
+  .avatar{width:34px;height:34px}
+}
+
 </style>
 </head>
 <body>
@@ -98,20 +122,25 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
       </div>
     </div>
     <div class="authPanel">
+      <div class="authWelcomeBrand">AllWorld Factures</div>
       <h2 id="authTitle">Welcome</h2>
       <p id="authSubtitle">Sign in or create your local prototype account.</p>
       <div class="authTabs"><button id="tabLogin" class="active" onclick="switchAuth('login')">Sign in</button><button id="tabSignup" onclick="switchAuth('signup')">Create account</button></div>
       <div id="authError" class="authError"></div>
       <div id="loginForm">
         <div class="field" style="margin-bottom:11px"><label id="loginEmailLabel">EMAIL</label><input id="loginEmail" class="input" type="email" autocomplete="email"></div>
-        <div class="field" style="margin-bottom:15px"><label id="loginPasswordLabel">PASSWORD</label><input id="loginPassword" class="input" type="password" autocomplete="current-password"></div>
+        <div class="field passwordWrap" style="margin-bottom:15px"><label id="loginPasswordLabel">PASSWORD</label><input id="loginPassword" class="input" type="password" autocomplete="current-password"><button class="passwordToggle" type="button" onclick="togglePassword('loginPassword',this)">◉</button></div>
         <button id="loginBtn" class="btn primary" style="width:100%" onclick="loginLocal()">Sign in</button>
       </div>
       <div id="signupForm" class="hidden">
-        <div class="field" style="margin-bottom:11px"><label id="signupNameLabel">YOUR NAME</label><input id="signupName" class="input"></div>
-        <div class="field" style="margin-bottom:11px"><label id="signupEmailLabel">EMAIL</label><input id="signupEmail" class="input" type="email"></div>
-        <div class="field" style="margin-bottom:15px"><label id="signupPasswordLabel">PASSWORD</label><input id="signupPassword" class="input" type="password"></div>
+        <div class="signupGrid">
+          <div class="field" style="margin-bottom:11px"><label id="signupNameLabel">YOUR NAME</label><input id="signupName" class="input" autocomplete="name"></div>
+          <div class="field" style="margin-bottom:11px"><label id="signupCompanyLabel">COMPANY NAME</label><input id="signupCompany" class="input" autocomplete="organization"></div>
+        </div>
+        <div class="field" style="margin-bottom:11px"><label id="signupEmailLabel">EMAIL</label><input id="signupEmail" class="input" type="email" autocomplete="email"></div>
+        <div class="field passwordWrap" style="margin-bottom:15px"><label id="signupPasswordLabel">PASSWORD</label><input id="signupPassword" class="input" type="password" autocomplete="new-password"><button class="passwordToggle" type="button" onclick="togglePassword('signupPassword',this)">◉</button></div>
         <button id="signupBtn" class="btn primary" style="width:100%" onclick="signupLocal()">Create account</button>
+        <div id="firstSetupHint" class="firstSetupHint">After account creation, we will open your company settings.</div>
       </div>
       <div id="authNote" class="authNote">Prototype authentication: account data stays in this browser only. Real cloud authentication will be added with the database phase.</div>
     </div>
@@ -170,7 +199,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.2: invoices and clients are now saved on this device using browser storage. Cloud accounts will be a later step.</div>
+      <div class="notice">Version 0.3.1: multilingual local account, company setup, logo branding and invoice management are active. Cloud sync comes in the database phase.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -308,8 +337,8 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 
   </div>
 </main>
-</div>
 <div class="mobile" id="mobileNav"></div>
+</div>
 
 <script>
 const pages=[
@@ -364,7 +393,7 @@ const translations={
  signOut:'Sign out',workspace:'Workspace',invoiceLabel:'Invoices',clientLabel:'Clients',templateLabel:'Template',appLanguage:'APP LANGUAGE',openSettings:'Open business settings',
  settingsBtn:'⚙ Settings',brandSub:'Invoicing without borders',authHero:'Professional invoicing made simple, multilingual and ready for businesses around the world.',
  authF1:'Create invoices in multiple currencies',authF2:'Save clients and invoices on your device',authF3:'Print clean PDF invoices',authTitle:'Welcome',authSub:'Sign in or create your local prototype account.',
- signIn:'Sign in',createAccount:'Create account',email:'EMAIL',password:'PASSWORD',yourName:'YOUR NAME',
+ signIn:'Sign in',createAccount:'Create account',email:'EMAIL',password:'PASSWORD',yourName:'YOUR NAME',companyName:'COMPANY NAME',firstSetup:'After account creation, we will open your company settings.',
  authNote:'Prototype authentication: account data stays in this browser only. Real cloud authentication will be added with the database phase.',
  localNote:'This prototype account exists only in this browser.',branding:'Branding',companyLogo:'COMPANY LOGO',removeLogo:'Remove logo',logoHint:'Stored locally in this browser. Use a small PNG/JPG.',invoiceDefaults:'Invoice defaults',invoiceTemplate:'INVOICE TEMPLATE',invoiceWord:'INVOICE'},
  fr:{navDashboard:'Tableau de bord',navInvoices:'Factures',navClients:'Clients',navTemplates:'Modèles',navCountries:'Pays',navProfile:'Profil',navSettings:'Paramètres',
@@ -373,7 +402,7 @@ const translations={
  signOut:'Se déconnecter',workspace:'Espace de travail',invoiceLabel:'Factures',clientLabel:'Clients',templateLabel:'Modèle',appLanguage:"LANGUE DE L’APPLICATION",openSettings:'Ouvrir les paramètres entreprise',
  settingsBtn:'⚙ Paramètres',brandSub:'Facturation sans frontières',authHero:'Une facturation professionnelle, simple, multilingue et pensée pour les entreprises du monde entier.',
  authF1:'Créer des factures en plusieurs devises',authF2:'Enregistrer clients et factures sur cet appareil',authF3:'Imprimer des factures PDF propres',authTitle:'Bienvenue',authSub:'Connectez-vous ou créez votre compte prototype local.',
- signIn:'Se connecter',createAccount:'Créer un compte',email:'E-MAIL',password:'MOT DE PASSE',yourName:'VOTRE NOM',
+ signIn:'Se connecter',createAccount:'Créer un compte',email:'E-MAIL',password:'MOT DE PASSE',yourName:'VOTRE NOM',companyName:'NOM DE L’ENTREPRISE',firstSetup:'Après la création du compte, nous ouvrirons les paramètres de votre entreprise.',
  authNote:"Authentification prototype : les données du compte restent dans ce navigateur. L’authentification cloud arrivera avec la base de données.",
  localNote:'Ce compte prototype existe uniquement dans ce navigateur.',branding:'Identité visuelle',companyLogo:'LOGO DE L’ENTREPRISE',removeLogo:'Supprimer le logo',logoHint:'Enregistré localement dans ce navigateur. Utilisez un petit PNG/JPG.',invoiceDefaults:'Paramètres de facture',invoiceTemplate:'MODÈLE DE FACTURE',invoiceWord:'FACTURE'},
  ar:{navDashboard:'لوحة التحكم',navInvoices:'الفواتير',navClients:'العملاء',navTemplates:'القوالب',navCountries:'الدول',navProfile:'الملف الشخصي',navSettings:'الإعدادات',
@@ -382,7 +411,7 @@ const translations={
  signOut:'تسجيل الخروج',workspace:'مساحة العمل',invoiceLabel:'الفواتير',clientLabel:'العملاء',templateLabel:'القالب',appLanguage:'لغة التطبيق',openSettings:'فتح إعدادات المؤسسة',
  settingsBtn:'⚙ الإعدادات',brandSub:'فواتير بلا حدود',authHero:'فواتير احترافية سهلة ومتعددة اللغات ومهيأة للأعمال حول العالم.',
  authF1:'إنشاء فواتير بعملات متعددة',authF2:'حفظ العملاء والفواتير على جهازك',authF3:'طباعة فواتير PDF مرتبة',authTitle:'مرحبًا',authSub:'سجّل الدخول أو أنشئ حساب النموذج المحلي.',
- signIn:'تسجيل الدخول',createAccount:'إنشاء حساب',email:'البريد الإلكتروني',password:'كلمة المرور',yourName:'اسمك',
+ signIn:'تسجيل الدخول',createAccount:'إنشاء حساب',email:'البريد الإلكتروني',password:'كلمة المرور',yourName:'اسمك',companyName:'اسم المؤسسة',firstSetup:'بعد إنشاء الحساب سنفتح إعدادات المؤسسة لإكمال بياناتها.',
  authNote:'تسجيل الدخول في هذه النسخة تجريبي ومحلي فقط. الحساب السحابي الحقيقي سيُضاف مع مرحلة قاعدة البيانات.',
  localNote:'هذا الحساب التجريبي موجود فقط داخل هذا المتصفح.',branding:'الهوية البصرية',companyLogo:'شعار المؤسسة',removeLogo:'حذف الشعار',logoHint:'يُحفظ محليًا في المتصفح. استخدم صورة PNG/JPG صغيرة.',invoiceDefaults:'إعدادات الفاتورة',invoiceTemplate:'قالب الفاتورة',invoiceWord:'فاتورة'}
 };
@@ -676,7 +705,7 @@ function setLanguage(lang){
  document.getElementById('authHeroText').textContent=t('authHero');document.getElementById('authFeat1').textContent=t('authF1');document.getElementById('authFeat2').textContent=t('authF2');document.getElementById('authFeat3').textContent=t('authF3');
  document.getElementById('authTitle').textContent=t('authTitle');document.getElementById('authSubtitle').textContent=t('authSub');document.getElementById('tabLogin').textContent=t('signIn');document.getElementById('tabSignup').textContent=t('createAccount');
  document.getElementById('loginEmailLabel').textContent=t('email');document.getElementById('loginPasswordLabel').textContent=t('password');document.getElementById('signupNameLabel').textContent=t('yourName');document.getElementById('signupEmailLabel').textContent=t('email');document.getElementById('signupPasswordLabel').textContent=t('password');
- document.getElementById('loginBtn').textContent=t('signIn');document.getElementById('signupBtn').textContent=t('createAccount');document.getElementById('authNote').textContent=t('authNote');
+ document.getElementById('signupCompanyLabel').textContent=t('companyName');document.getElementById('firstSetupHint').textContent=t('firstSetup');document.getElementById('loginBtn').textContent=t('signIn');document.getElementById('signupBtn').textContent=t('createAccount');document.getElementById('authNote').textContent=t('authNote');
  document.getElementById('profileTitle').textContent=t('profile');document.getElementById('logoutBtn').textContent=t('signOut');document.getElementById('workspaceTitle').textContent=t('workspace');document.getElementById('profileInvoicesLabel').textContent=t('invoiceLabel');document.getElementById('profileClientsLabel').textContent=t('clientLabel');document.getElementById('profileTemplateLabel').textContent=t('templateLabel');document.getElementById('profileLanguageLabel').textContent=t('appLanguage');document.getElementById('profileSettingsBtn').textContent=t('openSettings');document.getElementById('profileLocalNote').textContent=t('localNote');
  const bh=document.getElementById('brandingHeading');if(bh)bh.textContent=t('branding');const ll=document.getElementById('logoLabel');if(ll)ll.textContent=t('companyLogo');const rb=document.getElementById('removeLogoBtn');if(rb)rb.textContent=t('removeLogo');const lh=document.getElementById('logoHint');if(lh)lh.textContent=t('logoHint');const ih=document.getElementById('invoiceDefaultsHeading');if(ih)ih.textContent=t('invoiceDefaults');const it=document.getElementById('editorTemplateLabel');if(it)it.textContent=t('invoiceTemplate');const iw=document.getElementById('invoiceWord');if(iw)iw.textContent=t('invoiceWord');
  const sn=document.getElementById('sideNewInvoice');if(sn)sn.textContent=t('createInvoice');
@@ -690,25 +719,27 @@ async function hashPassword(value){
  if(window.crypto?.subtle){const b=new TextEncoder().encode(value);const h=await crypto.subtle.digest('SHA-256',b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')}
  return btoa(unescape(encodeURIComponent(value)));
 }
+function togglePassword(id,btn){const e=document.getElementById(id);if(!e)return;e.type=e.type==='password'?'text':'password';btn.textContent=e.type==='password'?'◉':'○'}
 function authData(){try{return JSON.parse(localStorage.getItem(AUTH_STORAGE))||{accounts:[]}}catch(e){return{accounts:[]}}}
 function saveAuthData(d){localStorage.setItem(AUTH_STORAGE,JSON.stringify(d))}
 function showAuthError(msg){const e=document.getElementById('authError');e.textContent=msg;e.classList.add('show')}
 function clearAuthError(){document.getElementById('authError').classList.remove('show')}
 function switchAuth(mode){
- authMode=mode;clearAuthError();document.getElementById('loginForm').classList.toggle('hidden',mode!=='login');document.getElementById('signupForm').classList.toggle('hidden',mode!=='signup');document.getElementById('tabLogin').classList.toggle('active',mode==='login');document.getElementById('tabSignup').classList.toggle('active',mode==='signup');
+ authMode=mode;clearAuthError();document.getElementById('loginForm').classList.toggle('hidden',mode!=='login');document.getElementById('signupForm').classList.toggle('hidden',mode!=='signup');document.getElementById('tabLogin').classList.toggle('active',mode==='login');document.getElementById('tabSignup').classList.toggle('active',mode==='signup');document.getElementById('firstSetupHint').style.display=mode==='signup'?'block':'none';
 }
 async function signupLocal(){
- clearAuthError();const name=document.getElementById('signupName').value.trim(),email=document.getElementById('signupEmail').value.trim().toLowerCase(),password=document.getElementById('signupPassword').value;
- if(!name||!email||password.length<4){showAuthError(state.settings.language==='ar'?'أدخل الاسم والبريد وكلمة مرور من 4 أحرف على الأقل.':state.settings.language==='fr'?'Saisissez le nom, l’e-mail et un mot de passe d’au moins 4 caractères.':'Enter name, email and a password of at least 4 characters.');return}
+ clearAuthError();const name=document.getElementById('signupName').value.trim(),company=document.getElementById('signupCompany').value.trim(),email=document.getElementById('signupEmail').value.trim().toLowerCase(),password=document.getElementById('signupPassword').value;
+ if(!name||!company||!email||password.length<4){showAuthError(state.settings.language==='ar'?'أدخل الاسم واسم المؤسسة والبريد وكلمة مرور من 4 أحرف على الأقل.':state.settings.language==='fr'?'Saisissez le nom, l’entreprise, l’e-mail et un mot de passe d’au moins 4 caractères.':'Enter your name, company, email and a password of at least 4 characters.');return}
  const d=authData();if(d.accounts.some(a=>a.email===email)){showAuthError(state.settings.language==='ar'?'هذا البريد مسجل بالفعل.':state.settings.language==='fr'?'Cet e-mail existe déjà.':'This email already exists.');return}
- const account={id:uid('user'),name,email,passwordHash:await hashPassword(password),createdAt:new Date().toISOString()};d.accounts.push(account);saveAuthData(d);startSession(account);
+ const account={id:uid('user'),name,company,email,passwordHash:await hashPassword(password),createdAt:new Date().toISOString()};d.accounts.push(account);saveAuthData(d);
+ state.settings.business=company;state.settings.email=email;persist();startSession(account,true);
 }
 async function loginLocal(){
  clearAuthError();const email=document.getElementById('loginEmail').value.trim().toLowerCase(),password=document.getElementById('loginPassword').value;const d=authData(),account=d.accounts.find(a=>a.email===email);
  if(!account||account.passwordHash!==await hashPassword(password)){showAuthError(state.settings.language==='ar'?'البريد أو كلمة المرور غير صحيحة.':state.settings.language==='fr'?'E-mail ou mot de passe incorrect.':'Incorrect email or password.');return}
  startSession(account);
 }
-function startSession(account){currentUser=account;localStorage.setItem(SESSION_STORAGE,account.id);document.getElementById('authScreen').classList.add('hidden');document.getElementById('appRoot').classList.remove('hidden');renderProfile();updateUserUI();showPage('dashboard')}
+function startSession(account,firstSetup=false){currentUser=account;localStorage.setItem(SESSION_STORAGE,account.id);document.getElementById('authScreen').classList.add('hidden');document.getElementById('appRoot').classList.remove('hidden');renderProfile();updateUserUI();if(firstSetup){loadSettingsForm();showPage('settings')}else showPage('dashboard')}
 function logoutLocal(){localStorage.removeItem(SESSION_STORAGE);currentUser=null;document.getElementById('appRoot').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');switchAuth('login')}
 function restoreSession(){
  const id=localStorage.getItem(SESSION_STORAGE),d=authData();currentUser=d.accounts.find(a=>a.id===id)||null;
