@@ -36,7 +36,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit}
 .grid2{display:grid;grid-template-columns:1.28fr .72fr;gap:17px;margin-top:17px}.panel{padding:18px}.panel h2{margin:0 0 13px;font-size:16px}
 .tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:680px}th{text-align:left;color:var(--muted);font-size:10px;padding:10px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.03em}
 td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-child td{border-bottom:0}
-.badge{padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800;display:inline-block}.paid{background:#e4f6f1;color:#08765e}.pending{background:#fff2d9;color:#9a6718}.overdue{background:#fee8eb;color:#b23a49}.draft{background:#edf0f5;color:#657186}
+.badge{padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800;display:inline-block}.paid{background:#e4f6f1;color:#08765e}.pending{background:#fff2d9;color:#9a6718}.overdue{background:#fee8eb;color:#b23a49}.draft{background:#edf0f5;color:#657186}.sent{background:#e7f2ff;color:#2463a7}.cancelled{background:#f3eaf5;color:#7c4c86}
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:15px;text-align:left}.quick b{display:block;margin-bottom:5px}.quick small{color:var(--muted)}
 .form{padding:20px}.section{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section h3{font-size:15px;margin:0 0 13px}
 .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.formgrid.cols3{grid-template-columns:repeat(3,1fr)}.field label{display:block;font-size:10px;color:var(--muted);font-weight:800;margin-bottom:5px}
@@ -289,6 +289,23 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .modalCard{width:min(440px,100%);background:#fff;border-radius:20px;padding:23px;box-shadow:0 25px 70px #0007;position:relative}
 .modalCard h3{margin:0 0 7px;font-size:22px}
 .modalCard p{color:var(--muted);font-size:13px;line-height:1.55}
+.invoiceActionModal .modalCard{width:min(500px,100%)}
+.actionSummary{padding:12px;border:1px solid var(--line);border-radius:13px;background:#f8fafc;margin:12px 0}
+.actionSummaryRow{display:flex;justify-content:space-between;gap:12px;padding:4px 0;font-size:12px}
+.actionSummaryRow b{text-align:end}
+.shareButtons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.shareButtons .wide{grid-column:1/-1}
+.paymentBalance{padding:11px 12px;border-radius:12px;background:#eefaf8;color:#08766d;font-weight:800;margin:10px 0}
+.paymentHistoryMini{margin-top:9px;font-size:11px;color:var(--muted);line-height:1.55}
+.invoiceActions{display:flex;gap:6px;flex-wrap:wrap}
+.invoiceActions .btn{white-space:nowrap}
+@media(max-width:620px){
+ .shareButtons{grid-template-columns:1fr}
+ .shareButtons .wide{grid-column:auto}
+ .invoiceActions{display:grid;grid-template-columns:1fr 1fr;width:100%}
+ .invoiceActions .btn{width:100%}
+}
+
 .modalClose{position:absolute;top:12px;inset-inline-end:12px;width:36px;height:36px;border:0;border-radius:10px;background:#f1f4f7;font-size:20px}
 .resetSuccess{padding:10px 12px;background:#e9f7f4;color:#08725f;border-radius:10px;font-size:12px;margin:10px 0}
 .syncPill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;background:#e7f8f5;color:#087665;font-size:10px;font-weight:800}
@@ -772,6 +789,42 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   </div>
 </div>
 
+
+<div id="paymentModal" class="modalOverlay hidden invoiceActionModal">
+  <div class="modalCard">
+    <button class="modalClose" type="button" onclick="closePaymentModal()">×</button>
+    <h3 id="paymentModalTitle">Register payment</h3>
+    <p id="paymentModalSub">Record the amount, date, payment method and reference.</p>
+    <div id="paymentInvoiceSummary" class="actionSummary"></div>
+    <div class="formgrid">
+      <div class="field"><label id="paymentAmountLabel">PAYMENT AMOUNT</label><input id="paymentAmount" class="input" type="number" min="0" step="0.01" oninput="updatePaymentBalancePreview()"></div>
+      <div class="field"><label id="paymentDateLabel">PAYMENT DATE</label><input id="paymentDate" class="input" type="date"></div>
+      <div class="field"><label id="paymentMethodLabel">PAYMENT METHOD</label><select id="paymentMethod" class="input">
+        <option value="">—</option><option value="cash">Cash</option><option value="bank_transfer">Bank transfer</option><option value="card">Card</option><option value="cheque">Cheque</option><option value="other">Other</option>
+      </select></div>
+      <div class="field"><label id="paymentReferenceLabel">REFERENCE</label><input id="paymentReference" class="input"></div>
+    </div>
+    <div id="paymentBalancePreview" class="paymentBalance"></div>
+    <div class="actions"><button id="paymentSaveBtn" class="btn primary" type="button" onclick="savePaymentRecord()">Save payment</button><button id="paymentClearBtn" class="btn secondary" type="button" onclick="clearPaymentRecord()">Clear payment</button></div>
+  </div>
+</div>
+
+<div id="shareModal" class="modalOverlay hidden invoiceActionModal">
+  <div class="modalCard">
+    <button class="modalClose" type="button" onclick="closeShareModal()">×</button>
+    <h3 id="shareModalTitle">Share invoice</h3>
+    <p id="shareModalSub">Send the invoice to your client and mark it as sent.</p>
+    <div id="shareInvoiceSummary" class="actionSummary"></div>
+    <div class="shareButtons">
+      <button id="sharePdfBtn" class="btn primary wide" type="button" onclick="shareInvoicePdfNative()">📄 Share PDF</button>
+      <button id="shareWhatsappBtn" class="btn secondary" type="button" onclick="shareInvoiceWhatsApp()">WhatsApp</button>
+      <button id="shareEmailBtn" class="btn secondary" type="button" onclick="shareInvoiceEmail()">Email</button>
+      <button id="shareDownloadBtn" class="btn secondary wide" type="button" onclick="downloadSharedInvoicePDF()">Download PDF</button>
+    </div>
+    <div id="shareHint" class="paymentHistoryMini"></div>
+  </div>
+</div>
+
 <div id="resetModal" class="modalOverlay hidden">
   <div class="modalCard">
     <button class="modalClose" type="button" onclick="closeResetModal()">×</button>
@@ -849,7 +902,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     <section id="invoices" class="page hidden">
       <div class="head"><div><h1>Invoices</h1><p>Save, edit, duplicate, mark paid and print invoices.</p></div><button class="btn primary" onclick="newInvoice()">＋ Create invoice</button></div>
       <div class="card panel">
-        <div class="toolbar"><input id="invoiceSearch" class="input search" placeholder="Search invoice or client…" oninput="renderInvoiceList()"><select id="invoiceStatusFilter" class="input" style="max-width:190px" onchange="renderInvoiceList()"><option value="">All statuses</option><option value="draft">draft</option><option value="pending">pending</option><option value="paid">paid</option><option value="overdue">overdue</option></select></div>
+        <div class="toolbar"><input id="invoiceSearch" class="input search" placeholder="Search invoice or client…" oninput="renderInvoiceList()"><select id="invoiceStatusFilter" class="input" style="max-width:190px" onchange="renderInvoiceList()"><option value="">All statuses</option><option value="draft">draft</option><option value="pending">pending</option><option value="sent">sent</option><option value="paid">paid</option><option value="overdue">overdue</option><option value="cancelled">cancelled</option></select></div>
         <div class="tablewrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Issue</th><th>Due</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="allInvoiceTable"></tbody></table></div>
       </div>
     </section>
@@ -857,10 +910,10 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     <section id="invoiceEditor" class="page hidden" data-step="1">
       <div class="head">
         <div><h1 id="editorTitle">Create invoice</h1><p id="editorSubtitle">Create a professional invoice in four quick steps.</p></div>
-        <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><span class="pdfActionGroup actions" style="display:flex;gap:8px"><button class="btn secondary" onclick="printInvoice()">Print</button><button class="btn secondary" onclick="downloadInvoicePDF()">Download PDF</button></span></div>
+        <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="shareCurrentInvoice()">Share</button><span class="pdfActionGroup actions" style="display:flex;gap:8px"><button class="btn secondary" onclick="printInvoice()">Print</button><button class="btn secondary" onclick="downloadInvoicePDF()">Download PDF</button></span></div>
       </div>
 
-      <div class="buildProof" id="buildProof">v1.5.0 ✓ — PDF A4 نهائي باسم الفاتورة</div>
+      <div class="buildProof" id="buildProof">v1.6.0 ✓ — مشاركة الفاتورة وتسجيل الدفع</div>
 
       <div class="invoiceWizard" id="invoiceWizard">
         <button type="button" data-step="1" onclick="setInvoiceStep(1)">1 · Client</button>
@@ -924,7 +977,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
             </div>
             <div class="formgrid" style="margin-top:14px">
               <div class="field"><label>NOTES</label><textarea id="notes" class="input" rows="4" oninput="renderPreview()"></textarea></div>
-              <div class="field"><label>STATUS</label><select id="status" class="input"><option value="draft">draft</option><option value="pending">pending</option><option value="paid">paid</option><option value="overdue">overdue</option></select></div>
+              <div class="field"><label>STATUS</label><select id="status" class="input"><option value="draft">draft</option><option value="pending">pending</option><option value="sent">sent</option><option value="paid">paid</option><option value="overdue">overdue</option><option value="cancelled">cancelled</option></select></div>
             </div>
           </div>
         </div>
@@ -1499,10 +1552,18 @@ function showPage(id){
 function countryBy(code){return countries.find(x=>x.code===code)||countries[0]}
 function clientBy(id){return state.clients.find(c=>c.id===id)}
 function statusAuto(inv){
- if(inv.status==='paid'||inv.status==='draft')return inv.status;
+ if(['paid','draft','cancelled'].includes(inv.status))return inv.status;
  if(inv.dueDate && inv.dueDate<todayISO())return 'overdue';
+ if(inv.status==='overdue')return inv.sentAt?'sent':'pending';
  return inv.status||'pending';
 }
+function invoicePaidAmount(inv){
+ const total=invoiceTotal(inv),raw=Math.max(0,Number(inv.paidAmount||0));
+ if(inv.status==='paid'&&raw<=0)return total;
+ return Math.min(total,raw);
+}
+function invoiceBalance(inv){return Math.max(0,invoiceTotal(inv)-invoicePaidAmount(inv))}
+function nowIso(){return new Date().toISOString()}
 function money(v,cur){
  const lang=state?.settings?.language||'en';
  const value=Number(v||0);
@@ -1581,8 +1642,8 @@ function monthLabel(key){
 function renderReports(){
  const page=document.getElementById('reports');if(!page)return;
  initReportControls();
- const cur=document.getElementById('reportCurrency').value,arr=filteredReportInvoices(),issued=arr.filter(i=>i.status!=='draft');
- const billed=issued.reduce((a,i)=>a+i.total,0),collected=issued.filter(i=>i.status==='paid').reduce((a,i)=>a+i.total,0),outstanding=issued.filter(i=>['pending','overdue'].includes(i.status)).reduce((a,i)=>a+i.total,0),overdue=issued.filter(i=>i.status==='overdue').reduce((a,i)=>a+i.total,0),rate=billed?collected/billed*100:0;
+ const cur=document.getElementById('reportCurrency').value,arr=filteredReportInvoices(),issued=arr.filter(i=>!['draft','cancelled'].includes(i.status));
+ const billed=issued.reduce((a,i)=>a+i.total,0),collected=issued.reduce((a,i)=>a+invoicePaidAmount(i),0),outstanding=issued.reduce((a,i)=>a+invoiceBalance(i),0),overdue=issued.filter(i=>i.status==='overdue').reduce((a,i)=>a+invoiceBalance(i),0),rate=billed?collected/billed*100:0;
  document.getElementById('repInvoices').textContent=issued.length;
  document.getElementById('repBilled').textContent=money(billed,cur);
  document.getElementById('repCollected').textContent=money(collected,cur);
@@ -1591,7 +1652,7 @@ function renderReports(){
  document.getElementById('repRate').textContent=new Intl.NumberFormat(state.settings.language==='ar'?'ar-DZ':state.settings.language==='fr'?'fr-FR':'en-US',{maximumFractionDigits:1}).format(rate)+'%';
 
  const months={};
- issued.filter(i=>i.status==='paid').forEach(i=>{const k=(i.issueDate||'').slice(0,7);if(k)months[k]=(months[k]||0)+i.total});
+ issued.forEach(i=>{const v=invoicePaidAmount(i),k=((i.paidAt||'').slice(0,7)||(i.issueDate||'').slice(0,7));if(k&&v)months[k]=(months[k]||0)+v});
  const allKeys=[];
  const from=document.getElementById('reportFrom').value,to=document.getElementById('reportTo').value;
  let d=new Date((from||todayISO())+'T12:00:00'),end=new Date((to||todayISO())+'T12:00:00');
@@ -1602,11 +1663,11 @@ function renderReports(){
  const chart=document.getElementById('revenueChart');
  chart.innerHTML=allKeys.length?allKeys.map(k=>{const v=months[k]||0,h=max?Math.max(3,v/max*165):3;return `<div class="barCol"><div class="barValue">${v?money(v,cur):'–'}</div><div class="barTrack"><div class="barFill" style="height:${h}px"></div></div><div class="barLabel">${monthLabel(k)}</div></div>`}).join(''):`<div class="reportEmpty">${uiPhrase('No data for this period.')}</div>`;
 
- const counts={paid:0,pending:0,overdue:0,draft:0};arr.forEach(i=>counts[i.status]=(counts[i.status]||0)+1);
- const total=arr.length||1,p1=counts.paid/total*100,p2=p1+counts.pending/total*100,p3=p2+counts.overdue/total*100;
- document.getElementById('statusDonut').style.background=`conic-gradient(#18a887 0 ${p1}%,#e0a333 ${p1}% ${p2}%,#d84b5b ${p2}% ${p3}%,#98a4b5 ${p3}% 100%)`;
+ const counts={paid:0,pending:0,sent:0,overdue:0,draft:0,cancelled:0};arr.forEach(i=>counts[i.status]=(counts[i.status]||0)+1);
+ const total=arr.length||1,p1=counts.paid/total*100,p2=p1+counts.pending/total*100,p3=p2+counts.sent/total*100,p4=p3+counts.overdue/total*100,p5=p4+counts.draft/total*100;
+ document.getElementById('statusDonut').style.background=`conic-gradient(#18a887 0 ${p1}%,#e0a333 ${p1}% ${p2}%,#3b82c4 ${p2}% ${p3}%,#d84b5b ${p3}% ${p4}%,#98a4b5 ${p4}% ${p5}%,#8b5b91 ${p5}% 100%)`;
  document.getElementById('donutTotal').textContent=arr.length;
- const legend=[['paid','#18a887'],['pending','#e0a333'],['overdue','#d84b5b'],['draft','#98a4b5']];
+ const legend=[['paid','#18a887'],['pending','#e0a333'],['sent','#3b82c4'],['overdue','#d84b5b'],['draft','#98a4b5'],['cancelled','#8b5b91']];
  document.getElementById('statusLegend').innerHTML=legend.map(([st,color])=>`<div class="legendItem"><span class="legendName"><i class="dot" style="background:${color}"></i>${statusLabel(st)}</span><b>${counts[st]||0}</b></div>`).join('');
 
  const clientMap={};
@@ -1614,8 +1675,8 @@ function renderReports(){
  const clients=Object.entries(clientMap).map(([name,x])=>({name,...x})).sort((a,b)=>b.value-a.value).slice(0,7);
  document.getElementById('topClients').innerHTML=clients.length?clients.map((x,n)=>`<div class="rankRow"><span class="rankNo">${n+1}</span><div><b>${esc(x.name)}</b><small>${x.count} ${uiPhrase('Invoices')}</small></div><b>${money(x.value,cur)}</b></div>`).join(''):`<div class="reportEmpty">${uiPhrase('No data for this period.')}</div>`;
 
- const recv=issued.filter(i=>['pending','overdue'].includes(i.status)).sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999')).slice(0,8);
- document.getElementById('receivables').innerHTML=recv.length?recv.map(i=>`<div class="receivable"><div><b>${esc(i.clientName)}</b><br><small>${esc(i.number)}</small></div><div><small>${uiPhrase('Due')}</small><br>${esc(i.dueDate||'—')}</div><div style="text-align:end"><span class="badge ${i.status}">${statusLabel(i.status)}</span><br><b>${money(i.total,cur)}</b></div></div>`).join(''):`<div class="reportEmpty">${uiPhrase('No receivables.')}</div>`;
+ const recv=issued.filter(i=>['pending','sent','overdue'].includes(i.status)&&invoiceBalance(i)>0).sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999')).slice(0,8);
+ document.getElementById('receivables').innerHTML=recv.length?recv.map(i=>`<div class="receivable"><div><b>${esc(i.clientName)}</b><br><small>${esc(i.number)}</small></div><div><small>${uiPhrase('Due')}</small><br>${esc(i.dueDate||'—')}</div><div style="text-align:end"><span class="badge ${i.status}">${statusLabel(i.status)}</span><br><b>${money(invoiceBalance(i),cur)}</b></div></div>`).join(''):`<div class="reportEmpty">${uiPhrase('No receivables.')}</div>`;
  translateStaticUI();
 }
 function exportReportCSV(){
@@ -1728,9 +1789,9 @@ function closeUpgradeModal(){document.getElementById('upgradeModal')?.classList.
 function renderDashboard(){
  state.invoices.forEach(i=>{i.status=statusAuto(i);i.total=invoiceTotal(i)});persist();
  document.getElementById('kpiCount').textContent=state.invoices.length;
- const paid=state.invoices.filter(i=>i.status==='paid').reduce((a,i)=>a+i.total,0);
- const pending=state.invoices.filter(i=>i.status==='pending').reduce((a,i)=>a+i.total,0);
- const overdue=state.invoices.filter(i=>i.status==='overdue').reduce((a,i)=>a+i.total,0);
+ const paid=state.invoices.reduce((a,i)=>a+invoicePaidAmount(i),0);
+ const pending=state.invoices.filter(i=>['pending','sent'].includes(i.status)).reduce((a,i)=>a+invoiceBalance(i),0);
+ const overdue=state.invoices.filter(i=>i.status==='overdue').reduce((a,i)=>a+invoiceBalance(i),0);
  document.getElementById('kpiPaid').textContent=compactMoney(paid);
  document.getElementById('kpiPending').textContent=compactMoney(pending);
  document.getElementById('kpiOverdue').textContent=compactMoney(overdue);
@@ -1752,7 +1813,7 @@ function renderInvoiceList(){
  tbody.innerHTML=arr.length?arr.map(i=>`<tr>
   <td data-label="${uiPhrase('Invoice')}"><b>${esc(i.number)}</b></td><td data-label="${uiPhrase('Client')}">${esc(i.clientName)}</td><td data-label="${uiPhrase('Issue')}">${esc(i.issueDate)}</td><td data-label="${uiPhrase('Due')}">${esc(i.dueDate)}</td>
   <td data-label="${uiPhrase('Total')}"><b>${money(i.total,i.currency)}</b></td><td data-label="${uiPhrase('Status')}"><span class="badge ${i.status}">${statusLabel(i.status)}</span></td>
-  <td data-label="${uiPhrase('Actions')}"><div class="invoiceActions"><button class="btn secondary small" onclick="editInvoice('${i.id}')">${actionLabel('Edit')}</button><button class="btn secondary small" onclick="duplicateInvoice('${i.id}')">${actionLabel('Duplicate')}</button>${i.status!=='paid'?`<button class="btn secondary small" onclick="markPaid('${i.id}')">${actionLabel('Paid')}</button>`:''}<button class="btn dangerbtn small" onclick="deleteInvoice('${i.id}')">${actionLabel('Delete')}</button></div></td>
+  <td data-label="${uiPhrase('Actions')}"><div class="invoiceActions"><button class="btn secondary small" onclick="editInvoice('${i.id}')">${actionLabel('Edit')}</button><button class="btn secondary small" onclick="openShareModal('${i.id}')">${actionLabel('Share')}</button>${i.status!=='paid'&&i.status!=='cancelled'?`<button class="btn secondary small" onclick="openPaymentModal('${i.id}')">${actionLabel('Register payment')}</button>`:''}<button class="btn secondary small" onclick="duplicateInvoice('${i.id}')">${actionLabel('Duplicate')}</button><button class="btn dangerbtn small" onclick="deleteInvoice('${i.id}')">${actionLabel('Delete')}</button></div></td>
  </tr>`).join(''):`<tr><td colspan="7" class="empty">${uiPhrase('No matching invoices.')}</td></tr>`;
  persist();translateStaticUI();
 }
@@ -1804,7 +1865,8 @@ function newInvoice(){
   number:generateInvoiceNumber(),clientId:'',clientName:'',clientEmail:'',clientPhone:'',clientAddress:'',clientTaxId:'',clientRegistrationNumber:'',issueDate:issue,dueDate:addDays(issue,state.settings.terms),
   country:state.settings.country,currency:countryBy(state.settings.country).cur,taxRate:countryBy(state.settings.country).rate,discount:0,shipping:0,status:'draft',notes:state.settings.notes,items:itemData,
   companyName:state.settings.business||'',companyEmail:state.settings.email||'',companyPhone:state.settings.phone||'',companyAddress:state.settings.address||'',companyTaxId:state.settings.taxId||'',companyRegistrationNumber:state.settings.registrationNumber||'',companyStatisticalId:state.settings.statisticalId||'',companySecondaryTaxId:state.settings.secondaryTaxId||'',
-  bankName:state.settings.bankName||'',accountHolder:state.settings.accountHolder||'',accountNumber:state.settings.accountNumber||'',iban:state.settings.iban||'',swiftBic:state.settings.swiftBic||'',paymentInstructions:state.settings.paymentInstructions||'',previewOverrides:{}
+  bankName:state.settings.bankName||'',accountHolder:state.settings.accountHolder||'',accountNumber:state.settings.accountNumber||'',iban:state.settings.iban||'',swiftBic:state.settings.swiftBic||'',paymentInstructions:state.settings.paymentInstructions||'',previewOverrides:{},
+  sentAt:'',paidAt:'',cancelledAt:'',paymentMethod:'',paidAmount:0,paymentReference:''
  });
  return true;
 }
@@ -1851,6 +1913,7 @@ function showEditor(inv){
 function editInvoice(id){const inv=state.invoices.find(i=>i.id===id);if(!inv)return;editingInvoiceId=id;showEditor(inv)}
 function collectInvoice(statusOverride){
  const selected=clientBy(document.getElementById('clientSelect').value);
+ const existing=state.invoices.find(x=>x.id===editingInvoiceId);
  const inv={
   id:editingInvoiceId||uid('inv'),number:document.getElementById('invno').value.trim()||generateInvoiceNumber(),
   clientId:selected?.id||'',clientName:selected?.name||document.getElementById('manualClientName')?.value.trim()||'',clientEmail:document.getElementById('email').value.trim(),
@@ -1863,7 +1926,8 @@ function collectInvoice(statusOverride){
   companyEmail:invoiceCompanySnapshot?.companyEmail||state.settings.email||'',companyPhone:invoiceCompanySnapshot?.companyPhone||state.settings.phone||'',companyAddress:invoiceCompanySnapshot?.companyAddress||state.settings.address||'',
   companyTaxId:invoiceCompanySnapshot?.companyTaxId||state.settings.taxId||'',companyRegistrationNumber:invoiceCompanySnapshot?.companyRegistrationNumber||state.settings.registrationNumber||'',companyStatisticalId:invoiceCompanySnapshot?.companyStatisticalId||state.settings.statisticalId||'',companySecondaryTaxId:invoiceCompanySnapshot?.companySecondaryTaxId||state.settings.secondaryTaxId||'',
   bankName:invoiceCompanySnapshot?.bankName||state.settings.bankName||'',accountHolder:invoiceCompanySnapshot?.accountHolder||state.settings.accountHolder||'',accountNumber:invoiceCompanySnapshot?.accountNumber||state.settings.accountNumber||'',iban:invoiceCompanySnapshot?.iban||state.settings.iban||'',swiftBic:invoiceCompanySnapshot?.swiftBic||state.settings.swiftBic||'',paymentInstructions:invoiceCompanySnapshot?.paymentInstructions||state.settings.paymentInstructions||'',
-  previewOverrides:{...(previewOverrides||{})}
+  previewOverrides:{...(previewOverrides||{})},
+  sentAt:existing?.sentAt||'',paidAt:existing?.paidAt||'',cancelledAt:existing?.cancelledAt||'',paymentMethod:existing?.paymentMethod||'',paidAmount:Number(existing?.paidAmount||0),paymentReference:existing?.paymentReference||''
  };
  inv.total=invoiceTotal(inv);return inv;
 }
@@ -1968,10 +2032,10 @@ function printInvoice(){
  const stamp=state.settings.stampImage||'',sig=state.settings.signatureImage||'';
  const msg=document.getElementById('buildProof');
  if(msg)msg.textContent=lang==='ar'
-  ?`v1.4.0 ✓ — PDF A4 جاهز${stamp?' · الختم ✓':''}${sig?' · الإمضاء ✓':''}`
+  ?`v1.6.0 ✓ — PDF A4 جاهز${stamp?' · الختم ✓':''}${sig?' · الإمضاء ✓':''}`
   :lang==='fr'
-  ?`v1.4.0 ✓ — PDF A4 prêt${stamp?' · cachet ✓':''}${sig?' · signature ✓':''}`
-  :`v1.4.0 ✓ — A4 PDF ready${stamp?' · stamp ✓':''}${sig?' · signature ✓':''}`;
+  ?`v1.6.0 ✓ — PDF A4 prêt${stamp?' · cachet ✓':''}${sig?' · signature ✓':''}`
+  :`v1.6.0 ✓ — A4 PDF ready${stamp?' · stamp ✓':''}${sig?' · signature ✓':''}`;
  const restore=()=>{document.title=oldTitle;window.removeEventListener('afterprint',restore)};
  window.addEventListener('afterprint',restore);
  setTimeout(()=>{window.print();setTimeout(()=>{if(document.title===printName)document.title=oldTitle},1800)},120);
@@ -2000,6 +2064,12 @@ function saveInvoice(statusOverride){
   setInvoiceStep(1);document.getElementById('invno')?.focus();return;
  }
  const idx=state.invoices.findIndex(i=>i.id===inv.id);
+ if(inv.status==='sent'&&!inv.sentAt)inv.sentAt=nowIso();
+ if(inv.status==='cancelled'&&!inv.cancelledAt)inv.cancelledAt=nowIso();
+ if(inv.status==='paid'){
+  if(Number(inv.paidAmount||0)<=0)inv.paidAmount=invoiceTotal(inv);
+  if(!inv.paidAt)inv.paidAt=nowIso();
+ }
  if(idx<0&&!requireCapacity('invoices'))return;
  if(idx>=0)state.invoices[idx]=inv;else{state.invoices.push(inv);state.settings.nextNo=Number(state.settings.nextNo||1)+1}
  editingInvoiceId=inv.id;persist();
@@ -2009,10 +2079,177 @@ function saveInvoice(statusOverride){
 function duplicateInvoice(id){
  if(!requireCapacity('invoices'))return;
  const src=state.invoices.find(i=>i.id===id);if(!src)return;
- const issue=todayISO();const copy={...src,id:uid('inv'),number:generateInvoiceNumber(),issueDate:issue,dueDate:addDays(issue,state.settings.terms),status:'draft',previewOverrides:{...(src.previewOverrides||{})},items:src.items.map(i=>({...i,id:uid('item')}))};
+ const issue=todayISO();const copy={...src,id:uid('inv'),number:generateInvoiceNumber(),issueDate:issue,dueDate:addDays(issue,state.settings.terms),status:'draft',sentAt:'',paidAt:'',cancelledAt:'',paymentMethod:'',paidAmount:0,paymentReference:'',previewOverrides:{...(src.previewOverrides||{})},items:src.items.map(i=>({...i,id:uid('item')}))};
  state.invoices.push(copy);state.settings.nextNo++;persist();renderInvoiceList();
 }
-function markPaid(id){const i=state.invoices.find(x=>x.id===id);if(i){i.status='paid';persist();renderInvoiceList();renderDashboard()}}
+
+let activePaymentInvoiceId=null,activeShareInvoiceId=null;
+
+function formatActionDate(value){
+ if(!value)return '—';
+ try{
+  const lang=state.settings.language||'en';
+  return new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-US',{year:'numeric',month:'short',day:'numeric'}).format(new Date(value));
+ }catch(e){return String(value).slice(0,10)}
+}
+
+function openPaymentModal(id){
+ const inv=state.invoices.find(x=>x.id===id);if(!inv)return;
+ activePaymentInvoiceId=id;
+ const lang=state.settings.language||'en',total=invoiceTotal(inv),paid=invoicePaidAmount(inv),balance=Math.max(0,total-paid);
+ document.getElementById('paymentModalTitle').textContent=lang==='ar'?'تسجيل الدفع':lang==='fr'?'Enregistrer un paiement':'Register payment';
+ document.getElementById('paymentModalSub').textContent=lang==='ar'?'سجّل المبلغ وتاريخ وطريقة الدفع والمرجع.':lang==='fr'?'Enregistrez le montant, la date, le mode et la référence.':'Record the amount, date, payment method and reference.';
+ document.getElementById('paymentAmountLabel').textContent=lang==='ar'?'المبلغ المدفوع':lang==='fr'?'MONTANT PAYÉ':'PAYMENT AMOUNT';
+ document.getElementById('paymentDateLabel').textContent=lang==='ar'?'تاريخ الدفع':lang==='fr'?'DATE DU PAIEMENT':'PAYMENT DATE';
+ document.getElementById('paymentMethodLabel').textContent=lang==='ar'?'طريقة الدفع':lang==='fr'?'MODE DE PAIEMENT':'PAYMENT METHOD';
+ document.getElementById('paymentReferenceLabel').textContent=lang==='ar'?'مرجع الدفع':lang==='fr'?'RÉFÉRENCE':'REFERENCE';
+ document.getElementById('paymentSaveBtn').textContent=lang==='ar'?'حفظ الدفع':lang==='fr'?'Enregistrer le paiement':'Save payment';
+ document.getElementById('paymentClearBtn').textContent=lang==='ar'?'مسح بيانات الدفع':lang==='fr'?'Effacer le paiement':'Clear payment';
+ document.getElementById('paymentInvoiceSummary').innerHTML=`<div class="actionSummaryRow"><span>${uiPhrase('Invoice')}</span><b>${esc(inv.number)}</b></div><div class="actionSummaryRow"><span>${uiPhrase('Client')}</span><b>${esc(inv.clientName||'—')}</b></div><div class="actionSummaryRow"><span>${uiPhrase('Total')}</span><b>${money(total,inv.currency)}</b></div><div class="actionSummaryRow"><span>${lang==='ar'?'المدفوع سابقاً':lang==='fr'?'Déjà payé':'Already paid'}</span><b>${money(paid,inv.currency)}</b></div>`;
+ document.getElementById('paymentAmount').value=balance>0?Number(balance.toFixed(2)):Number(paid.toFixed(2));
+ document.getElementById('paymentDate').value=(inv.paidAt||'').slice(0,10)||todayISO();
+ document.getElementById('paymentMethod').value=inv.paymentMethod||'';
+ document.getElementById('paymentReference').value=inv.paymentReference||'';
+ updatePaymentBalancePreview();
+ document.getElementById('paymentModal').classList.remove('hidden');
+}
+function closePaymentModal(){document.getElementById('paymentModal')?.classList.add('hidden');activePaymentInvoiceId=null}
+function updatePaymentBalancePreview(){
+ const inv=state.invoices.find(x=>x.id===activePaymentInvoiceId);if(!inv)return;
+ const total=invoiceTotal(inv),amount=Math.max(0,Number(document.getElementById('paymentAmount')?.value||0)),balance=Math.max(0,total-amount),lang=state.settings.language||'en';
+ const label=balance<=0?(lang==='ar'?'سيتم اعتبار الفاتورة مدفوعة بالكامل ✓':lang==='fr'?'La facture sera entièrement payée ✓':'Invoice will be fully paid ✓'):(lang==='ar'?'المتبقي بعد التسجيل: ':lang==='fr'?'Reste à payer : ':'Balance after payment: ')+money(balance,inv.currency);
+ document.getElementById('paymentBalancePreview').textContent=label;
+}
+function savePaymentRecord(){
+ const inv=state.invoices.find(x=>x.id===activePaymentInvoiceId);if(!inv)return;
+ const lang=state.settings.language||'en',total=invoiceTotal(inv),amount=Math.max(0,Number(document.getElementById('paymentAmount').value||0));
+ if(amount<=0){alert(lang==='ar'?'أدخل مبلغاً مدفوعاً أكبر من صفر.':lang==='fr'?'Saisissez un montant supérieur à zéro.':'Enter a payment amount greater than zero.');return}
+ inv.paidAmount=Math.min(total,amount);
+ const date=document.getElementById('paymentDate').value||todayISO();
+ inv.paidAt=new Date(date+'T12:00:00').toISOString();
+ inv.paymentMethod=document.getElementById('paymentMethod').value||'';
+ inv.paymentReference=document.getElementById('paymentReference').value.trim();
+ if(inv.paidAmount>=total-0.005)inv.status='paid';
+ else if(!['sent','overdue'].includes(inv.status))inv.status='pending';
+ persist();closePaymentModal();renderInvoiceList();renderDashboard();renderReports();
+ alert(lang==='ar'?'تم تسجيل الدفع ✓':lang==='fr'?'Paiement enregistré ✓':'Payment recorded ✓');
+}
+function clearPaymentRecord(){
+ const inv=state.invoices.find(x=>x.id===activePaymentInvoiceId);if(!inv)return;
+ const lang=state.settings.language||'en';
+ if(!confirm(lang==='ar'?'هل تريد مسح بيانات الدفع لهذه الفاتورة؟':lang==='fr'?'Effacer les données de paiement de cette facture ?':'Clear payment data for this invoice?'))return;
+ inv.paidAmount=0;inv.paidAt='';inv.paymentMethod='';inv.paymentReference='';
+ if(inv.status==='paid')inv.status=inv.sentAt?'sent':'pending';
+ persist();closePaymentModal();renderInvoiceList();renderDashboard();renderReports();
+}
+function markPaid(id){openPaymentModal(id)}
+
+function markInvoiceSent(inv){
+ if(!inv)return;
+ if(!inv.sentAt)inv.sentAt=nowIso();
+ if(!['paid','cancelled'].includes(inv.status))inv.status=(inv.dueDate&&inv.dueDate<todayISO())?'overdue':'sent';
+ persist();renderInvoiceList();renderDashboard();
+}
+
+function shareMessage(inv){
+ const lang=state.settings.language||'en',balance=invoiceBalance(inv);
+ if(lang==='ar')return `فاتورة ${inv.number}\nالعميل: ${inv.clientName||''}\nالإجمالي: ${money(invoiceTotal(inv),inv.currency)}\nالمتبقي: ${money(balance,inv.currency)}\nتاريخ الاستحقاق: ${inv.dueDate||'—'}`;
+ if(lang==='fr')return `Facture ${inv.number}\nClient : ${inv.clientName||''}\nTotal : ${money(invoiceTotal(inv),inv.currency)}\nReste à payer : ${money(balance,inv.currency)}\nÉchéance : ${inv.dueDate||'—'}`;
+ return `Invoice ${inv.number}\nClient: ${inv.clientName||''}\nTotal: ${money(invoiceTotal(inv),inv.currency)}\nBalance due: ${money(balance,inv.currency)}\nDue: ${inv.dueDate||'—'}`;
+}
+function shareSubject(inv){
+ const lang=state.settings.language||'en';
+ return lang==='ar'?`فاتورة ${inv.number}`:lang==='fr'?`Facture ${inv.number}`:`Invoice ${inv.number}`;
+}
+function normalizeWhatsappPhone(phone,country){
+ let p=String(phone||'').replace(/[^\d+]/g,'');
+ if(p.startsWith('+'))return p.slice(1);
+ const dial={DZ:'213',FR:'33',US:'1',CA:'1',GB:'44',AE:'971',SA:'966',MA:'212',TN:'216',EG:'20',DE:'49',ES:'34',IT:'39',IN:'91',TR:'90'};
+ if(p.startsWith('00'))return p.slice(2);
+ if(p.startsWith('0')&&dial[country])return dial[country]+p.slice(1);
+ return p;
+}
+function openShareModal(id){
+ const inv=state.invoices.find(x=>x.id===id);if(!inv)return;
+ activeShareInvoiceId=id;
+ const lang=state.settings.language||'en';
+ document.getElementById('shareModalTitle').textContent=lang==='ar'?'مشاركة الفاتورة':lang==='fr'?'Partager la facture':'Share invoice';
+ document.getElementById('shareModalSub').textContent=lang==='ar'?'أرسل الفاتورة للعميل وسيتم تسجيلها كمرسلة.':lang==='fr'?'Envoyez la facture au client et marquez-la comme envoyée.':'Send the invoice to your client and mark it as sent.';
+ document.getElementById('sharePdfBtn').textContent=lang==='ar'?'📄 مشاركة ملف PDF':lang==='fr'?'📄 Partager le PDF':'📄 Share PDF';
+ document.getElementById('shareWhatsappBtn').textContent='WhatsApp';
+ document.getElementById('shareEmailBtn').textContent=lang==='ar'?'البريد الإلكتروني':lang==='fr'?'E-mail':'Email';
+ document.getElementById('shareDownloadBtn').textContent=lang==='ar'?'تحميل PDF':lang==='fr'?'Télécharger PDF':'Download PDF';
+ document.getElementById('shareInvoiceSummary').innerHTML=`<div class="actionSummaryRow"><span>${uiPhrase('Invoice')}</span><b>${esc(inv.number)}</b></div><div class="actionSummaryRow"><span>${uiPhrase('Client')}</span><b>${esc(inv.clientName||'—')}</b></div><div class="actionSummaryRow"><span>${uiPhrase('Total')}</span><b>${money(invoiceTotal(inv),inv.currency)}</b></div><div class="actionSummaryRow"><span>${lang==='ar'?'البريد':lang==='fr'?'E-mail':'Email'}</span><b>${esc(inv.clientEmail||'—')}</b></div><div class="actionSummaryRow"><span>${lang==='ar'?'الهاتف':lang==='fr'?'Téléphone':'Phone'}</span><b>${esc(inv.clientPhone||'—')}</b></div>`;
+ document.getElementById('shareHint').textContent=lang==='ar'?'على الهاتف، زر مشاركة PDF يسمح باختيار WhatsApp أو Gmail أو أي تطبيق يدعم مشاركة الملفات.':lang==='fr'?'Sur mobile, Partager le PDF permet de choisir WhatsApp, Gmail ou toute application compatible.':'On mobile, Share PDF lets you choose WhatsApp, Gmail, or any app that accepts files.';
+ document.getElementById('shareModal').classList.remove('hidden');
+}
+function closeShareModal(){document.getElementById('shareModal')?.classList.add('hidden');activeShareInvoiceId=null}
+
+async function buildInvoicePdfBlobForShare(inv){
+ if(typeof html2pdf==='undefined')throw new Error('html2pdf unavailable');
+ const previousEditing=editingInvoiceId;
+ if(previousEditing!==inv.id){editingInvoiceId=inv.id;showEditor(inv)}
+ renderPreview();updateBrandAssetDisplays();
+ const source=document.getElementById('previewCard');if(!source)throw new Error('Preview not found');
+ const host=document.createElement('div');host.className='pdfExportHost';
+ const clone=source.cloneNode(true);clone.id='sharePdfClone';clone.classList.remove('directEditMode');
+ clone.querySelectorAll('.directEditBar,.actions').forEach(el=>el.remove());
+ clone.querySelectorAll('[contenteditable]').forEach(el=>{el.removeAttribute('contenteditable');el.style.outline='none'});
+ host.appendChild(clone);document.body.appendChild(host);await waitForImages(clone);await new Promise(r=>setTimeout(r,60));
+ const options={margin:[8,8,8,8],image:{type:'jpeg',quality:0.98},html2canvas:{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,windowWidth:Math.max(clone.scrollWidth,900)},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['css','legacy'],avoid:['tr','.amountWords','.paymentBox','.dzLegalStrip','.signatureArea','.previewtotal']}};
+ try{return await html2pdf().set(options).from(clone).outputPdf('blob')}finally{host.remove()}
+}
+async function shareInvoicePdfNative(){
+ const inv=state.invoices.find(x=>x.id===activeShareInvoiceId);if(!inv)return;
+ const lang=state.settings.language||'en';
+ try{
+  setPdfBusy(true);
+  const blob=await buildInvoicePdfBlobForShare(inv),file=new File([blob],`${String(inv.number||'invoice').replace(/[\\/:*?"<>|]+/g,'-')}.pdf`,{type:'application/pdf'});
+  if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
+   await navigator.share({title:shareSubject(inv),text:shareMessage(inv),files:[file]});
+   markInvoiceSent(inv);closeShareModal();
+  }else{
+   const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+   alert(lang==='ar'?'هذا المتصفح لا يدعم مشاركة ملف PDF مباشرة، لذلك تم تحميل الملف.':lang==='fr'?'Ce navigateur ne prend pas en charge le partage direct du PDF ; le fichier a été téléchargé.':'Direct PDF sharing is not supported here, so the file was downloaded.');
+  }
+ }catch(e){
+  if(e?.name!=='AbortError'){console.error(e);alert(lang==='ar'?'تعذر مشاركة PDF.':lang==='fr'?'Impossible de partager le PDF.':'Could not share the PDF.')}
+ }finally{setPdfBusy(false)}
+}
+function shareInvoiceWhatsApp(){
+ const inv=state.invoices.find(x=>x.id===activeShareInvoiceId);if(!inv)return;
+ const p=normalizeWhatsappPhone(inv.clientPhone,inv.country),msg=encodeURIComponent(shareMessage(inv));
+ const url=p?`https://wa.me/${p}?text=${msg}`:`https://api.whatsapp.com/send?text=${msg}`;
+ window.open(url,'_blank');markInvoiceSent(inv);closeShareModal();
+}
+function shareInvoiceEmail(){
+ const inv=state.invoices.find(x=>x.id===activeShareInvoiceId);if(!inv)return;
+ const to=encodeURIComponent(inv.clientEmail||''),subject=encodeURIComponent(shareSubject(inv)),body=encodeURIComponent(shareMessage(inv));
+ window.location.href=`mailto:${to}?subject=${subject}&body=${body}`;markInvoiceSent(inv);closeShareModal();
+}
+async function downloadSharedInvoicePDF(){
+ const inv=state.invoices.find(x=>x.id===activeShareInvoiceId);if(!inv)return;
+ const lang=state.settings.language||'en';
+ try{
+  setPdfBusy(true);const blob=await buildInvoicePdfBlobForShare(inv),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`${String(inv.number||'invoice').replace(/[\\/:*?"<>|]+/g,'-')}.pdf`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+ }catch(e){console.error(e);alert(lang==='ar'?'تعذر تحميل PDF.':lang==='fr'?'Impossible de télécharger le PDF.':'Could not download PDF.')}finally{setPdfBusy(false)}
+}
+
+function saveCurrentForShare(){
+ const lang=state.settings.language||'en',inv=collectInvoice();
+ if(!inv.clientName){alert(lang==='ar'?'أدخل اسم العميل أولاً.':lang==='fr'?'Saisissez d’abord le nom du client.':'Enter the client name first.');setInvoiceStep(1);return null}
+ if(invoiceTotal(inv)<=0){alert(lang==='ar'?'أدخل قيمة الفاتورة قبل مشاركتها.':lang==='fr'?'Saisissez le montant avant de partager.':'Enter the invoice amount before sharing.');setInvoiceStep(2);return null}
+ if(inv.status==='draft')inv.status='pending';
+ const idx=state.invoices.findIndex(x=>x.id===inv.id);
+ if(idx<0&&!requireCapacity('invoices'))return null;
+ if(idx>=0)state.invoices[idx]=inv;else{state.invoices.push(inv);state.settings.nextNo=Number(state.settings.nextNo||1)+1}
+ editingInvoiceId=inv.id;persist();return inv;
+}
+function shareCurrentInvoice(){
+ const inv=saveCurrentForShare();if(inv)openShareModal(inv.id);
+}
+
 function deleteInvoice(id){if(confirm('Delete this invoice?')){state.invoices=state.invoices.filter(i=>i.id!==id);persist();renderInvoiceList();renderDashboard()}}
 
 
@@ -2394,7 +2631,7 @@ function renderPreview(){
  if(pgrid)pgrid.innerHTML=payRows.join('');
  if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
  const proof=document.getElementById('buildProof');
- if(proof)proof.textContent=lang==='ar'?'v1.5.0 ✓ — PDF A4 نهائي باسم الفاتورة':lang==='fr'?'v1.5.0 ✓ — PDF A4 final':'v1.5.0 ✓ — final A4 PDF';
+ if(proof)proof.textContent=lang==='ar'?'v1.6.0 ✓ — مشاركة الفاتورة وتسجيل الدفع':lang==='fr'?'v1.6.0 ✓ — partage et suivi des paiements':'v1.6.0 ✓ — sharing and payment tracking';
  const stampEl=document.querySelector('[data-edit-key="stampLabel"]'),sigEl=document.querySelector('[data-edit-key="signatureLabel"]'),footEl=document.getElementById('invoiceFooterNote');
  if(stampEl)stampEl.textContent=lang==='ar'?'ختم المؤسسة':lang==='fr'?'Cachet de l’entreprise':'Company stamp';
  if(sigEl)sigEl.textContent=lang==='ar'?'الإمضاء':lang==='fr'?'Signature autorisée':'Authorized signature';
@@ -2644,11 +2881,15 @@ const uiPhrases={
  'Edit':{fr:'Modifier',ar:'تعديل'},
  'Duplicate':{fr:'Dupliquer',ar:'نسخ'},
  'Paid':{fr:'Payée',ar:'مدفوعة'},
+ 'Share':{fr:'Partager',ar:'مشاركة'},
+ 'Register payment':{fr:'Paiement',ar:'تسجيل الدفع'},
  'Delete':{fr:'Supprimer',ar:'حذف'},
  'draft':{fr:'brouillon',ar:'مسودة'},
  'pending':{fr:'en attente',ar:'قيد الانتظار'},
+ 'sent':{fr:'envoyée',ar:'مرسلة'},
  'paid':{fr:'payée',ar:'مدفوعة'},
  'overdue':{fr:'en retard',ar:'متأخرة'},
+ 'cancelled':{fr:'annulée',ar:'ملغاة'},
  'No invoices yet.':{fr:'Aucune facture.',ar:'لا توجد فواتير بعد.'},
  'No matching invoices.':{fr:'Aucune facture correspondante.',ar:'لا توجد فواتير مطابقة.'},
  'No matching clients.':{fr:'Aucun client correspondant.',ar:'لا يوجد عملاء مطابقون.'},
@@ -2853,6 +3094,7 @@ function workspacePayload(){
    status:inv.status||'draft',notes:inv.notes||'',template_id:inv.template||state.template||'modern',subtotal:sub,tax_amount:tax,discount_amount:disc,total,
    company_name:inv.companyName||state.settings.business||'',company_email:inv.companyEmail||state.settings.email||'',company_phone:inv.companyPhone||state.settings.phone||'',company_address:inv.companyAddress||state.settings.address||'',company_tax_id:inv.companyTaxId||state.settings.taxId||'',company_registration_number:inv.companyRegistrationNumber||state.settings.registrationNumber||'',company_statistical_id:inv.companyStatisticalId||state.settings.statisticalId||'',company_secondary_tax_id:inv.companySecondaryTaxId||state.settings.secondaryTaxId||'',
    bank_name:inv.bankName||state.settings.bankName||'',account_holder:inv.accountHolder||state.settings.accountHolder||'',account_number:inv.accountNumber||state.settings.accountNumber||'',iban:inv.iban||state.settings.iban||'',swift_bic:inv.swiftBic||state.settings.swiftBic||'',payment_instructions:inv.paymentInstructions||state.settings.paymentInstructions||'',preview_overrides:inv.previewOverrides||{},
+   sent_at:inv.sentAt||'',paid_at:inv.paidAt||'',cancelled_at:inv.cancelledAt||'',payment_method:inv.paymentMethod||'',paid_amount:Number(inv.paidAmount||0),payment_reference:inv.paymentReference||'',
    items:(inv.items||[]).map((x,n)=>({description:x.d||'',quantity:Number(x.q||0),unit_price:Number(x.p||0),line_total:Number(x.q||0)*Number(x.p||0),sort_order:n}))
   }
  });
@@ -2886,7 +3128,7 @@ async function loadCloudWorkspace(userId){
   if(hasCloudData){
    const itemGroups={};(items||[]).forEach(x=>(itemGroups[x.invoice_id]||(itemGroups[x.invoice_id]=[])).push(x));
    state.clients=(clients||[]).map(c=>({id:c.id,name:c.name,email:c.email||'',phone:c.phone||'',country:c.country_code||'DZ',address:c.address||'',taxId:c.tax_id||'',registrationNumber:c.registration_number||''}));
-   state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',clientPhone:i.client_phone||'',clientAddress:i.client_address||'',clientTaxId:i.client_tax_id||'',clientRegistrationNumber:i.client_registration_number||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),companyName:i.company_name||'',companyEmail:i.company_email||'',companyPhone:i.company_phone||'',companyAddress:i.company_address||'',companyTaxId:i.company_tax_id||'',companyRegistrationNumber:i.company_registration_number||'',companyStatisticalId:i.company_statistical_id||'',companySecondaryTaxId:i.company_secondary_tax_id||'',bankName:i.bank_name||'',accountHolder:i.account_holder||'',accountNumber:i.account_number||'',iban:i.iban||'',swiftBic:i.swift_bic||'',paymentInstructions:i.payment_instructions||'',previewOverrides:i.preview_overrides||{},items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
+   state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',clientPhone:i.client_phone||'',clientAddress:i.client_address||'',clientTaxId:i.client_tax_id||'',clientRegistrationNumber:i.client_registration_number||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),companyName:i.company_name||'',companyEmail:i.company_email||'',companyPhone:i.company_phone||'',companyAddress:i.company_address||'',companyTaxId:i.company_tax_id||'',companyRegistrationNumber:i.company_registration_number||'',companyStatisticalId:i.company_statistical_id||'',companySecondaryTaxId:i.company_secondary_tax_id||'',bankName:i.bank_name||'',accountHolder:i.account_holder||'',accountNumber:i.account_number||'',iban:i.iban||'',swiftBic:i.swift_bic||'',paymentInstructions:i.payment_instructions||'',previewOverrides:i.preview_overrides||{},sentAt:i.sent_at||'',paidAt:i.paid_at||'',cancelledAt:i.cancelled_at||'',paymentMethod:i.payment_method||'',paidAmount:Number(i.paid_amount||0),paymentReference:i.payment_reference||'',items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
   }
   if(profile){
    state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',phone:profile.company_phone||'',address:profile.address||'',taxId:profile.tax_id||'',registrationNumber:profile.registration_number||'',statisticalId:profile.statistical_id||'',secondaryTaxId:profile.secondary_tax_id||'',bankName:profile.bank_name||'',accountHolder:profile.account_holder||'',accountNumber:profile.account_number||'',iban:profile.iban||'',swiftBic:profile.swift_bic||'',paymentInstructions:profile.payment_instructions||'',logo:profile.logo_image||state.settings.logo||'',stampImage:profile.stamp_image||'',signatureImage:profile.signature_image||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
