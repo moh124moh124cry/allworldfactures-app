@@ -165,6 +165,18 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .resetSuccess{padding:10px 12px;background:#e9f7f4;color:#08725f;border-radius:10px;font-size:12px;margin:10px 0}
 .syncPill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;background:#e7f8f5;color:#087665;font-size:10px;font-weight:800}
 
+
+/* v0.5.1 — RTL and invoice-card polish */
+.phoneMode[dir="rtl"] #invoices td{direction:rtl}
+.phoneMode[dir="rtl"] #invoices td>b,
+.phoneMode[dir="rtl"] #invoices td>.badge{direction:rtl}
+.phoneMode[dir="rtl"] #invoices .invoiceActions{direction:rtl}
+.phoneMode #invoices tr{transition:transform .15s ease,box-shadow .15s ease}
+.phoneMode #invoices tr:active{transform:scale(.995)}
+.phoneMode #invoices .badge{min-width:76px;text-align:center}
+.phoneMode #invoices td[data-label]{min-height:34px}
+.phoneMode .head>.btn.primary{min-height:48px;font-size:15px}
+
 </style>
 </head>
 <body>
@@ -283,7 +295,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.5: cloud accounts, cross-device sync, full multilingual UI and password recovery are active.</div>
+      <div class="notice">Version 0.5.1: mobile RTL polish, improved currency formatting, multilingual cleanup and cloud features are active.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -583,8 +595,20 @@ function statusAuto(inv){
  return inv.status||'pending';
 }
 function money(v,cur){
- const symbol=symbols[cur]||cur;
- return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(Number(v||0))+' '+symbol;
+ const lang=state?.settings?.language||'en';
+ const locale=lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-US';
+ try{
+  return new Intl.NumberFormat(locale,{
+   style:'currency',
+   currency:cur||'DZD',
+   currencyDisplay:'narrowSymbol',
+   minimumFractionDigits:0,
+   maximumFractionDigits:2
+  }).format(Number(v||0));
+ }catch(e){
+  const symbol=symbols[cur]||cur;
+  return new Intl.NumberFormat(locale,{maximumFractionDigits:2}).format(Number(v||0))+' '+symbol;
+ }
 }
 function invoiceTotal(inv){
  const sub=(inv.items||[]).reduce((a,i)=>a+(Number(i.q)||0)*(Number(i.p)||0),0);
@@ -605,7 +629,11 @@ function renderDashboard(){
  const rows=[...state.invoices].slice(-5).reverse();
  document.getElementById('recentInvoiceTable').innerHTML=rows.length?rows.map(i=>`<tr><td><b>${esc(i.number)}</b></td><td>${esc(i.clientName)}</td><td><b>${money(i.total,i.currency)}</b></td><td><span class="badge ${i.status}">${statusLabel(i.status)}</span></td></tr>`).join(''):`<tr><td colspan="4" class="empty">${uiPhrase('No invoices yet.')}</td></tr>`;translateStaticUI();
 }
-function compactMoney(v){return new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:1}).format(v)}
+function compactMoney(v){
+ const lang=state?.settings?.language||'en';
+ const locale=lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-US';
+ return new Intl.NumberFormat(locale,{notation:'compact',maximumFractionDigits:1}).format(v)
+}
 
 function renderInvoiceList(){
  const q=(document.getElementById('invoiceSearch')?.value||'').toLowerCase();
@@ -815,6 +843,10 @@ const uiPhrases={
  'Due':{fr:'Échéance',ar:'الاستحقاق'},
  'Actions':{fr:'Actions',ar:'الإجراءات'},
  'Create invoice':{fr:'Créer une facture',ar:'إنشاء فاتورة'},
+ '＋ Create invoice':{fr:'＋ Créer une facture',ar:'＋ إنشاء فاتورة'},
+ '+ Create invoice':{fr:'+ Créer une facture',ar:'+ إنشاء فاتورة'},
+ '＋ New invoice':{fr:'＋ Nouvelle facture',ar:'＋ فاتورة جديدة'},
+ 'New invoice':{fr:'Nouvelle facture',ar:'فاتورة جديدة'},
  'Build and save the invoice. Print/PDF uses the preview on the right.':{fr:'Créez et enregistrez la facture. L’impression/PDF utilise l’aperçu.',ar:'أنشئ الفاتورة واحفظها. الطباعة وPDF يعتمدان على المعاينة.'},
  'Save draft':{fr:'Enregistrer brouillon',ar:'حفظ كمسودة'},
  'Save invoice':{fr:'Enregistrer la facture',ar:'حفظ الفاتورة'},
@@ -907,7 +939,11 @@ const uiPhrases={
  'NEW PASSWORD':{fr:'NOUVEAU MOT DE PASSE',ar:'كلمة المرور الجديدة'},
  'CONFIRM PASSWORD':{fr:'CONFIRMER LE MOT DE PASSE',ar:'تأكيد كلمة المرور'},
  'Update password':{fr:'Mettre à jour le mot de passe',ar:'تحديث كلمة المرور'},
- 'Forgot password?':{fr:'Mot de passe oublié ?',ar:'نسيت كلمة المرور؟'}
+ 'Forgot password?':{fr:'Mot de passe oublié ?',ar:'نسيت كلمة المرور؟'},
+ 'Selected':{fr:'Sélectionné',ar:'محدد'},
+ 'Tap to use':{fr:'Appuyez pour utiliser',ar:'اضغط للاستخدام'},
+ 'saved clients':{fr:'clients enregistrés',ar:'عملاء محفوظون'},
+ 'Cloud sync':{fr:'Synchronisation cloud',ar:'مزامنة سحابية'}
 };
 function uiPhrase(value,lang=state.settings.language||'en'){
  const v=String(value||'').trim();
