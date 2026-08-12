@@ -103,6 +103,68 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
   .avatar{width:34px;height:34px}
 }
 
+
+/* v0.5 — stronger phone layout + recovery modal */
+.phoneMode .app{display:block}
+.phoneMode .side{display:none!important}
+.phoneMode .top{height:60px;padding:0 12px}
+.phoneMode .top small{display:none}
+.phoneMode .content{padding:14px 10px 86px;max-width:none}
+.phoneMode .mobile{display:flex!important;position:fixed;left:8px;right:8px;bottom:8px;background:var(--navy);border-radius:17px;padding:7px;z-index:40;justify-content:space-around;box-shadow:0 12px 34px #00152d55}
+.phoneMode[dir="rtl"] .mobile{direction:rtl}
+.phoneMode .mobile button{border:0;background:transparent;color:#ffffffb0;font-size:10px;padding:7px 5px;min-width:52px}
+.phoneMode .mobile button.active{color:#5be1d7}
+.phoneMode .head{align-items:flex-start;flex-direction:column;gap:10px}
+.phoneMode .head h1{font-size:24px}
+.phoneMode .head p{font-size:13px;line-height:1.55}
+.phoneMode .actions{width:100%}
+.phoneMode .actions .btn{flex:1;min-width:95px}
+.phoneMode .stats{grid-template-columns:1fr 1fr;gap:9px}
+.phoneMode .stat{padding:14px}
+.phoneMode .stat strong{font-size:20px}
+.phoneMode .grid2,.phoneMode .invoicegrid{grid-template-columns:1fr!important}
+.phoneMode .preview{position:static}
+.phoneMode .form{padding:15px}
+.phoneMode .formgrid,.phoneMode .formgrid.cols3{grid-template-columns:1fr}
+.phoneMode .templates,.phoneMode .clientcards{grid-template-columns:1fr}
+.phoneMode .toolbar{align-items:stretch}
+.phoneMode .toolbar .input,.phoneMode .search{max-width:none!important;width:100%}
+.phoneMode .country{grid-template-columns:1.3fr .9fr}
+.phoneMode .country>:nth-child(3),.phoneMode .country>:nth-child(4){display:none}
+.phoneMode .topright #settingsTopBtn{display:none}
+.phoneMode .topright{gap:5px}
+.phoneMode .langSelect{width:64px;padding:7px}
+.phoneMode .avatar{width:34px;height:34px}
+.phoneMode .notice{font-size:11px;line-height:1.55}
+.phoneMode .previewtop{padding:18px}
+.phoneMode .previewbody{padding:16px}
+.phoneMode #invoices .tablewrap{overflow:visible}
+.phoneMode #invoices table{min-width:0;display:block}
+.phoneMode #invoices thead{display:none}
+.phoneMode #invoices tbody{display:grid;gap:10px}
+.phoneMode #invoices tr{display:grid;background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px;box-shadow:0 6px 20px rgba(22,37,62,.05)}
+.phoneMode #invoices td{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 0;border:0;font-size:12px}
+.phoneMode #invoices td::before{content:attr(data-label);font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase}
+.phoneMode #invoices td:last-child{display:block;padding-top:10px;border-top:1px solid var(--line);margin-top:4px}
+.phoneMode #invoices td:last-child::before{display:none}
+.phoneMode #invoices .invoiceActions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.phoneMode #invoices .invoiceActions .btn{width:100%}
+.phoneMode #dashboard .tablewrap{overflow-x:auto}
+.phoneMode #dashboard table{min-width:560px}
+.phoneMode .authScreen{padding:80px 12px 24px}
+.phoneMode .authWrap{border-radius:23px}
+.phoneMode .authPanel{padding:27px 19px 24px}
+.phoneMode .authHero{display:none}
+.phoneMode .authWelcomeBrand{display:block}
+.forgotBtn{display:block;margin:9px auto 0;border:0;background:transparent;color:var(--teal);font-weight:800;font-size:12px}
+.modalOverlay{position:fixed;inset:0;background:#001224aa;backdrop-filter:blur(5px);z-index:100;display:grid;place-items:center;padding:18px}
+.modalCard{width:min(440px,100%);background:#fff;border-radius:20px;padding:23px;box-shadow:0 25px 70px #0007;position:relative}
+.modalCard h3{margin:0 0 7px;font-size:22px}
+.modalCard p{color:var(--muted);font-size:13px;line-height:1.55}
+.modalClose{position:absolute;top:12px;inset-inline-end:12px;width:36px;height:36px;border:0;border-radius:10px;background:#f1f4f7;font-size:20px}
+.resetSuccess{padding:10px 12px;background:#e9f7f4;color:#08725f;border-radius:10px;font-size:12px;margin:10px 0}
+.syncPill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;background:#e7f8f5;color:#087665;font-size:10px;font-weight:800}
+
 </style>
 </head>
 <body>
@@ -124,13 +186,13 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
     <div class="authPanel">
       <div class="authWelcomeBrand">AllWorld Factures</div>
       <h2 id="authTitle">Welcome</h2>
-      <p id="authSubtitle">Sign in or create your local prototype account.</p>
+      <p id="authSubtitle">Sign in or create your cloud account.</p>
       <div class="authTabs"><button id="tabLogin" class="active" onclick="switchAuth('login')">Sign in</button><button id="tabSignup" onclick="switchAuth('signup')">Create account</button></div>
       <div id="authError" class="authError"></div>
       <div id="loginForm">
         <div class="field" style="margin-bottom:11px"><label id="loginEmailLabel">EMAIL</label><input id="loginEmail" class="input" type="email" autocomplete="email"></div>
         <div class="field passwordWrap" style="margin-bottom:15px"><label id="loginPasswordLabel">PASSWORD</label><input id="loginPassword" class="input" type="password" autocomplete="current-password"><button class="passwordToggle" type="button" onclick="togglePassword('loginPassword',this)">◉</button></div>
-        <button id="loginBtn" class="btn primary" style="width:100%" onclick="loginLocal()">Sign in</button>
+        <button id="loginBtn" class="btn primary" style="width:100%" onclick="loginLocal()">Sign in</button><button id="forgotPasswordBtn" class="forgotBtn" type="button" onclick="openResetModal('request')">Forgot password?</button>
       </div>
       <div id="signupForm" class="hidden">
         <div class="signupGrid">
@@ -143,6 +205,28 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
         <div id="firstSetupHint" class="firstSetupHint">After account creation, we will open your company settings.</div>
       </div>
       <div id="authNote" class="authNote">Cloud authentication powered by Supabase. Your invoices and clients can follow you across devices.</div>
+    </div>
+  </div>
+</div>
+
+
+<div id="resetModal" class="modalOverlay hidden">
+  <div class="modalCard">
+    <button class="modalClose" type="button" onclick="closeResetModal()">×</button>
+    <div id="resetRequestView">
+      <h3 id="resetTitle">Reset password</h3>
+      <p id="resetHelp">Enter your email and we will send you a secure recovery link.</p>
+      <div class="field" style="margin:14px 0"><label id="resetEmailLabel">EMAIL</label><input id="resetEmail" class="input" type="email" autocomplete="email"></div>
+      <div id="resetMessage"></div>
+      <button id="resetSendBtn" class="btn primary" style="width:100%" onclick="sendResetEmail()">Send recovery email</button>
+    </div>
+    <div id="resetNewView" class="hidden">
+      <h3 id="newPasswordTitle">Choose a new password</h3>
+      <p id="newPasswordHelp">Enter a new password of at least 6 characters.</p>
+      <div class="field passwordWrap" style="margin:14px 0 10px"><label id="newPasswordLabel">NEW PASSWORD</label><input id="newPassword" class="input" type="password" autocomplete="new-password"><button class="passwordToggle" type="button" onclick="togglePassword('newPassword',this)">◉</button></div>
+      <div class="field passwordWrap" style="margin-bottom:14px"><label id="confirmPasswordLabel">CONFIRM PASSWORD</label><input id="confirmPassword" class="input" type="password" autocomplete="new-password"><button class="passwordToggle" type="button" onclick="togglePassword('confirmPassword',this)">◉</button></div>
+      <div id="newPasswordMessage"></div>
+      <button id="updatePasswordBtn" class="btn primary" style="width:100%" onclick="updateRecoveredPassword()">Update password</button>
     </div>
   </div>
 </div>
@@ -189,7 +273,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
     <section id="invoices" class="page hidden">
       <div class="head"><div><h1>Invoices</h1><p>Save, edit, duplicate, mark paid and print invoices.</p></div><button class="btn primary" onclick="newInvoice()">＋ Create invoice</button></div>
       <div class="card panel">
-        <div class="toolbar"><input id="invoiceSearch" class="input search" placeholder="Search invoice or client…" oninput="renderInvoiceList()"><select id="invoiceStatusFilter" class="input" style="max-width:190px" onchange="renderInvoiceList()"><option value="">All statuses</option><option>draft</option><option>pending</option><option>paid</option><option>overdue</option></select></div>
+        <div class="toolbar"><input id="invoiceSearch" class="input search" placeholder="Search invoice or client…" oninput="renderInvoiceList()"><select id="invoiceStatusFilter" class="input" style="max-width:190px" onchange="renderInvoiceList()"><option value="">All statuses</option><option value="draft">draft</option><option value="pending">pending</option><option value="paid">paid</option><option value="overdue">overdue</option></select></div>
         <div class="tablewrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Issue</th><th>Due</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="allInvoiceTable"></tbody></table></div>
       </div>
     </section>
@@ -199,7 +283,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.4: real Supabase accounts and cloud workspace sync are active. Local browser storage remains as an offline mirror.</div>
+      <div class="notice">Version 0.5: cloud accounts, cross-device sync, full multilingual UI and password recovery are active.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -233,7 +317,7 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 
           <div class="section"><h3>Notes & status</h3><div class="formgrid">
             <div class="field"><label>NOTES</label><textarea id="notes" class="input" rows="4" oninput="renderPreview()"></textarea></div>
-            <div class="field"><label>STATUS</label><select id="status" class="input"><option>draft</option><option>pending</option><option>paid</option><option>overdue</option></select></div>
+            <div class="field"><label>STATUS</label><select id="status" class="input"><option value="draft">draft</option><option value="pending">pending</option><option value="paid">paid</option><option value="overdue">overdue</option></select></div>
           </div></div>
         </div>
 
@@ -396,28 +480,28 @@ const translations={
  invoices:'Invoices',clients:'Clients',templates:'Invoice Templates',countries:'Country & Compliance',profile:'Profile',settings:'Settings',
  signOut:'Sign out',workspace:'Workspace',invoiceLabel:'Invoices',clientLabel:'Clients',templateLabel:'Template',appLanguage:'APP LANGUAGE',openSettings:'Open business settings',
  settingsBtn:'⚙ Settings',brandSub:'Invoicing without borders',authHero:'Professional invoicing made simple, multilingual and ready for businesses around the world.',
- authF1:'Create invoices in multiple currencies',authF2:'Sync clients and invoices across devices',authF3:'Print clean PDF invoices',authTitle:'Welcome',authSub:'Sign in or create your local prototype account.',
+ authF1:'Create invoices in multiple currencies',authF2:'Sync clients and invoices across devices',authF3:'Print clean PDF invoices',authTitle:'Welcome',authSub:'Sign in or create your cloud account.',
  signIn:'Sign in',createAccount:'Create account',email:'EMAIL',password:'PASSWORD',yourName:'YOUR NAME',companyName:'COMPANY NAME',firstSetup:'After account creation, we will open your company settings.',
  authNote:'Cloud authentication powered by Supabase. Your invoices and clients can follow you across devices.',
- localNote:'This account is connected to the cloud workspace.',branding:'Branding',companyLogo:'COMPANY LOGO',removeLogo:'Remove logo',logoHint:'Stored locally in this browser. Use a small PNG/JPG.',invoiceDefaults:'Invoice defaults',invoiceTemplate:'INVOICE TEMPLATE',invoiceWord:'INVOICE'},
+ localNote:'This account is connected to the cloud workspace.',branding:'Branding',companyLogo:'COMPANY LOGO',removeLogo:'Remove logo',logoHint:'Use a small PNG/JPG logo. Cloud logo storage will be added separately.',invoiceDefaults:'Invoice defaults',invoiceTemplate:'INVOICE TEMPLATE',invoiceWord:'INVOICE'},
  fr:{navDashboard:'Tableau de bord',navInvoices:'Factures',navClients:'Clients',navTemplates:'Modèles',navCountries:'Pays',navProfile:'Profil',navSettings:'Paramètres',
  overview:'Aperçu',welcome:'Bon retour 👋',welcomeSub:'Votre centre de gestion de facturation internationale.',newInvoice:'＋ Nouvelle facture',createInvoice:'＋ Créer une facture',
  invoices:'Factures',clients:'Clients',templates:'Modèles de facture',countries:'Pays et conformité',profile:'Profil',settings:'Paramètres',
  signOut:'Se déconnecter',workspace:'Espace de travail',invoiceLabel:'Factures',clientLabel:'Clients',templateLabel:'Modèle',appLanguage:"LANGUE DE L’APPLICATION",openSettings:'Ouvrir les paramètres entreprise',
  settingsBtn:'⚙ Paramètres',brandSub:'Facturation sans frontières',authHero:'Une facturation professionnelle, simple, multilingue et pensée pour les entreprises du monde entier.',
- authF1:'Créer des factures en plusieurs devises',authF2:'Enregistrer clients et factures sur cet appareil',authF3:'Imprimer des factures PDF propres',authTitle:'Bienvenue',authSub:'Connectez-vous ou créez votre compte prototype local.',
+ authF1:'Créer des factures en plusieurs devises',authF2:'Synchroniser clients et factures entre vos appareils',authF3:'Imprimer des factures PDF propres',authTitle:'Bienvenue',authSub:'Connectez-vous ou créez votre compte cloud.',
  signIn:'Se connecter',createAccount:'Créer un compte',email:'E-MAIL',password:'MOT DE PASSE',yourName:'VOTRE NOM',companyName:'NOM DE L’ENTREPRISE',firstSetup:'Après la création du compte, nous ouvrirons les paramètres de votre entreprise.',
- authNote:"Authentification prototype : les données du compte restent dans ce navigateur. L’authentification cloud arrivera avec la base de données.",
- localNote:'Ce compte prototype existe uniquement dans ce navigateur.',branding:'Identité visuelle',companyLogo:'LOGO DE L’ENTREPRISE',removeLogo:'Supprimer le logo',logoHint:'Enregistré localement dans ce navigateur. Utilisez un petit PNG/JPG.',invoiceDefaults:'Paramètres de facture',invoiceTemplate:'MODÈLE DE FACTURE',invoiceWord:'FACTURE'},
+ authNote:'Authentification cloud activée. Une confirmation par e-mail peut être demandée lors de l’inscription.',
+ localNote:'Ce compte est connecté à votre espace cloud.',branding:'Identité visuelle',companyLogo:'LOGO DE L’ENTREPRISE',removeLogo:'Supprimer le logo',logoHint:'Utilisez un petit logo PNG/JPG. Le stockage cloud du logo sera ajouté séparément.',invoiceDefaults:'Paramètres de facture',invoiceTemplate:'MODÈLE DE FACTURE',invoiceWord:'FACTURE'},
  ar:{navDashboard:'لوحة التحكم',navInvoices:'الفواتير',navClients:'العملاء',navTemplates:'القوالب',navCountries:'الدول',navProfile:'الملف الشخصي',navSettings:'الإعدادات',
  overview:'نظرة عامة',welcome:'مرحبًا بعودتك 👋',welcomeSub:'مركز إدارة الفواتير العالمية.',newInvoice:'＋ فاتورة جديدة',createInvoice:'＋ إنشاء فاتورة',
  invoices:'الفواتير',clients:'العملاء',templates:'قوالب الفواتير',countries:'الدول والامتثال',profile:'الملف الشخصي',settings:'الإعدادات',
  signOut:'تسجيل الخروج',workspace:'مساحة العمل',invoiceLabel:'الفواتير',clientLabel:'العملاء',templateLabel:'القالب',appLanguage:'لغة التطبيق',openSettings:'فتح إعدادات المؤسسة',
  settingsBtn:'⚙ الإعدادات',brandSub:'فواتير بلا حدود',authHero:'فواتير احترافية سهلة ومتعددة اللغات ومهيأة للأعمال حول العالم.',
- authF1:'إنشاء فواتير بعملات متعددة',authF2:'حفظ العملاء والفواتير على جهازك',authF3:'طباعة فواتير PDF مرتبة',authTitle:'مرحبًا',authSub:'سجّل الدخول أو أنشئ حساب النموذج المحلي.',
+ authF1:'إنشاء فواتير بعملات متعددة',authF2:'مزامنة العملاء والفواتير بين أجهزتك',authF3:'طباعة فواتير PDF مرتبة',authTitle:'مرحبًا',authSub:'سجّل الدخول أو أنشئ حسابك السحابي.',
  signIn:'تسجيل الدخول',createAccount:'إنشاء حساب',email:'البريد الإلكتروني',password:'كلمة المرور',yourName:'اسمك',companyName:'اسم المؤسسة',firstSetup:'بعد إنشاء الحساب سنفتح إعدادات المؤسسة لإكمال بياناتها.',
- authNote:'تسجيل الدخول في هذه النسخة تجريبي ومحلي فقط. الحساب السحابي الحقيقي سيُضاف مع مرحلة قاعدة البيانات.',
- localNote:'هذا الحساب التجريبي موجود فقط داخل هذا المتصفح.',branding:'الهوية البصرية',companyLogo:'شعار المؤسسة',removeLogo:'حذف الشعار',logoHint:'يُحفظ محليًا في المتصفح. استخدم صورة PNG/JPG صغيرة.',invoiceDefaults:'إعدادات الفاتورة',invoiceTemplate:'قالب الفاتورة',invoiceWord:'فاتورة'}
+ authNote:'الحساب السحابي مفعّل. قد يُطلب تأكيد البريد الإلكتروني عند إنشاء الحساب.',
+ localNote:'هذا الحساب متصل بمساحة العمل السحابية.',branding:'الهوية البصرية',companyLogo:'شعار المؤسسة',removeLogo:'حذف الشعار',logoHint:'استخدم شعار PNG/JPG صغيرًا. سنضيف تخزين الشعار سحابيًا في مرحلة مستقلة.',invoiceDefaults:'إعدادات الفاتورة',invoiceTemplate:'قالب الفاتورة',invoiceWord:'فاتورة'}
 };
 
 const todayISO=()=>new Date().toISOString().slice(0,10);
@@ -489,7 +573,7 @@ function showPage(id){
  if(id==='countries')renderCountries();
  if(id==='profile')renderProfile();
  if(id==='settings')loadSettingsForm();
- window.scrollTo(0,0);
+ translateStaticUI();phoneLayout();window.scrollTo(0,0);
 }
 function countryBy(code){return countries.find(x=>x.code===code)||countries[0]}
 function clientBy(id){return state.clients.find(c=>c.id===id)}
@@ -519,7 +603,7 @@ function renderDashboard(){
  document.getElementById('kpiPending').textContent=compactMoney(pending);
  document.getElementById('kpiOverdue').textContent=compactMoney(overdue);
  const rows=[...state.invoices].slice(-5).reverse();
- document.getElementById('recentInvoiceTable').innerHTML=rows.length?rows.map(i=>`<tr><td><b>${esc(i.number)}</b></td><td>${esc(i.clientName)}</td><td><b>${money(i.total,i.currency)}</b></td><td><span class="badge ${i.status}">${i.status}</span></td></tr>`).join(''):`<tr><td colspan="4" class="empty">No invoices yet.</td></tr>`;
+ document.getElementById('recentInvoiceTable').innerHTML=rows.length?rows.map(i=>`<tr><td><b>${esc(i.number)}</b></td><td>${esc(i.clientName)}</td><td><b>${money(i.total,i.currency)}</b></td><td><span class="badge ${i.status}">${statusLabel(i.status)}</span></td></tr>`).join(''):`<tr><td colspan="4" class="empty">${uiPhrase('No invoices yet.')}</td></tr>`;translateStaticUI();
 }
 function compactMoney(v){return new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:1}).format(v)}
 
@@ -530,11 +614,11 @@ function renderInvoiceList(){
  let arr=[...state.invoices].reverse().filter(i=>(!q||(`${i.number} ${i.clientName}`).toLowerCase().includes(q))&&(!f||i.status===f));
  const tbody=document.getElementById('allInvoiceTable');
  tbody.innerHTML=arr.length?arr.map(i=>`<tr>
-  <td><b>${esc(i.number)}</b></td><td>${esc(i.clientName)}</td><td>${esc(i.issueDate)}</td><td>${esc(i.dueDate)}</td>
-  <td><b>${money(i.total,i.currency)}</b></td><td><span class="badge ${i.status}">${i.status}</span></td>
-  <td><div class="invoiceActions"><button class="btn secondary small" onclick="editInvoice('${i.id}')">Edit</button><button class="btn secondary small" onclick="duplicateInvoice('${i.id}')">Duplicate</button>${i.status!=='paid'?`<button class="btn secondary small" onclick="markPaid('${i.id}')">Paid</button>`:''}<button class="btn dangerbtn small" onclick="deleteInvoice('${i.id}')">Delete</button></div></td>
- </tr>`).join(''):`<tr><td colspan="7" class="empty">No matching invoices.</td></tr>`;
- persist();
+  <td data-label="${uiPhrase('Invoice')}"><b>${esc(i.number)}</b></td><td data-label="${uiPhrase('Client')}">${esc(i.clientName)}</td><td data-label="${uiPhrase('Issue')}">${esc(i.issueDate)}</td><td data-label="${uiPhrase('Due')}">${esc(i.dueDate)}</td>
+  <td data-label="${uiPhrase('Total')}"><b>${money(i.total,i.currency)}</b></td><td data-label="${uiPhrase('Status')}"><span class="badge ${i.status}">${statusLabel(i.status)}</span></td>
+  <td data-label="${uiPhrase('Actions')}"><div class="invoiceActions"><button class="btn secondary small" onclick="editInvoice('${i.id}')">${actionLabel('Edit')}</button><button class="btn secondary small" onclick="duplicateInvoice('${i.id}')">${actionLabel('Duplicate')}</button>${i.status!=='paid'?`<button class="btn secondary small" onclick="markPaid('${i.id}')">${actionLabel('Paid')}</button>`:''}<button class="btn dangerbtn small" onclick="deleteInvoice('${i.id}')">${actionLabel('Delete')}</button></div></td>
+ </tr>`).join(''):`<tr><td colspan="7" class="empty">${uiPhrase('No matching invoices.')}</td></tr>`;
+ persist();translateStaticUI();
 }
 
 function populateSelectors(){
@@ -550,7 +634,7 @@ function populateSelectors(){
 }
 function refreshClientSelect(selected){
  const el=document.getElementById('clientSelect');if(!el)return;
- el.innerHTML=`<option value="">— Manual / no saved client —</option>`+state.clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+ el.innerHTML=`<option value="">— ${uiPhrase('Manual / no saved client')} —</option>`+state.clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
  if(selected)el.value=selected;
  el.onchange=()=>{
   const c=clientBy(el.value);if(c){document.getElementById('email').value=c.email||'';document.getElementById('country').value=c.country||state.settings.country;changeCountry(false)}
@@ -663,8 +747,8 @@ function renderClients(){
  const q=(document.getElementById('clientSearch')?.value||'').toLowerCase();
  const arr=state.clients.filter(c=>!q||(`${c.name} ${c.email} ${countryBy(c.country).name}`).toLowerCase().includes(q));
  document.getElementById('clientCount').textContent=`${state.clients.length} saved clients`;
- document.getElementById('clientCards').innerHTML=arr.length?arr.map(c=>`<div class="card clientcard"><h3>${esc(c.name)}</h3><div class="muted">${esc(c.email||'No email')}</div><div class="muted" style="margin-top:5px">${countryBy(c.country).flag} ${esc(countryBy(c.country).name)}</div><div class="muted" style="margin-top:5px">${esc(c.address||'')}</div><div class="clientactions"><button class="btn secondary small" onclick="editClient('${c.id}')">Edit</button><button class="btn primary small" onclick="invoiceForClient('${c.id}')">Invoice</button><button class="btn dangerbtn small" onclick="deleteClient('${c.id}')">Delete</button></div></div>`).join(''):`<div class="empty">No matching clients.</div>`;
- refreshClientSelect();
+ document.getElementById('clientCards').innerHTML=arr.length?arr.map(c=>`<div class="card clientcard"><h3>${esc(c.name)}</h3><div class="muted">${esc(c.email||'No email')}</div><div class="muted" style="margin-top:5px">${countryBy(c.country).flag} ${esc(countryBy(c.country).name)}</div><div class="muted" style="margin-top:5px">${esc(c.address||'')}</div><div class="clientactions"><button class="btn secondary small" onclick="editClient('${c.id}')">Edit</button><button class="btn primary small" onclick="invoiceForClient('${c.id}')">Invoice</button><button class="btn dangerbtn small" onclick="deleteClient('${c.id}')">Delete</button></div></div>`).join(''):`<div class="empty">${uiPhrase('No matching clients.')}</div>`;
+ refreshClientSelect();translateStaticUI();
 }
 function saveClient(){
  const id=document.getElementById('clientId').value||uid('client'),name=document.getElementById('clientName').value.trim();
@@ -703,6 +787,169 @@ function saveSettings(){
  persist();setLanguage(state.settings.language);updateLogoDisplays();alert('Settings saved ✓');
 }
 
+
+const uiPhrases={
+ 'Professional invoicing for every country.':{fr:'Facturation professionnelle pour chaque pays.',ar:'فواتير احترافية لكل دولة.'},
+ 'TOTAL INVOICES':{fr:'TOTAL DES FACTURES',ar:'إجمالي الفواتير'},
+ 'Stored on this device':{fr:'Synchronisées dans le cloud',ar:'متزامنة سحابيًا'},
+ 'PAID':{fr:'PAYÉ',ar:'المدفوع'},
+ 'Collected':{fr:'Encaissé',ar:'تم تحصيله'},
+ 'PENDING':{fr:'EN ATTENTE',ar:'قيد الانتظار'},
+ 'Awaiting payment':{fr:'Paiement en attente',ar:'بانتظار الدفع'},
+ 'OVERDUE':{fr:'EN RETARD',ar:'المتأخر'},
+ 'Needs attention':{fr:'Nécessite une attention',ar:'يحتاج متابعة'},
+ 'Recent invoices':{fr:'Factures récentes',ar:'أحدث الفواتير'},
+ 'View all':{fr:'Voir tout',ar:'عرض الكل'},
+ 'Invoice':{fr:'Facture',ar:'الفاتورة'},
+ 'Client':{fr:'Client',ar:'العميل'},
+ 'Total':{fr:'Total',ar:'الإجمالي'},
+ 'Status':{fr:'Statut',ar:'الحالة'},
+ 'Quick actions':{fr:'Actions rapides',ar:'إجراءات سريعة'},
+ 'Professional billing':{fr:'Facturation professionnelle',ar:'فواتير احترافية'},
+ 'Manage customers':{fr:'Gérer les clients',ar:'إدارة العملاء'},
+ 'Choose a style':{fr:'Choisir un style',ar:'اختيار تصميم'},
+ 'Currency & tax presets':{fr:'Devise et fiscalité',ar:'العملة والضرائب'},
+ 'Save, edit, duplicate, mark paid and print invoices.':{fr:'Enregistrez, modifiez, dupliquez, marquez comme payées et imprimez vos factures.',ar:'احفظ الفواتير وعدّلها وانسخها وحدد المدفوع منها واطبعها.'},
+ 'All statuses':{fr:'Tous les statuts',ar:'كل الحالات'},
+ 'Issue':{fr:'Émission',ar:'الإصدار'},
+ 'Due':{fr:'Échéance',ar:'الاستحقاق'},
+ 'Actions':{fr:'Actions',ar:'الإجراءات'},
+ 'Create invoice':{fr:'Créer une facture',ar:'إنشاء فاتورة'},
+ 'Build and save the invoice. Print/PDF uses the preview on the right.':{fr:'Créez et enregistrez la facture. L’impression/PDF utilise l’aperçu.',ar:'أنشئ الفاتورة واحفظها. الطباعة وPDF يعتمدان على المعاينة.'},
+ 'Save draft':{fr:'Enregistrer brouillon',ar:'حفظ كمسودة'},
+ 'Save invoice':{fr:'Enregistrer la facture',ar:'حفظ الفاتورة'},
+ 'Print / PDF':{fr:'Imprimer / PDF',ar:'طباعة / PDF'},
+ 'Business & client':{fr:'Entreprise et client',ar:'المؤسسة والعميل'},
+ 'BUSINESS NAME':{fr:'NOM DE L’ENTREPRISE',ar:'اسم المؤسسة'},
+ 'CLIENT':{fr:'CLIENT',ar:'العميل'},
+ 'CLIENT EMAIL':{fr:'E-MAIL DU CLIENT',ar:'بريد العميل'},
+ 'INVOICE NUMBER':{fr:'NUMÉRO DE FACTURE',ar:'رقم الفاتورة'},
+ 'Dates & compliance':{fr:'Dates et conformité',ar:'التواريخ والامتثال'},
+ 'ISSUE DATE':{fr:'DATE D’ÉMISSION',ar:'تاريخ الإصدار'},
+ 'DUE DATE':{fr:'DATE D’ÉCHÉANCE',ar:'تاريخ الاستحقاق'},
+ 'COUNTRY':{fr:'PAYS',ar:'الدولة'},
+ 'CURRENCY':{fr:'DEVISE',ar:'العملة'},
+ 'TAX RATE %':{fr:'TAUX DE TAXE %',ar:'نسبة الضريبة %'},
+ 'DISCOUNT %':{fr:'REMISE %',ar:'الخصم %'},
+ 'INVOICE TEMPLATE':{fr:'MODÈLE DE FACTURE',ar:'قالب الفاتورة'},
+ 'Line items':{fr:'Lignes de facture',ar:'بنود الفاتورة'},
+ '＋ Add item':{fr:'＋ Ajouter une ligne',ar:'＋ إضافة بند'},
+ 'Add item':{fr:'Ajouter une ligne',ar:'إضافة بند'},
+ 'Description':{fr:'Description',ar:'الوصف'},
+ 'Qty':{fr:'Qté',ar:'الكمية'},
+ 'Unit price':{fr:'Prix unitaire',ar:'سعر الوحدة'},
+ 'SHIPPING / EXTRA CHARGE':{fr:'LIVRAISON / FRAIS SUPPLÉMENTAIRES',ar:'الشحن / رسوم إضافية'},
+ 'Subtotal':{fr:'Sous-total',ar:'المجموع الفرعي'},
+ 'Discount':{fr:'Remise',ar:'الخصم'},
+ 'Tax':{fr:'Taxe',ar:'الضريبة'},
+ 'Shipping':{fr:'Livraison',ar:'الشحن'},
+ 'Notes & status':{fr:'Notes et statut',ar:'الملاحظات والحالة'},
+ 'NOTES':{fr:'NOTES',ar:'الملاحظات'},
+ 'STATUS':{fr:'STATUT',ar:'الحالة'},
+ 'INVOICE':{fr:'FACTURE',ar:'فاتورة'},
+ 'Bill to':{fr:'Facturer à',ar:'الفاتورة إلى'},
+ 'Compliance':{fr:'Conformité',ar:'الامتثال'},
+ 'Item':{fr:'Article',ar:'البند'},
+ 'Tax & adjustments':{fr:'Taxe et ajustements',ar:'الضريبة والتعديلات'},
+ 'Total due':{fr:'Total à payer',ar:'الإجمالي المستحق'},
+ 'Add reusable customers so invoice creation is faster.':{fr:'Ajoutez des clients réutilisables pour créer les factures plus rapidement.',ar:'أضف العملاء مرة واحدة لاستخدامهم بسرعة في الفواتير.'},
+ 'Add client':{fr:'Ajouter un client',ar:'إضافة عميل'},
+ 'CLIENT / COMPANY NAME':{fr:'NOM DU CLIENT / ENTREPRISE',ar:'اسم العميل / المؤسسة'},
+ 'ADDRESS':{fr:'ADRESSE',ar:'العنوان'},
+ 'TAX / VAT ID':{fr:'IDENTIFIANT FISCAL / TVA',ar:'الرقم الجبائي / الضريبي'},
+ 'Save client':{fr:'Enregistrer le client',ar:'حفظ العميل'},
+ 'Clear':{fr:'Effacer',ar:'مسح'},
+ 'Invoice Templates':{fr:'Modèles de facture',ar:'قوالب الفواتير'},
+ 'Select one style. It is applied to invoice previews and printing.':{fr:'Sélectionnez un style pour l’aperçu et l’impression.',ar:'اختر تصميمًا لتطبيقه على المعاينة والطباعة.'},
+ 'Country & Compliance':{fr:'Pays et conformité',ar:'الدول والامتثال'},
+ 'Starter presets for currency, tax name and default tax rate.':{fr:'Préréglages de devise, taxe et taux par défaut.',ar:'إعدادات أولية للعملة واسم الضريبة ونسبتها الافتراضية.'},
+ 'These are starter presets for product development, not legal/tax advice. Before production use, invoice requirements for each country must be verified and maintained from authoritative sources.':{fr:'Ces préréglages servent au développement et ne constituent pas un conseil fiscal. Les exigences de chaque pays doivent être vérifiées avant la mise en production.',ar:'هذه إعدادات أولية للتطوير وليست استشارة ضريبية. يجب التحقق من متطلبات الفوترة لكل دولة قبل الاستخدام التجاري.'},
+ 'Your local account and workspace overview.':{fr:'Vue d’ensemble de votre compte et espace cloud.',ar:'نظرة عامة على حسابك ومساحة عملك السحابية.'},
+ 'Account':{fr:'Compte',ar:'الحساب'},
+ 'This account is connected to the cloud workspace.':{fr:'Ce compte est connecté à votre espace cloud.',ar:'هذا الحساب متصل بمساحة العمل السحابية.'},
+ 'Workspace':{fr:'Espace de travail',ar:'مساحة العمل'},
+ 'Template':{fr:'Modèle',ar:'القالب'},
+ 'APP LANGUAGE':{fr:'LANGUE DE L’APPLICATION',ar:'لغة التطبيق'},
+ 'Open business settings':{fr:'Ouvrir les paramètres entreprise',ar:'فتح إعدادات المؤسسة'},
+ 'Your business profile and invoice defaults.':{fr:'Profil de votre entreprise et paramètres de facturation.',ar:'بيانات المؤسسة وإعدادات الفواتير الافتراضية.'},
+ 'Save settings':{fr:'Enregistrer les paramètres',ar:'حفظ الإعدادات'},
+ 'Business profile':{fr:'Profil de l’entreprise',ar:'بيانات المؤسسة'},
+ 'Branding':{fr:'Identité visuelle',ar:'الهوية البصرية'},
+ 'Logo':{fr:'Logo',ar:'الشعار'},
+ 'COMPANY LOGO':{fr:'LOGO DE L’ENTREPRISE',ar:'شعار المؤسسة'},
+ 'Remove logo':{fr:'Supprimer le logo',ar:'حذف الشعار'},
+ 'Invoice defaults':{fr:'Paramètres de facture',ar:'إعدادات الفاتورة'},
+ 'DEFAULT COUNTRY':{fr:'PAYS PAR DÉFAUT',ar:'الدولة الافتراضية'},
+ 'DEFAULT LANGUAGE':{fr:'LANGUE PAR DÉFAUT',ar:'اللغة الافتراضية'},
+ 'INVOICE PREFIX':{fr:'PRÉFIXE DE FACTURE',ar:'بادئة رقم الفاتورة'},
+ 'PAYMENT TERM (DAYS)':{fr:'DÉLAI DE PAIEMENT (JOURS)',ar:'مهلة الدفع (بالأيام)'},
+ 'NEXT INVOICE NUMBER':{fr:'PROCHAIN NUMÉRO DE FACTURE',ar:'رقم الفاتورة التالي'},
+ 'DEFAULT NOTES':{fr:'NOTES PAR DÉFAUT',ar:'الملاحظات الافتراضية'},
+ 'Reset local data':{fr:'Réinitialiser les données',ar:'إعادة ضبط البيانات'},
+ 'Edit':{fr:'Modifier',ar:'تعديل'},
+ 'Duplicate':{fr:'Dupliquer',ar:'نسخ'},
+ 'Paid':{fr:'Payée',ar:'مدفوعة'},
+ 'Delete':{fr:'Supprimer',ar:'حذف'},
+ 'draft':{fr:'brouillon',ar:'مسودة'},
+ 'pending':{fr:'en attente',ar:'قيد الانتظار'},
+ 'paid':{fr:'payée',ar:'مدفوعة'},
+ 'overdue':{fr:'en retard',ar:'متأخرة'},
+ 'No invoices yet.':{fr:'Aucune facture.',ar:'لا توجد فواتير بعد.'},
+ 'No matching invoices.':{fr:'Aucune facture correspondante.',ar:'لا توجد فواتير مطابقة.'},
+ 'No matching clients.':{fr:'Aucun client correspondant.',ar:'لا يوجد عملاء مطابقون.'},
+ 'Manual / no saved client':{fr:'Manuel / aucun client enregistré',ar:'يدوي / بدون عميل محفوظ'},
+ 'Service or product':{fr:'Service ou produit',ar:'خدمة أو منتج'},
+ 'Reset password':{fr:'Réinitialiser le mot de passe',ar:'استعادة كلمة المرور'},
+ 'Enter your email and we will send you a secure recovery link.':{fr:'Saisissez votre e-mail et nous vous enverrons un lien sécurisé.',ar:'أدخل بريدك وسنرسل لك رابطًا آمنًا لاستعادة كلمة المرور.'},
+ 'Send recovery email':{fr:'Envoyer le lien de récupération',ar:'إرسال رابط الاستعادة'},
+ 'Choose a new password':{fr:'Choisissez un nouveau mot de passe',ar:'اختر كلمة مرور جديدة'},
+ 'Enter a new password of at least 6 characters.':{fr:'Saisissez un nouveau mot de passe d’au moins 6 caractères.',ar:'أدخل كلمة مرور جديدة من 6 أحرف على الأقل.'},
+ 'NEW PASSWORD':{fr:'NOUVEAU MOT DE PASSE',ar:'كلمة المرور الجديدة'},
+ 'CONFIRM PASSWORD':{fr:'CONFIRMER LE MOT DE PASSE',ar:'تأكيد كلمة المرور'},
+ 'Update password':{fr:'Mettre à jour le mot de passe',ar:'تحديث كلمة المرور'},
+ 'Forgot password?':{fr:'Mot de passe oublié ?',ar:'نسيت كلمة المرور؟'}
+};
+function uiPhrase(value,lang=state.settings.language||'en'){
+ const v=String(value||'').trim();
+ let canonical=null;
+ for(const [en,tr] of Object.entries(uiPhrases)){
+  if(v===en||v===tr.fr||v===tr.ar){canonical=en;break}
+ }
+ if(!canonical)return value;
+ if(lang==='en')return canonical;
+ return uiPhrases[canonical][lang]||canonical;
+}
+function translateStaticUI(){
+ const lang=state.settings.language||'en';
+ const root=document.body;
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ const nodes=[];
+ while(walker.nextNode())nodes.push(walker.currentNode);
+ nodes.forEach(node=>{
+  const p=node.parentElement;if(!p||['SCRIPT','STYLE'].includes(p.tagName))return;
+  const raw=node.nodeValue||'',trim=raw.trim();if(!trim)return;
+  const translated=uiPhrase(trim,lang);
+  if(translated!==trim){
+   const lead=(raw.match(/^\s*/)||[''])[0],tail=(raw.match(/\s*$/)||[''])[0];
+   node.nodeValue=lead+translated+tail;
+  }
+ });
+ const placeholders={
+  invoiceSearch:{en:'Search invoice or client…',fr:'Rechercher une facture ou un client…',ar:'ابحث عن فاتورة أو عميل…'},
+  clientSearch:{en:'Search clients…',fr:'Rechercher des clients…',ar:'ابحث عن عميل…'},
+  countrySearch:{en:'Search country, currency or tax…',fr:'Rechercher pays, devise ou taxe…',ar:'ابحث عن دولة أو عملة أو ضريبة…'}
+ };
+ Object.entries(placeholders).forEach(([id,x])=>{const e=document.getElementById(id);if(e)e.placeholder=x[lang]||x.en});
+ const reset=document.getElementById('resetEmail');if(reset)reset.placeholder=lang==='ar'?'name@example.com':'name@example.com';
+}
+function statusLabel(status){return uiPhrase(status,state.settings.language||'en')}
+function actionLabel(x){return uiPhrase(x,state.settings.language||'en')}
+function phoneLayout(){
+ const phone=(screen.width<=820)||(window.innerWidth<=820)||(navigator.maxTouchPoints>0&&screen.width<=1100);
+ document.documentElement.classList.toggle('phoneMode',phone);
+}
+phoneLayout();window.addEventListener('resize',phoneLayout);
+
 function setLanguage(lang){
  if(!translations[lang])lang='en';
  state.settings.language=lang;persist();
@@ -721,6 +968,7 @@ function setLanguage(lang){
  const ih1=document.querySelector('#invoices .head h1');if(ih1)ih1.textContent=t('invoices');const ch1=document.querySelector('#clients .head h1');if(ch1)ch1.textContent=t('clients');const th1=document.querySelector('#templates .head h1');if(th1)th1.textContent=t('templates');const coh1=document.querySelector('#countries .head h1');if(coh1)coh1.textContent=t('countries');const sh1=document.querySelector('#settings .head h1');if(sh1)sh1.textContent=t('settings');
  buildNav();
  const visible=[...document.querySelectorAll('.page')].find(x=>!x.classList.contains('hidden'));if(visible)document.getElementById('topTitle').textContent=visible.id==='invoiceEditor'?t('createInvoice'):pageTitle(visible.id);
+ translateStaticUI();phoneLayout();
 }
 
 async function hashPassword(value){
@@ -737,6 +985,32 @@ function accountFromUser(user){
  const meta=user?.user_metadata||{};
  return {id:user?.id||'',name:meta.full_name||meta.name||user?.email?.split('@')[0]||'Account',company:meta.company_name||state.settings.business||'',email:user?.email||''}
 }
+
+function openResetModal(mode='request'){
+ const modal=document.getElementById('resetModal');modal.classList.remove('hidden');
+ const req=document.getElementById('resetRequestView'),nw=document.getElementById('resetNewView');
+ req.classList.toggle('hidden',mode!=='request');nw.classList.toggle('hidden',mode!=='new');
+ if(mode==='request')document.getElementById('resetEmail').value=document.getElementById('loginEmail')?.value||'';
+ translateStaticUI();
+}
+function closeResetModal(){document.getElementById('resetModal').classList.add('hidden')}
+async function sendResetEmail(){
+ const email=document.getElementById('resetEmail').value.trim().toLowerCase(),box=document.getElementById('resetMessage');
+ if(!email){box.innerHTML=`<div class="authError show">${state.settings.language==='ar'?'أدخل بريدك الإلكتروني.':state.settings.language==='fr'?'Saisissez votre e-mail.':'Enter your email.'}</div>`;return}
+ const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
+ if(error){box.innerHTML=`<div class="authError show">${esc(error.message)}</div>`;return}
+ box.innerHTML=`<div class="resetSuccess">${state.settings.language==='ar'?'تم إرسال رابط الاستعادة. افتح بريدك الإلكتروني واضغط الرابط.':state.settings.language==='fr'?'Lien de récupération envoyé. Ouvrez votre e-mail et cliquez sur le lien.':'Recovery link sent. Open your email and click the link.'}</div>`;
+}
+async function updateRecoveredPassword(){
+ const p=document.getElementById('newPassword').value,c=document.getElementById('confirmPassword').value,box=document.getElementById('newPasswordMessage');
+ if(p.length<6){box.innerHTML=`<div class="authError show">${state.settings.language==='ar'?'كلمة المرور يجب أن تكون 6 أحرف على الأقل.':state.settings.language==='fr'?'Le mot de passe doit contenir au moins 6 caractères.':'Password must be at least 6 characters.'}</div>`;return}
+ if(p!==c){box.innerHTML=`<div class="authError show">${state.settings.language==='ar'?'كلمتا المرور غير متطابقتين.':state.settings.language==='fr'?'Les mots de passe ne correspondent pas.':'Passwords do not match.'}</div>`;return}
+ const {error}=await sb.auth.updateUser({password:p});
+ if(error){box.innerHTML=`<div class="authError show">${esc(error.message)}</div>`;return}
+ box.innerHTML=`<div class="resetSuccess">${state.settings.language==='ar'?'تم تحديث كلمة المرور بنجاح.':state.settings.language==='fr'?'Mot de passe mis à jour avec succès.':'Password updated successfully.'}</div>`;
+ setTimeout(()=>closeResetModal(),1000);
+}
+
 async function signupLocal(){
  clearAuthError();
  const name=document.getElementById('signupName').value.trim(),company=document.getElementById('signupCompany').value.trim(),email=document.getElementById('signupEmail').value.trim().toLowerCase(),password=document.getElementById('signupPassword').value;
@@ -854,8 +1128,16 @@ function updateLogoDisplays(){
 }
 async function resetDemoData(){if(confirm('Reset invoices, clients and cloud workspace data?')){state=defaultState();persist();await syncWorkspaceCloud();populateSelectors();loadSettingsForm();renderDashboard();alert('Workspace reset.')}}
 
+
+sb.auth.onAuthStateChange((event,session)=>{
+ if(event==='PASSWORD_RECOVERY'){
+  if(session?.user)currentUser=accountFromUser(session.user);
+  setTimeout(()=>openResetModal('new'),0);
+ }
+});
+
 async function boot(){
- populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();updateLogoDisplays();setLanguage(state.settings.language||'en');
+ phoneLayout();populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();updateLogoDisplays();setLanguage(state.settings.language||'en');
  const restored=await restoreSession();if(!restored)switchAuth('login');
 }
 boot();
