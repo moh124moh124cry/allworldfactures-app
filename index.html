@@ -85,6 +85,15 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .brandAssetPreview{height:96px;border:1px dashed #cfd7df;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;color:var(--muted);font-size:12px;margin-bottom:10px}
 .brandAssetPreview img{max-width:100%;max-height:100%;object-fit:contain}
 .brandAssetCard .btnrow{display:flex;gap:7px;margin-top:8px}
+.assetUploadBtn{display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;border-radius:12px;border:1px solid #16a89e;background:#eaf9f7;color:#08766d;font-weight:900;cursor:pointer;text-align:center;padding:10px}
+.assetUploadBtn input{display:none}
+.quickAssets{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.quickAssets h4{margin:0 0 10px;font-size:15px}
+.quickAssetsGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quickAssetBox{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fbfcfd}
+.quickAssetPreview{height:74px;display:flex;align-items:center;justify-content:center;border:1px dashed #cfd7df;border-radius:10px;background:#fff;margin-bottom:8px;color:var(--muted);font-size:12px}
+.quickAssetPreview img{max-width:100%;max-height:100%;object-fit:contain}
+@media(max-width:620px){.quickAssetsGrid{grid-template-columns:1fr}}
 .brandAssetCard .btnrow button{flex:1}
 @media(max-width:700px){.brandAssetGrid{grid-template-columns:1fr}}
 .invoiceFooterNote{margin-top:14px;padding-top:9px;border-top:1px solid var(--line);text-align:center;font-size:8.5px;color:var(--muted)}
@@ -803,7 +812,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
 
-      <div class="buildProof" id="buildProof">v1.3.0 ✓ — الختم والإمضاء داخل الفاتورة</div>
+      <div class="buildProof" id="buildProof">v1.3.1 ✓ — أزرار رفع الختم والإمضاء ظاهرة</div>
 
       <div class="invoiceWizard" id="invoiceWizard">
         <button type="button" data-step="1" onclick="setInvoiceStep(1)">1 · Client</button>
@@ -868,6 +877,20 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
             <div class="formgrid" style="margin-top:14px">
               <div class="field"><label>NOTES</label><textarea id="notes" class="input" rows="4" oninput="renderPreview()"></textarea></div>
               <div class="field"><label>STATUS</label><select id="status" class="input"><option value="draft">draft</option><option value="pending">pending</option><option value="paid">paid</option><option value="overdue">overdue</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quickAssets" id="quickStampSignature">
+          <h4>الختم والإمضاء في هذه الفاتورة</h4>
+          <div class="quickAssetsGrid">
+            <div class="quickAssetBox">
+              <div id="quickStampPreview" class="quickAssetPreview">لم يتم رفع ختم</div>
+              <label class="assetUploadBtn">🔵 اختيار صورة الختم<input type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'stamp')"></label>
+            </div>
+            <div class="quickAssetBox">
+              <div id="quickSignaturePreview" class="quickAssetPreview">لم يتم رفع إمضاء</div>
+              <label class="assetUploadBtn">✍️ اختيار صورة الإمضاء<input type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'signature')"></label>
             </div>
           </div>
         </div>
@@ -1117,25 +1140,25 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
           <div class="field"><label>SWIFT / BIC</label><input id="setSwift" class="input"></div>
           <div class="field"><label>PAYMENT INSTRUCTIONS</label><textarea id="setPaymentInstructions" class="input" rows="3"></textarea></div>
         </div><div class="formHelp">Only completed payment fields are displayed on the invoice.</div></div>
-        <div class="section"><h3 id="brandingHeading">Branding, stamp & signature</h3>
+        <div class="section"><h3 id="brandingHeading">الشعار والختم والإمضاء</h3>
           <div class="brandAssetGrid">
             <div class="brandAssetCard">
-              <div id="logoPreview" class="brandAssetPreview">Logo</div>
-              <div class="field"><label id="logoLabel">COMPANY LOGO</label><input id="logoFile" class="input" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'logo')"></div>
-              <div class="btnrow"><button id="removeLogoBtn" class="btn secondary small" type="button" onclick="removeBrandAsset('logo')">Remove</button></div>
+              <div id="logoPreview" class="brandAssetPreview">شعار المؤسسة</div>
+              <label class="assetUploadBtn">🖼️ رفع شعار المؤسسة<input id="logoFile" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'logo')"></label>
+              <div class="btnrow"><button id="removeLogoBtn" class="btn secondary small" type="button" onclick="removeBrandAsset('logo')">حذف الشعار</button></div>
             </div>
             <div class="brandAssetCard">
-              <div id="stampPreview" class="brandAssetPreview">Stamp</div>
-              <div class="field"><label>COMPANY STAMP</label><input id="stampFile" class="input" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'stamp')"></div>
-              <div class="btnrow"><button class="btn secondary small" type="button" onclick="removeBrandAsset('stamp')">Remove</button></div>
+              <div id="stampPreview" class="brandAssetPreview">صورة الختم</div>
+              <label class="assetUploadBtn">🔵 رفع صورة الختم<input id="stampFile" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'stamp')"></label>
+              <div class="btnrow"><button class="btn secondary small" type="button" onclick="removeBrandAsset('stamp')">حذف الختم</button></div>
             </div>
             <div class="brandAssetCard">
-              <div id="signaturePreview" class="brandAssetPreview">Signature</div>
-              <div class="field"><label>AUTHORIZED SIGNATURE</label><input id="signatureFile" class="input" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'signature')"></div>
-              <div class="btnrow"><button class="btn secondary small" type="button" onclick="removeBrandAsset('signature')">Remove</button></div>
+              <div id="signaturePreview" class="brandAssetPreview">صورة الإمضاء</div>
+              <label class="assetUploadBtn">✍️ رفع صورة الإمضاء<input id="signatureFile" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'signature')"></label>
+              <div class="btnrow"><button class="btn secondary small" type="button" onclick="removeBrandAsset('signature')">حذف الإمضاء</button></div>
             </div>
           </div>
-          <div id="logoHint" class="muted" style="margin-top:10px">PNG/JPG/WebP. Images are resized automatically and synchronized to your account.</div>
+          <div id="logoHint" class="muted" style="margin-top:10px">يمكن استعمال PNG أو JPG أو WebP. يتم تصغير الصور تلقائياً وتظهر في الفاتورة.</div>
         </div>
         <div class="section"><h3 id="invoiceDefaultsHeading">Invoice defaults</h3><div class="formgrid cols3">
           <div class="field"><label>DEFAULT COUNTRY</label><select id="setCountry" class="input" onchange="updateLegalFieldLabels()"></select></div>
@@ -2212,7 +2235,7 @@ function renderPreview(){
  if(pgrid)pgrid.innerHTML=payRows.join('');
  if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
  const proof=document.getElementById('buildProof');
- if(proof)proof.textContent=lang==='ar'?'v1.2.1 ✓ — التعديل المباشر الكامل للفاتورة':lang==='fr'?'v1.3.0 ✓ — cachet et signature sur la facture':'v1.3.0 ✓ — stamp and signature on invoice';
+ if(proof)proof.textContent=lang==='ar'?'v1.2.1 ✓ — التعديل المباشر الكامل للفاتورة':lang==='fr'?'v1.3.1 ✓ — boutons cachet et signature visibles':'v1.3.1 ✓ — visible stamp and signature upload';
  const stampEl=document.querySelector('[data-edit-key="stampLabel"]'),sigEl=document.querySelector('[data-edit-key="signatureLabel"]'),footEl=document.getElementById('invoiceFooterNote');
  if(stampEl)stampEl.textContent=lang==='ar'?'ختم المؤسسة':lang==='fr'?'Cachet de l’entreprise':'Company stamp';
  if(sigEl)sigEl.textContent=lang==='ar'?'الإمضاء':lang==='fr'?'Signature autorisée':'Authorized signature';
@@ -2766,7 +2789,10 @@ async function loadBrandAsset(file,type){
  if(type==='logo')state.settings.logo=value;
  if(type==='stamp')state.settings.stampImage=value;
  if(type==='signature')state.settings.signatureImage=value;
- persist();updateLogoDisplays();updateBrandAssetDisplays();
+ persist();updateLogoDisplays();updateBrandAssetDisplays();saveBrandAssetsCloud();
+ const lang=state.settings.language||'en';
+ if(type==='stamp')alert(lang==='ar'?'تم رفع صورة الختم وستظهر داخل الفاتورة ✓':lang==='fr'?'Le cachet a été ajouté à la facture ✓':'Stamp added to the invoice ✓');
+ if(type==='signature')alert(lang==='ar'?'تم رفع صورة الإمضاء وستظهر داخل الفاتورة ✓':lang==='fr'?'La signature a été ajoutée à la facture ✓':'Signature added to the invoice ✓');
 }
 function removeBrandAsset(type){
  if(type==='logo')state.settings.logo='';
@@ -2782,9 +2808,11 @@ async function saveBrandAssetsCloud(){
 }
 function updateBrandAssetDisplays(){
  const items=[
-  ['logoPreview',state.settings.logo,'Logo'],
-  ['stampPreview',state.settings.stampImage,'Stamp'],
-  ['signaturePreview',state.settings.signatureImage,'Signature']
+  ['logoPreview',state.settings.logo,'شعار المؤسسة'],
+  ['stampPreview',state.settings.stampImage,'صورة الختم'],
+  ['signaturePreview',state.settings.signatureImage,'صورة الإمضاء'],
+  ['quickStampPreview',state.settings.stampImage,'لم يتم رفع ختم'],
+  ['quickSignaturePreview',state.settings.signatureImage,'لم يتم رفع إمضاء']
  ];
  items.forEach(([id,value,label])=>{
   const el=document.getElementById(id);if(!el)return;
