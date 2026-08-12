@@ -50,6 +50,17 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .amountWords{margin-top:16px;padding:13px 14px;border-top:1.5px solid var(--line);border-radius:10px;background:#f8fbfc;font-size:11px;line-height:1.8;color:var(--ink)}
 .amountWords b{display:block;margin-bottom:4px;color:#096f69;font-size:10px;font-weight:900}
 .amountWords span{font-weight:800}
+.legalMeta{margin-top:5px;font-size:10px;line-height:1.65;color:var(--muted)}
+.paymentBox{margin-top:12px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfcfd;font-size:10.5px;line-height:1.65}
+.paymentBox.hidden{display:none}
+.paymentBox b{display:block;color:#096f69;margin-bottom:4px;font-size:10px}
+.paymentGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px}
+.paymentGrid div{min-width:0;overflow-wrap:anywhere}
+.paymentInstructions{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);color:var(--muted)}
+.formHelp{font-size:12px;color:var(--muted);line-height:1.55;margin-top:7px}
+.legalSectionNote{padding:10px 12px;border-radius:10px;background:#f3fbfa;color:#166f6a;font-size:12px;line-height:1.55;margin-bottom:12px}
+@media(max-width:620px){.paymentGrid{grid-template-columns:1fr}}
+
 .previewTaxRow.hidden,.previewDiscountRow.hidden,.previewShippingRow.hidden{display:none}
 
 .notice{padding:12px 14px;background:#edf8f7;border:1px solid #d6efec;color:#146b66;border-radius:11px;font-size:12px;margin-bottom:14px}
@@ -750,6 +761,10 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
               <div class="field"><label>CLIENT</label><select id="clientSelect" class="input"></select></div>
               <div id="manualClientField" class="field manualClientField hidden"><label>CLIENT / COMPANY NAME</label><input id="manualClientName" class="input" placeholder="Client or company name" oninput="renderPreview()"></div>
               <div class="field"><label>CLIENT EMAIL</label><input id="email" class="input" type="email" oninput="renderPreview()"></div>
+              <div class="field"><label>CLIENT PHONE</label><input id="invoiceClientPhone" class="input" inputmode="tel" oninput="renderPreview()"></div>
+              <div class="field"><label>CLIENT ADDRESS</label><textarea id="invoiceClientAddress" class="input" rows="2" oninput="renderPreview()"></textarea></div>
+              <div class="field"><label>CLIENT TAX / VAT ID</label><input id="invoiceClientTaxId" class="input" oninput="renderPreview()"></div>
+              <div class="field"><label>CLIENT REGISTRATION ID</label><input id="invoiceClientRegNo" class="input" oninput="renderPreview()"></div>
               <div class="field"><label>INVOICE NUMBER</label><input id="invno" class="input" oninput="renderPreview()"></div>
             </div>
             <div class="invoiceSaveHint" id="clientStepHint">Choose a saved client or enter a new client name. You can save the invoice as a draft at any time.</div>
@@ -812,6 +827,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
               <b id="pAmountWordsTitle">Total amount in words</b>
               <span id="pAmountWords"></span>
             </div>
+            <div class="paymentBox hidden" id="pPaymentBox">
+              <b id="pPaymentTitle">Payment details</b>
+              <div class="paymentGrid" id="pPaymentGrid"></div>
+              <div class="paymentInstructions hidden" id="pPaymentInstructions"></div>
+            </div>
             <div class="actions" style="margin-top:15px">
               <button class="btn secondary" onclick="saveDraft()">Save draft</button>
               <button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button>
@@ -836,9 +856,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
           <input type="hidden" id="clientId">
           <div class="field" style="margin-bottom:10px"><label>CLIENT / COMPANY NAME</label><input id="clientName" class="input"></div>
           <div class="field" style="margin-bottom:10px"><label>EMAIL</label><input id="clientEmail" class="input" type="email"></div>
+          <div class="field" style="margin-bottom:10px"><label>PHONE</label><input id="clientPhone" class="input" inputmode="tel"></div>
           <div class="field" style="margin-bottom:10px"><label>COUNTRY</label><select id="clientCountry" class="input"></select></div>
           <div class="field" style="margin-bottom:10px"><label>ADDRESS</label><textarea id="clientAddress" class="input" rows="3"></textarea></div>
-          <div class="field" style="margin-bottom:14px"><label>TAX / VAT ID</label><input id="clientTaxId" class="input"></div>
+          <div class="field" style="margin-bottom:10px"><label>TAX / VAT ID</label><input id="clientTaxId" class="input"></div>
+          <div class="field" style="margin-bottom:14px"><label>REGISTRATION / COMPANY ID</label><input id="clientRegNo" class="input"></div>
           <div class="actions"><button class="btn primary" onclick="saveClient()">Save client</button><button class="btn secondary" onclick="resetClientForm()">Clear</button></div>
         </div>
         <div><div class="toolbar"><input id="clientSearch" class="input search" placeholder="Search clients…" oninput="renderClients()"><span class="kpiNote" id="clientCount"></span></div><div id="clientCards" class="clientcards"></div></div>
@@ -989,18 +1011,32 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     <section id="settings" class="page hidden">
       <div class="head"><div><h1>Settings</h1><p>Your business profile and invoice defaults.</p></div><button class="btn primary" onclick="saveSettings()">Save settings</button></div>
       <div class="card form">
-        <div class="section"><h3>Business profile</h3><div class="formgrid">
-          <div class="field"><label>BUSINESS NAME</label><input id="setBusiness" class="input"></div>
+        <div class="section"><h3>Business & legal profile</h3>
+          <div class="legalSectionNote">These fields are printed on invoices. Labels adapt to the selected country as a starter preset; local legal requirements should be verified before production use.</div>
+          <div class="formgrid">
+          <div class="field"><label>BUSINESS / LEGAL NAME</label><input id="setBusiness" class="input"></div>
           <div class="field"><label>EMAIL</label><input id="setEmail" class="input" type="email"></div>
+          <div class="field"><label>PHONE</label><input id="setPhone" class="input" inputmode="tel"></div>
           <div class="field"><label>ADDRESS</label><textarea id="setAddress" class="input" rows="3"></textarea></div>
-          <div class="field"><label>TAX / VAT ID</label><input id="setTaxId" class="input"></div>
+          <div class="field"><label id="setTaxIdLabel">TAX / VAT ID</label><input id="setTaxId" class="input"></div>
+          <div class="field"><label id="setRegNoLabel">REGISTRATION NUMBER</label><input id="setRegNo" class="input"></div>
+          <div class="field"><label id="setStatIdLabel">STATISTICAL / SECONDARY ID</label><input id="setStatId" class="input"></div>
+          <div class="field"><label id="setSecondaryTaxIdLabel">ADDITIONAL LEGAL ID</label><input id="setSecondaryTaxId" class="input"></div>
         </div></div>
+        <div class="section"><h3>Payment details on invoice</h3><div class="formgrid">
+          <div class="field"><label>BANK NAME</label><input id="setBankName" class="input"></div>
+          <div class="field"><label>ACCOUNT HOLDER</label><input id="setAccountHolder" class="input"></div>
+          <div class="field"><label id="setAccountNoLabel">ACCOUNT / RIB NUMBER</label><input id="setAccountNumber" class="input"></div>
+          <div class="field"><label>IBAN</label><input id="setIban" class="input"></div>
+          <div class="field"><label>SWIFT / BIC</label><input id="setSwift" class="input"></div>
+          <div class="field"><label>PAYMENT INSTRUCTIONS</label><textarea id="setPaymentInstructions" class="input" rows="3"></textarea></div>
+        </div><div class="formHelp">Only completed payment fields are displayed on the invoice.</div></div>
         <div class="section"><h3 id="brandingHeading">Branding</h3><div class="formgrid">
           <div><div id="logoPreview" class="logoPreview">Logo</div></div>
           <div><div class="field"><label id="logoLabel">COMPANY LOGO</label><input id="logoFile" class="input" type="file" accept="image/*" onchange="loadLogoFile(this.files[0])"></div><div class="actions" style="margin-top:9px"><button id="removeLogoBtn" class="btn secondary small" onclick="removeLogo()">Remove logo</button></div><div id="logoHint" class="muted" style="margin-top:8px">Stored locally in this browser. Use a small PNG/JPG.</div></div>
         </div></div>
         <div class="section"><h3 id="invoiceDefaultsHeading">Invoice defaults</h3><div class="formgrid cols3">
-          <div class="field"><label>DEFAULT COUNTRY</label><select id="setCountry" class="input"></select></div>
+          <div class="field"><label>DEFAULT COUNTRY</label><select id="setCountry" class="input" onchange="updateLegalFieldLabels()"></select></div>
           <div class="field"><label>DEFAULT LANGUAGE</label><select id="setLanguage" class="input"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div>
           <div class="field"><label>INVOICE PREFIX</label><input id="setPrefix" class="input"></div>
           <div class="field"><label>PAYMENT TERM (DAYS)</label><input id="setTerms" class="input" type="number"></div>
@@ -1053,6 +1089,44 @@ const countries=[
  {code:'TR',name:'Türkiye',flag:'🇹🇷',cur:'TRY',currency:'Turkish Lira',tax:'KDV',rate:20,date:'DD.MM.YYYY'},
  {code:'CH',name:'Switzerland',flag:'🇨🇭',cur:'CHF',currency:'Swiss Franc',tax:'VAT',rate:8.1,date:'DD.MM.YYYY'}
 ];
+
+
+const legalPresets={
+ DZ:{tax:'NIF / N° fiscal',reg:'RC / Registre de commerce',stat:'NIS / N° statistique',secondary:'AI / Identifiant complémentaire',account:'RIB / N° de compte'},
+ FR:{tax:'N° TVA intracommunautaire',reg:'SIREN / SIRET',stat:'N° RCS',secondary:'Identifiant légal complémentaire',account:'IBAN / N° de compte'},
+ US:{tax:'EIN / Tax ID',reg:'Company registration',stat:'State registration',secondary:'Additional legal ID',account:'Account number'},
+ AE:{tax:'TRN / VAT number',reg:'Trade license number',stat:'Company registration',secondary:'Additional legal ID',account:'IBAN / Account number'},
+ GB:{tax:'VAT number',reg:'Company number',stat:'UTR / Additional ID',secondary:'Additional legal ID',account:'Sort code / Account number'},
+ IN:{tax:'GSTIN',reg:'CIN / Registration number',stat:'PAN',secondary:'Additional legal ID',account:'Account number'},
+ MA:{tax:'IF / Identifiant fiscal',reg:'RC / Registre de commerce',stat:'ICE',secondary:'Patente / Additional ID',account:'RIB / N° de compte'},
+ CA:{tax:'GST/HST number',reg:'Business number',stat:'Provincial registration',secondary:'Additional legal ID',account:'Account number'},
+ DE:{tax:'USt-IdNr. / VAT ID',reg:'Handelsregister',stat:'Steuernummer',secondary:'Additional legal ID',account:'IBAN / Account number'},
+ ES:{tax:'NIF / CIF',reg:'Registro Mercantil',stat:'Additional tax ID',secondary:'Additional legal ID',account:'IBAN / Account number'},
+ IT:{tax:'Partita IVA',reg:'Registro Imprese',stat:'Codice Fiscale',secondary:'Additional legal ID',account:'IBAN / Account number'},
+ SA:{tax:'VAT / Tax number',reg:'Commercial Registration',stat:'National address / ID',secondary:'Additional legal ID',account:'IBAN / Account number'},
+ TN:{tax:'Matricule fiscal',reg:'RNE / Registration',stat:'Additional legal ID',secondary:'Additional legal ID',account:'RIB / N° de compte'},
+ EG:{tax:'Tax registration number',reg:'Commercial Registry',stat:'Additional legal ID',secondary:'Additional legal ID',account:'Account number'},
+ TR:{tax:'Vergi No',reg:'Ticaret Sicil No',stat:'MERSİS No',secondary:'Additional legal ID',account:'IBAN / Account number'}
+};
+function legalPreset(code){return legalPresets[code]||{tax:'Tax / VAT ID',reg:'Registration number',stat:'Statistical / secondary ID',secondary:'Additional legal ID',account:'Account number'}}
+function updateLegalFieldLabels(){
+ const code=document.getElementById('setCountry')?.value||state.settings.country||'DZ',p=legalPreset(code);
+ const ids={setTaxIdLabel:p.tax,setRegNoLabel:p.reg,setStatIdLabel:p.stat,setSecondaryTaxIdLabel:p.secondary,setAccountNoLabel:p.account};
+ Object.entries(ids).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v});
+}
+function invoiceLegalMeta(s,code,lang){
+ const p=legalPreset(code),rows=[];
+ if(s.taxId)rows.push(`${p.tax}: ${esc(s.taxId)}`);
+ if(s.registrationNumber)rows.push(`${p.reg}: ${esc(s.registrationNumber)}`);
+ if(s.statisticalId)rows.push(`${p.stat}: ${esc(s.statisticalId)}`);
+ if(s.secondaryTaxId)rows.push(`${p.secondary}: ${esc(s.secondaryTaxId)}`);
+ return rows;
+}
+function paymentLabels(lang){
+ if(lang==='ar')return {title:'معلومات الدفع',bank:'البنك',holder:'صاحب الحساب',account:'رقم الحساب / RIB',iban:'IBAN',swift:'SWIFT / BIC'};
+ if(lang==='fr')return {title:'Coordonnées de paiement',bank:'Banque',holder:'Titulaire',account:'Compte / RIB',iban:'IBAN',swift:'SWIFT / BIC'};
+ return {title:'Payment details',bank:'Bank',holder:'Account holder',account:'Account / RIB',iban:'IBAN',swift:'SWIFT / BIC'};
+}
 
 const symbols={DZD:'DA',USD:'$',EUR:'€',AED:'د.إ',GBP:'£',INR:'₹',JPY:'¥',BRL:'R$',MAD:'DH',CAD:'C$',SAR:'﷼',TND:'DT',EGP:'E£',TRY:'₺',CHF:'CHF'};
 const templateDefs=[
@@ -1107,12 +1181,12 @@ function defaultState(){
  const issue=todayISO();
  return {
   subscription:{plan:'free',status:'active',startedAt:'',trialEndsAt:'',renewsAt:'',endsAt:'',updatePaymentUrl:'',subscriptionId:null},
-  settings:{business:'Your Business LLC',email:'billing@yourbusiness.com',address:'123 Business Avenue',taxId:'',country:'DZ',language:'en',prefix:'INV-2026-',terms:30,nextNo:1001,notes:'Thank you for your business!',logo:''},
+  settings:{business:'Your Business LLC',email:'billing@yourbusiness.com',phone:'',address:'123 Business Avenue',taxId:'',registrationNumber:'',statisticalId:'',secondaryTaxId:'',bankName:'',accountHolder:'',accountNumber:'',iban:'',swiftBic:'',paymentInstructions:'',country:'DZ',language:'en',prefix:'INV-2026-',terms:30,nextNo:1001,notes:'Thank you for your business!',logo:''},
   template:'modern',
   clients:[
-   {id:'c1',name:'Acme Corporation',email:'billing@acmecorp.com',country:'US',address:'New York, USA',taxId:''},
-   {id:'c2',name:'Globex LLC',email:'billing@globex.com',country:'FR',address:'Paris, France',taxId:''},
-   {id:'c3',name:'Oran Digital',email:'contact@orandigital.dz',country:'DZ',address:'Oran, Algeria',taxId:''}
+   {id:'c1',name:'Acme Corporation',email:'billing@acmecorp.com',phone:'',country:'US',address:'New York, USA',taxId:'',registrationNumber:''},
+   {id:'c2',name:'Globex LLC',email:'billing@globex.com',phone:'',country:'FR',address:'Paris, France',taxId:'',registrationNumber:''},
+   {id:'c3',name:'Oran Digital',email:'contact@orandigital.dz',phone:'',country:'DZ',address:'Oran, Algeria',taxId:'',registrationNumber:''}
   ],
   invoices:[
    {id:'i1',number:'INV-2026-0998',clientId:'c1',clientName:'Acme Corporation',clientEmail:'billing@acmecorp.com',issueDate:issue,dueDate:addDays(issue,30),country:'US',currency:'USD',taxRate:0,discount:0,shipping:0,status:'paid',notes:'Thank you for your business!',items:[{id:'a',d:'Brand website',q:1,p:6200}],total:6200},
@@ -1138,6 +1212,7 @@ let editingInvoiceId=null;
 let currentUser=null;
 let authMode='login';
 let itemData=[];
+let invoiceCompanySnapshot=null;
 
 function t(key){const lang=state?.settings?.language||'en';return translations[lang]?.[key]||translations.en[key]||key}
 
@@ -1526,6 +1601,10 @@ function refreshClientSelect(selected){
   if(manual)manual.classList.toggle('hidden',!!c);
   if(c){
    document.getElementById('email').value=c.email||'';
+   const ph=document.getElementById('invoiceClientPhone');if(ph)ph.value=c.phone||'';
+   const ad=document.getElementById('invoiceClientAddress');if(ad)ad.value=c.address||'';
+   const tx=document.getElementById('invoiceClientTaxId');if(tx)tx.value=c.taxId||'';
+   const rg=document.getElementById('invoiceClientRegNo');if(rg)rg.value=c.registrationNumber||'';
    document.getElementById('country').value=c.country||state.settings.country;
    changeCountry(false);
   }
@@ -1541,8 +1620,10 @@ function newInvoice(){
  const issue=todayISO();
  itemData=[{id:uid('item'),d:'Service or product',q:1,p:0}];
  showEditor({
-  number:generateInvoiceNumber(),clientId:'',clientName:'',clientEmail:'',issueDate:issue,dueDate:addDays(issue,state.settings.terms),
-  country:state.settings.country,currency:countryBy(state.settings.country).cur,taxRate:countryBy(state.settings.country).rate,discount:0,shipping:0,status:'draft',notes:state.settings.notes,items:itemData
+  number:generateInvoiceNumber(),clientId:'',clientName:'',clientEmail:'',clientPhone:'',clientAddress:'',clientTaxId:'',clientRegistrationNumber:'',issueDate:issue,dueDate:addDays(issue,state.settings.terms),
+  country:state.settings.country,currency:countryBy(state.settings.country).cur,taxRate:countryBy(state.settings.country).rate,discount:0,shipping:0,status:'draft',notes:state.settings.notes,items:itemData,
+  companyName:state.settings.business||'',companyEmail:state.settings.email||'',companyPhone:state.settings.phone||'',companyAddress:state.settings.address||'',companyTaxId:state.settings.taxId||'',companyRegistrationNumber:state.settings.registrationNumber||'',companyStatisticalId:state.settings.statisticalId||'',companySecondaryTaxId:state.settings.secondaryTaxId||'',
+  bankName:state.settings.bankName||'',accountHolder:state.settings.accountHolder||'',accountNumber:state.settings.accountNumber||'',iban:state.settings.iban||'',swiftBic:state.settings.swiftBic||'',paymentInstructions:state.settings.paymentInstructions||''
  });
  return true;
 }
@@ -1552,10 +1633,19 @@ function showEditor(inv){
  document.getElementById('editorTitle').textContent=editingInvoiceId?'Edit invoice':'Create invoice';
  populateSelectors();
  const et=document.getElementById('editorTemplate');if(et){et.innerHTML=templateDefs.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');et.value=state.template;}
- document.getElementById('business').value=state.settings.business||'';
+ invoiceCompanySnapshot={
+  companyName:inv.companyName||state.settings.business||'',companyEmail:inv.companyEmail||state.settings.email||'',companyPhone:inv.companyPhone||state.settings.phone||'',companyAddress:inv.companyAddress||state.settings.address||'',
+  companyTaxId:inv.companyTaxId||state.settings.taxId||'',companyRegistrationNumber:inv.companyRegistrationNumber||state.settings.registrationNumber||'',companyStatisticalId:inv.companyStatisticalId||state.settings.statisticalId||'',companySecondaryTaxId:inv.companySecondaryTaxId||state.settings.secondaryTaxId||'',
+  bankName:inv.bankName||state.settings.bankName||'',accountHolder:inv.accountHolder||state.settings.accountHolder||'',accountNumber:inv.accountNumber||state.settings.accountNumber||'',iban:inv.iban||state.settings.iban||'',swiftBic:inv.swiftBic||state.settings.swiftBic||'',paymentInstructions:inv.paymentInstructions||state.settings.paymentInstructions||''
+ };
+ document.getElementById('business').value=invoiceCompanySnapshot.companyName||'';
  document.getElementById('clientSelect').value=inv.clientId||'';
  const manualName=document.getElementById('manualClientName');if(manualName)manualName.value=inv.clientId?'':(inv.clientName||'');
  document.getElementById('email').value=inv.clientEmail||'';
+ document.getElementById('invoiceClientPhone').value=inv.clientPhone||'';
+ document.getElementById('invoiceClientAddress').value=inv.clientAddress||'';
+ document.getElementById('invoiceClientTaxId').value=inv.clientTaxId||'';
+ document.getElementById('invoiceClientRegNo').value=inv.clientRegistrationNumber||'';
  document.getElementById('invno').value=inv.number||generateInvoiceNumber();
  document.getElementById('issueDate').value=inv.issueDate||todayISO();
  document.getElementById('dueDate').value=inv.dueDate||addDays(todayISO(),state.settings.terms);
@@ -1568,6 +1658,10 @@ function showEditor(inv){
  document.getElementById('status').value=inv.status||'draft';
  itemData=(inv.items||[]).map(i=>({...i}));
  refreshClientSelect(inv.clientId||'');
+ if(inv.clientPhone!==undefined)document.getElementById('invoiceClientPhone').value=inv.clientPhone||document.getElementById('invoiceClientPhone').value;
+ if(inv.clientAddress!==undefined)document.getElementById('invoiceClientAddress').value=inv.clientAddress||document.getElementById('invoiceClientAddress').value;
+ if(inv.clientTaxId!==undefined)document.getElementById('invoiceClientTaxId').value=inv.clientTaxId||document.getElementById('invoiceClientTaxId').value;
+ if(inv.clientRegistrationNumber!==undefined)document.getElementById('invoiceClientRegNo').value=inv.clientRegistrationNumber||document.getElementById('invoiceClientRegNo').value;
  setInvoiceStep(1,false);
  renderItems();applyTemplate();renderPreview();invoiceWizardLocale();window.scrollTo(0,0);
 }
@@ -1577,10 +1671,15 @@ function collectInvoice(statusOverride){
  const inv={
   id:editingInvoiceId||uid('inv'),number:document.getElementById('invno').value.trim()||generateInvoiceNumber(),
   clientId:selected?.id||'',clientName:selected?.name||document.getElementById('manualClientName')?.value.trim()||'',clientEmail:document.getElementById('email').value.trim(),
+  clientPhone:document.getElementById('invoiceClientPhone').value.trim(),clientAddress:document.getElementById('invoiceClientAddress').value.trim(),clientTaxId:document.getElementById('invoiceClientTaxId').value.trim(),clientRegistrationNumber:document.getElementById('invoiceClientRegNo').value.trim(),
   issueDate:document.getElementById('issueDate').value,dueDate:document.getElementById('dueDate').value,
   country:document.getElementById('country').value,currency:document.getElementById('currency').value,
   taxRate:Number(document.getElementById('tax').value||0),discount:Number(document.getElementById('discount').value||0),shipping:Number(document.getElementById('shipping').value||0),
-  status:statusOverride||document.getElementById('status').value,notes:document.getElementById('notes').value,items:itemData.map(i=>({...i}))
+  status:statusOverride||document.getElementById('status').value,notes:document.getElementById('notes').value,items:itemData.map(i=>({...i})),
+  companyName:document.getElementById('business').value.trim()||invoiceCompanySnapshot?.companyName||state.settings.business||'',
+  companyEmail:invoiceCompanySnapshot?.companyEmail||state.settings.email||'',companyPhone:invoiceCompanySnapshot?.companyPhone||state.settings.phone||'',companyAddress:invoiceCompanySnapshot?.companyAddress||state.settings.address||'',
+  companyTaxId:invoiceCompanySnapshot?.companyTaxId||state.settings.taxId||'',companyRegistrationNumber:invoiceCompanySnapshot?.companyRegistrationNumber||state.settings.registrationNumber||'',companyStatisticalId:invoiceCompanySnapshot?.companyStatisticalId||state.settings.statisticalId||'',companySecondaryTaxId:invoiceCompanySnapshot?.companySecondaryTaxId||state.settings.secondaryTaxId||'',
+  bankName:invoiceCompanySnapshot?.bankName||state.settings.bankName||'',accountHolder:invoiceCompanySnapshot?.accountHolder||state.settings.accountHolder||'',accountNumber:invoiceCompanySnapshot?.accountNumber||state.settings.accountNumber||'',iban:invoiceCompanySnapshot?.iban||state.settings.iban||'',swiftBic:invoiceCompanySnapshot?.swiftBic||state.settings.swiftBic||'',paymentInstructions:invoiceCompanySnapshot?.paymentInstructions||state.settings.paymentInstructions||''
  };
  inv.total=invoiceTotal(inv);return inv;
 }
@@ -1866,11 +1965,23 @@ function renderPreview(){
  const c=countryBy(document.getElementById('country').value),cur=document.getElementById('currency').value,tot=calcCurrent();
  const selected=clientBy(document.getElementById('clientSelect').value);
  const manualName=document.getElementById('manualClientName')?.value.trim()||'';
- document.getElementById('pBusiness').textContent=document.getElementById('business').value||state.settings.business;
- document.getElementById('pBusinessMeta').innerHTML=`${esc(state.settings.email)}<br>${esc(state.settings.address)}${state.settings.taxId?'<br>Tax ID: '+esc(state.settings.taxId):''}`;
+ const snap=invoiceCompanySnapshot||{};
+ const companyForPreview={
+  business:document.getElementById('business').value||snap.companyName||state.settings.business||'',
+  email:snap.companyEmail||state.settings.email||'',phone:snap.companyPhone||state.settings.phone||'',address:snap.companyAddress||state.settings.address||'',
+  taxId:snap.companyTaxId||state.settings.taxId||'',registrationNumber:snap.companyRegistrationNumber||state.settings.registrationNumber||'',statisticalId:snap.companyStatisticalId||state.settings.statisticalId||'',secondaryTaxId:snap.companySecondaryTaxId||state.settings.secondaryTaxId||''
+ };
+ document.getElementById('pBusiness').textContent=companyForPreview.business;
+ const companyRows=[companyForPreview.email,companyForPreview.phone,companyForPreview.address].filter(Boolean).map(esc).concat(invoiceLegalMeta(companyForPreview,document.getElementById('country').value,state.settings.language||'en'));
+ document.getElementById('pBusinessMeta').innerHTML=companyRows.join('<br>');
  document.getElementById('pInv').textContent=document.getElementById('invno').value;
  document.getElementById('pDates').innerHTML=`Issue: ${esc(document.getElementById('issueDate').value)}<br>Due: ${esc(document.getElementById('dueDate').value)}`;
- document.getElementById('pClient').innerHTML=`${esc(selected?.name||manualName||uiPhrase('Client'))}<br>${esc(document.getElementById('email').value)}${selected?.address?'<br>'+esc(selected.address):''}`;
+ const cp=legalPreset(document.getElementById('country').value);
+ const clientRows=[selected?.name||manualName||uiPhrase('Client'),document.getElementById('email').value,document.getElementById('invoiceClientPhone').value,document.getElementById('invoiceClientAddress').value].filter(Boolean).map(esc);
+ const clientTax=document.getElementById('invoiceClientTaxId').value.trim(),clientReg=document.getElementById('invoiceClientRegNo').value.trim();
+ if(clientTax)clientRows.push(`${esc(cp.tax)}: ${esc(clientTax)}`);
+ if(clientReg)clientRows.push(`${esc(cp.reg)}: ${esc(clientReg)}`);
+ document.getElementById('pClient').innerHTML=clientRows.join('<br>');
  document.getElementById('pCountry').innerHTML=`${c.flag} ${esc(c.name)}<br>${esc(c.tax)} · ${esc(cur)}`;
  document.getElementById('pItems').innerHTML=itemData.map(i=>`<tr><td>${esc(i.d)}</td><td>${Number(i.q)}</td><td>${money(Number(i.q)*Number(i.p),cur)}</td></tr>`).join('');
  const rate=Number(document.getElementById('tax').value||0),lang=state.settings.language||'en',lbl=invoicePreviewLabels(c,rate,lang);
@@ -1896,27 +2007,37 @@ function renderPreview(){
  [...document.querySelectorAll('.linerow b')].forEach((b,n)=>{if(itemData[n])b.textContent=money(Number(itemData[n].q)*Number(itemData[n].p),cur)});
  const live=money(tot.total,cur);
  const wt=document.getElementById('wizardTotal'),bt=document.getElementById('bottomInvoiceTotal');if(wt)wt.textContent=live;if(bt)bt.textContent=live;
+ const pl=paymentLabels(lang),ps=invoiceCompanySnapshot||state.settings||{},payRows=[];
+ if(ps.bankName)payRows.push(`<div><strong>${esc(pl.bank)}:</strong> ${esc(ps.bankName)}</div>`);
+ if(ps.accountHolder)payRows.push(`<div><strong>${esc(pl.holder)}:</strong> ${esc(ps.accountHolder)}</div>`);
+ if(ps.accountNumber)payRows.push(`<div><strong>${esc(pl.account)}:</strong> ${esc(ps.accountNumber)}</div>`);
+ if(ps.iban)payRows.push(`<div><strong>${esc(pl.iban)}:</strong> ${esc(ps.iban)}</div>`);
+ if(ps.swiftBic)payRows.push(`<div><strong>${esc(pl.swift)}:</strong> ${esc(ps.swiftBic)}</div>`);
+ const pbox=document.getElementById('pPaymentBox'),pgrid=document.getElementById('pPaymentGrid'),pins=document.getElementById('pPaymentInstructions');
+ if(pbox){pbox.classList.toggle('hidden',!payRows.length&&!ps.paymentInstructions);document.getElementById('pPaymentTitle').textContent=pl.title}
+ if(pgrid)pgrid.innerHTML=payRows.join('');
+ if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
 }
 
 function renderClients(){
  const q=(document.getElementById('clientSearch')?.value||'').toLowerCase();
  const arr=state.clients.filter(c=>!q||(`${c.name} ${c.email} ${countryBy(c.country).name}`).toLowerCase().includes(q));
  document.getElementById('clientCount').textContent=`${state.clients.length} saved clients`;
- document.getElementById('clientCards').innerHTML=arr.length?arr.map(c=>`<div class="card clientcard"><h3>${esc(c.name)}</h3><div class="muted">${esc(c.email||'No email')}</div><div class="muted" style="margin-top:5px">${countryBy(c.country).flag} ${esc(countryBy(c.country).name)}</div><div class="muted" style="margin-top:5px">${esc(c.address||'')}</div><div class="clientactions"><button class="btn secondary small" onclick="editClient('${c.id}')">Edit</button><button class="btn primary small" onclick="invoiceForClient('${c.id}')">Invoice</button><button class="btn dangerbtn small" onclick="deleteClient('${c.id}')">Delete</button></div></div>`).join(''):`<div class="empty">${uiPhrase('No matching clients.')}</div>`;
+ document.getElementById('clientCards').innerHTML=arr.length?arr.map(c=>`<div class="card clientcard"><h3>${esc(c.name)}</h3><div class="muted">${esc(c.email||'No email')}</div>${c.phone?`<div class="muted" style="margin-top:5px">${esc(c.phone)}</div>`:''}${c.taxId?`<div class="muted" style="margin-top:5px">${esc(legalPreset(c.country).tax)}: ${esc(c.taxId)}</div>`:''}<div class="muted" style="margin-top:5px">${countryBy(c.country).flag} ${esc(countryBy(c.country).name)}</div><div class="muted" style="margin-top:5px">${esc(c.address||'')}</div><div class="clientactions"><button class="btn secondary small" onclick="editClient('${c.id}')">Edit</button><button class="btn primary small" onclick="invoiceForClient('${c.id}')">Invoice</button><button class="btn dangerbtn small" onclick="deleteClient('${c.id}')">Delete</button></div></div>`).join(''):`<div class="empty">${uiPhrase('No matching clients.')}</div>`;
  refreshClientSelect();translateStaticUI();
 }
 function saveClient(){
  const id=document.getElementById('clientId').value||uid('client'),name=document.getElementById('clientName').value.trim();
  if(!name){alert('Enter a client name.');return}
- const c={id,name,email:document.getElementById('clientEmail').value.trim(),country:document.getElementById('clientCountry').value,address:document.getElementById('clientAddress').value.trim(),taxId:document.getElementById('clientTaxId').value.trim()};
+ const c={id,name,email:document.getElementById('clientEmail').value.trim(),phone:document.getElementById('clientPhone').value.trim(),country:document.getElementById('clientCountry').value,address:document.getElementById('clientAddress').value.trim(),taxId:document.getElementById('clientTaxId').value.trim(),registrationNumber:document.getElementById('clientRegNo').value.trim()};
  const idx=state.clients.findIndex(x=>x.id===id);if(idx<0&&!requireCapacity('clients'))return;if(idx>=0)state.clients[idx]=c;else state.clients.push(c);persist();resetClientForm();renderClients();
 }
 function editClient(id){
- const c=clientBy(id);if(!c)return;document.getElementById('clientId').value=c.id;document.getElementById('clientName').value=c.name;document.getElementById('clientEmail').value=c.email||'';document.getElementById('clientCountry').value=c.country||state.settings.country;document.getElementById('clientAddress').value=c.address||'';document.getElementById('clientTaxId').value=c.taxId||'';document.getElementById('clientFormTitle').textContent='Edit client';window.scrollTo(0,0);
+ const c=clientBy(id);if(!c)return;document.getElementById('clientId').value=c.id;document.getElementById('clientName').value=c.name;document.getElementById('clientEmail').value=c.email||'';document.getElementById('clientPhone').value=c.phone||'';document.getElementById('clientCountry').value=c.country||state.settings.country;document.getElementById('clientAddress').value=c.address||'';document.getElementById('clientTaxId').value=c.taxId||'';document.getElementById('clientRegNo').value=c.registrationNumber||'';document.getElementById('clientFormTitle').textContent='Edit client';window.scrollTo(0,0);
 }
-function resetClientForm(){document.getElementById('clientId').value='';document.getElementById('clientName').value='';document.getElementById('clientEmail').value='';document.getElementById('clientCountry').value=state.settings.country;document.getElementById('clientAddress').value='';document.getElementById('clientTaxId').value='';document.getElementById('clientFormTitle').textContent='Add client'}
+function resetClientForm(){document.getElementById('clientId').value='';document.getElementById('clientName').value='';document.getElementById('clientEmail').value='';document.getElementById('clientPhone').value='';document.getElementById('clientCountry').value=state.settings.country;document.getElementById('clientAddress').value='';document.getElementById('clientTaxId').value='';document.getElementById('clientRegNo').value='';document.getElementById('clientFormTitle').textContent='Add client'}
 function deleteClient(id){if(confirm('Delete this client?')){state.clients=state.clients.filter(c=>c.id!==id);persist();renderClients()}}
-function invoiceForClient(id){if(!newInvoice())return;document.getElementById('clientSelect').value=id;const c=clientBy(id);if(c){document.getElementById('email').value=c.email;document.getElementById('country').value=c.country;changeCountry()}}
+function invoiceForClient(id){if(!newInvoice())return;document.getElementById('clientSelect').value=id;const c=clientBy(id);if(c){document.getElementById('email').value=c.email||'';document.getElementById('invoiceClientPhone').value=c.phone||'';document.getElementById('invoiceClientAddress').value=c.address||'';document.getElementById('invoiceClientTaxId').value=c.taxId||'';document.getElementById('invoiceClientRegNo').value=c.registrationNumber||'';document.getElementById('country').value=c.country;changeCountry()}}
 
 function renderTemplates(){
  const grid=document.getElementById('templateGrid');
@@ -1935,10 +2056,13 @@ function renderCountries(){
 function loadSettingsForm(){
  populateSelectors();const s=state.settings;
  updateLogoDisplays();
- document.getElementById('setBusiness').value=s.business||'';document.getElementById('setEmail').value=s.email||'';document.getElementById('setAddress').value=s.address||'';document.getElementById('setTaxId').value=s.taxId||'';document.getElementById('setCountry').value=s.country||'DZ';document.getElementById('setLanguage').value=s.language||'en';document.getElementById('setPrefix').value=s.prefix||'INV-';document.getElementById('setTerms').value=s.terms||30;document.getElementById('setNextNo').value=s.nextNo||1;document.getElementById('setNotes').value=s.notes||'';
+ document.getElementById('setBusiness').value=s.business||'';document.getElementById('setEmail').value=s.email||'';document.getElementById('setPhone').value=s.phone||'';document.getElementById('setAddress').value=s.address||'';document.getElementById('setTaxId').value=s.taxId||'';document.getElementById('setRegNo').value=s.registrationNumber||'';document.getElementById('setStatId').value=s.statisticalId||'';document.getElementById('setSecondaryTaxId').value=s.secondaryTaxId||'';
+ document.getElementById('setBankName').value=s.bankName||'';document.getElementById('setAccountHolder').value=s.accountHolder||'';document.getElementById('setAccountNumber').value=s.accountNumber||'';document.getElementById('setIban').value=s.iban||'';document.getElementById('setSwift').value=s.swiftBic||'';document.getElementById('setPaymentInstructions').value=s.paymentInstructions||'';
+ document.getElementById('setCountry').value=s.country||'DZ';document.getElementById('setLanguage').value=s.language||'en';document.getElementById('setPrefix').value=s.prefix||'INV-';document.getElementById('setTerms').value=s.terms||30;document.getElementById('setNextNo').value=s.nextNo||1;document.getElementById('setNotes').value=s.notes||'';
+ updateLegalFieldLabels();
 }
 function saveSettings(){
- state.settings={...state.settings,business:document.getElementById('setBusiness').value.trim(),email:document.getElementById('setEmail').value.trim(),address:document.getElementById('setAddress').value.trim(),taxId:document.getElementById('setTaxId').value.trim(),country:document.getElementById('setCountry').value,language:document.getElementById('setLanguage').value,prefix:document.getElementById('setPrefix').value.trim()||'INV-',terms:Number(document.getElementById('setTerms').value||30),nextNo:Number(document.getElementById('setNextNo').value||1),notes:document.getElementById('setNotes').value};
+ state.settings={...state.settings,business:document.getElementById('setBusiness').value.trim(),email:document.getElementById('setEmail').value.trim(),phone:document.getElementById('setPhone').value.trim(),address:document.getElementById('setAddress').value.trim(),taxId:document.getElementById('setTaxId').value.trim(),registrationNumber:document.getElementById('setRegNo').value.trim(),statisticalId:document.getElementById('setStatId').value.trim(),secondaryTaxId:document.getElementById('setSecondaryTaxId').value.trim(),bankName:document.getElementById('setBankName').value.trim(),accountHolder:document.getElementById('setAccountHolder').value.trim(),accountNumber:document.getElementById('setAccountNumber').value.trim(),iban:document.getElementById('setIban').value.trim(),swiftBic:document.getElementById('setSwift').value.trim(),paymentInstructions:document.getElementById('setPaymentInstructions').value.trim(),country:document.getElementById('setCountry').value,language:document.getElementById('setLanguage').value,prefix:document.getElementById('setPrefix').value.trim()||'INV-',terms:Number(document.getElementById('setTerms').value||30),nextNo:Number(document.getElementById('setNextNo').value||1),notes:document.getElementById('setNotes').value};
  persist();setLanguage(state.settings.language);updateLogoDisplays();alert('Settings saved ✓');
 }
 
@@ -2331,14 +2455,18 @@ function workspacePayload(){
  const profile={
   full_name:currentUser?.name||'',company_name:state.settings.business||currentUser?.company||'',business_email:state.settings.email||currentUser?.email||'',
   address:state.settings.address||'',tax_id:state.settings.taxId||'',country_code:state.settings.country||'DZ',language:state.settings.language||'en',
-  invoice_prefix:state.settings.prefix||'INV-',payment_terms:Number(state.settings.terms||30),next_invoice_number:Number(state.settings.nextNo||1),default_notes:state.settings.notes||''
+  invoice_prefix:state.settings.prefix||'INV-',payment_terms:Number(state.settings.terms||30),next_invoice_number:Number(state.settings.nextNo||1),default_notes:state.settings.notes||'',
+  company_phone:state.settings.phone||'',registration_number:state.settings.registrationNumber||'',statistical_id:state.settings.statisticalId||'',secondary_tax_id:state.settings.secondaryTaxId||'',
+  bank_name:state.settings.bankName||'',account_holder:state.settings.accountHolder||'',account_number:state.settings.accountNumber||'',iban:state.settings.iban||'',swift_bic:state.settings.swiftBic||'',payment_instructions:state.settings.paymentInstructions||''
  };
- const clients=state.clients.map(c=>({id:c.id,name:c.name,email:c.email||'',country_code:c.country||'DZ',address:c.address||'',tax_id:c.taxId||''}));
+ const clients=state.clients.map(c=>({id:c.id,name:c.name,email:c.email||'',phone:c.phone||'',country_code:c.country||'DZ',address:c.address||'',tax_id:c.taxId||'',registration_number:c.registrationNumber||''}));
  const invoices=state.invoices.map(inv=>{
   const sub=(inv.items||[]).reduce((a,i)=>a+Number(i.q||0)*Number(i.p||0),0),disc=sub*Number(inv.discount||0)/100,tax=(sub-disc)*Number(inv.taxRate||0)/100,total=sub-disc+tax+Number(inv.shipping||0);
-  return {id:inv.id,number:inv.number,client_id:inv.clientId||'',client_name:inv.clientName||'',client_email:inv.clientEmail||'',issue_date:inv.issueDate||todayISO(),due_date:inv.dueDate||'',
+  return {id:inv.id,number:inv.number,client_id:inv.clientId||'',client_name:inv.clientName||'',client_email:inv.clientEmail||'',client_phone:inv.clientPhone||'',client_address:inv.clientAddress||'',client_tax_id:inv.clientTaxId||'',client_registration_number:inv.clientRegistrationNumber||'',issue_date:inv.issueDate||todayISO(),due_date:inv.dueDate||'',
    country_code:inv.country||'DZ',currency_code:inv.currency||'DZD',tax_rate:Number(inv.taxRate||0),discount_rate:Number(inv.discount||0),shipping:Number(inv.shipping||0),
    status:inv.status||'draft',notes:inv.notes||'',template_id:inv.template||state.template||'modern',subtotal:sub,tax_amount:tax,discount_amount:disc,total,
+   company_name:inv.companyName||state.settings.business||'',company_email:inv.companyEmail||state.settings.email||'',company_phone:inv.companyPhone||state.settings.phone||'',company_address:inv.companyAddress||state.settings.address||'',company_tax_id:inv.companyTaxId||state.settings.taxId||'',company_registration_number:inv.companyRegistrationNumber||state.settings.registrationNumber||'',company_statistical_id:inv.companyStatisticalId||state.settings.statisticalId||'',company_secondary_tax_id:inv.companySecondaryTaxId||state.settings.secondaryTaxId||'',
+   bank_name:inv.bankName||state.settings.bankName||'',account_holder:inv.accountHolder||state.settings.accountHolder||'',account_number:inv.accountNumber||state.settings.accountNumber||'',iban:inv.iban||state.settings.iban||'',swift_bic:inv.swiftBic||state.settings.swiftBic||'',payment_instructions:inv.paymentInstructions||state.settings.paymentInstructions||'',
    items:(inv.items||[]).map((x,n)=>({description:x.d||'',quantity:Number(x.q||0),unit_price:Number(x.p||0),line_total:Number(x.q||0)*Number(x.p||0),sort_order:n}))
   }
  });
@@ -2371,11 +2499,11 @@ async function loadCloudWorkspace(userId){
   const hasCloudData=(clients&&clients.length)||(invoices&&invoices.length);
   if(hasCloudData){
    const itemGroups={};(items||[]).forEach(x=>(itemGroups[x.invoice_id]||(itemGroups[x.invoice_id]=[])).push(x));
-   state.clients=(clients||[]).map(c=>({id:c.id,name:c.name,email:c.email||'',country:c.country_code||'DZ',address:c.address||'',taxId:c.tax_id||''}));
-   state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
+   state.clients=(clients||[]).map(c=>({id:c.id,name:c.name,email:c.email||'',phone:c.phone||'',country:c.country_code||'DZ',address:c.address||'',taxId:c.tax_id||'',registrationNumber:c.registration_number||''}));
+   state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',clientPhone:i.client_phone||'',clientAddress:i.client_address||'',clientTaxId:i.client_tax_id||'',clientRegistrationNumber:i.client_registration_number||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),companyName:i.company_name||'',companyEmail:i.company_email||'',companyPhone:i.company_phone||'',companyAddress:i.company_address||'',companyTaxId:i.company_tax_id||'',companyRegistrationNumber:i.company_registration_number||'',companyStatisticalId:i.company_statistical_id||'',companySecondaryTaxId:i.company_secondary_tax_id||'',bankName:i.bank_name||'',accountHolder:i.account_holder||'',accountNumber:i.account_number||'',iban:i.iban||'',swiftBic:i.swift_bic||'',paymentInstructions:i.payment_instructions||'',items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
   }
   if(profile){
-   state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',address:profile.address||'',taxId:profile.tax_id||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
+   state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',phone:profile.company_phone||'',address:profile.address||'',taxId:profile.tax_id||'',registrationNumber:profile.registration_number||'',statisticalId:profile.statistical_id||'',secondaryTaxId:profile.secondary_tax_id||'',bankName:profile.bank_name||'',accountHolder:profile.account_holder||'',accountNumber:profile.account_number||'',iban:profile.iban||'',swiftBic:profile.swift_bic||'',paymentInstructions:profile.payment_instructions||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
    state.subscription={
     plan:profile.plan_code||'free',
     status:profile.subscription_status||'active',
