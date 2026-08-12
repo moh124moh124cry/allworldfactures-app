@@ -653,7 +653,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.8.0: paid-plan switching now uses the Lemon Squeezy customer portal so an existing subscription is changed instead of creating a second subscription.</div>
+      <div class="notice">Version 0.7.2: billing is fully localized, mobile-friendly and connected to Lemon Squeezy subscriptions.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -802,7 +802,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
           <span id="currentPlanBadge" class="planBadge">FREE</span>
           <h2 id="currentPlanTitle">Free plan</h2>
           <p id="currentPlanDescription">A starter workspace for testing AllWorld Factures with real cloud accounts and invoices.</p>
-          <div class="actions" style="margin-top:15px"><button class="btn primary" id="currentUpgradeBtn" onclick="openUpgradeModal('pro')">Upgrade plan</button><button class="btn secondary" id="manageSubscriptionBtn" style="display:none" onclick="openCustomerPortal()">Manage subscription</button></div>
+          <div class="actions" style="margin-top:15px"><button class="btn primary" id="currentUpgradeBtn" onclick="openUpgradeModal('pro')">Upgrade plan</button></div>
         </div>
         <div class="card usageBox">
           <h3 style="margin:0 0 4px">Usage this workspace</h3>
@@ -1028,7 +1028,6 @@ const CHECKOUT_URLS={
  pro:'https://allworldfactures.lemonsqueezy.com/checkout/buy/1b32f362-6ade-495a-a072-2cd4870b1fcc',
  business:'https://allworldfactures.lemonsqueezy.com/checkout/buy/f8fd9e69-73b2-49fe-9501-d6d1a723b554'
 };
-const CUSTOMER_PORTAL_URL='https://allworldfactures.lemonsqueezy.com/billing';
 let pendingCheckoutPlan='pro';
 
 function checkoutUrlFor(plan){
@@ -1040,25 +1039,9 @@ function checkoutUrlFor(plan){
  if(currentUser?.name)u.searchParams.set('checkout[name]',currentUser.name);
  return u.toString();
 }
-function openCustomerPortal(){
- if(!currentUser?.id){
-  alert(state.settings.language==='ar'?'يجب تسجيل الدخول لإدارة الاشتراك.':state.settings.language==='fr'?'Connectez-vous pour gérer votre abonnement.':'Please sign in to manage your subscription.');
-  return;
- }
- window.location.assign(CUSTOMER_PORTAL_URL);
-}
 function startCheckout(plan=pendingCheckoutPlan){
  if(!currentUser?.id){
   alert(state.settings.language==='ar'?'يجب تسجيل الدخول قبل الاشتراك.':state.settings.language==='fr'?'Connectez-vous avant de vous abonner.':'Please sign in before subscribing.');
-  return;
- }
- const current=currentPlan();
- const hasPaidSubscription = current!=='free' || !!state.subscription?.subscriptionId;
- // Existing paid subscribers must never open a second checkout for a plan switch.
- // Always route them to the Lemon Squeezy customer portal.
- if(hasPaidSubscription && plan!==current){
-  closeUpgradeModal();
-  openCustomerPortal();
   return;
  }
  const url=checkoutUrlFor(plan);
@@ -1332,11 +1315,7 @@ function renderBilling(){
     btn.onclick=null;
     btn.disabled=true;
   }else{
-    if(plan!=='free' && code!==plan){
-      btn.textContent=lang==='ar'?`التحويل إلى ${planName(code)}`:lang==='fr'?`Passer à ${planName(code)}`:`Switch to ${planName(code)}`;
-    }else{
-      btn.textContent=uiPhrase(code==='pro'?'Choose Pro':'Choose Business');
-    }
+    btn.textContent=uiPhrase(code==='pro'?'Choose Pro':'Choose Business');
     btn.onclick=()=>openUpgradeModal(code);
   }
 
@@ -1350,41 +1329,28 @@ function renderBilling(){
  });
  const up=document.getElementById('currentUpgradeBtn');
  if(up){
-  const target=plan==='free'?'pro':'business';
   up.style.display=plan==='business'?'none':'';
-  up.onclick=()=>openUpgradeModal(target);
-  if(plan==='free')up.textContent=lang==='ar'?'ترقية الخطة':lang==='fr'?'Mettre à niveau':'Upgrade plan';
-  else up.textContent=lang==='ar'?`التحويل إلى ${planName(target)}`:lang==='fr'?`Passer à ${planName(target)}`:`Switch to ${planName(target)}`;
- }
- const manage=document.getElementById('manageSubscriptionBtn');
- if(manage){
-  manage.style.display=plan==='free'?'none':'';
-  manage.textContent=lang==='ar'?'إدارة الاشتراك':lang==='fr'?'Gérer l’abonnement':'Manage subscription';
-  manage.onclick=openCustomerPortal;
+  up.onclick=()=>openUpgradeModal(plan==='free'?'pro':'business');
  }
  translateStaticUI();
 }
 function openUpgradeModal(target='pro'){
  pendingCheckoutPlan=target;
  const lang=state.settings.language||'en',modal=document.getElementById('upgradeModal');
- const targetName=planName(target),currentCode=currentPlan(),current=planName(currentCode);
- const hasPaidSubscription = currentCode!=='free' || !!state.subscription?.subscriptionId;
- const switching=hasPaidSubscription && target!==currentCode;
- document.getElementById('upgradeModalTitle').textContent=switching
-  ?(lang==='ar'?`تغيير الخطة إلى ${targetName}`:lang==='fr'?`Passer à ${targetName}`:`Switch to ${targetName}`)
-  :(lang==='ar'?`الترقية إلى ${targetName}`:lang==='fr'?`Passer à ${targetName}`:`Upgrade to ${targetName}`);
- document.getElementById('upgradeModalSub').textContent=switching
-  ?(lang==='ar'?'سنفتح بوابة Lemon Squeezy لإدارة اشتراكك الحالي وتغيير الخطة دون إنشاء اشتراك ثانٍ.':lang==='fr'?'Le portail Lemon Squeezy va gérer votre abonnement actuel afin de changer d’offre sans créer un deuxième abonnement.':'Lemon Squeezy will open your existing subscription so you can change plans without creating a second subscription.')
-  :(lang==='ar'?'سيتم تحويلك إلى صفحة دفع Lemon Squeezy الآمنة لإتمام الاشتراك.':lang==='fr'?'Vous serez redirigé vers le paiement sécurisé Lemon Squeezy pour finaliser l’abonnement.':'You will be redirected to Lemon Squeezy secure checkout to complete the subscription.');
- document.getElementById('upgradeModalText').innerHTML=lang==='ar'
-  ?`خطتك الحالية: <b>${current}</b><br>الخطة المطلوبة: <b>${targetName}</b><div class="secureCheckoutNote">${switching?'🔁 سيتم تعديل الاشتراك الحالي نفسه. لن يتم إنشاء اشتراك جديد.<br><small>v0.8.1</small>':'🔒 تتم معالجة الدفع بأمان عبر Lemon Squeezy، ويتم ربط حساب AllWorld Factures بعملية الشراء تلقائيًا.<br><small>v0.8.1</small>'}</div>`
+ const targetName=planName(target),current=planName();
+ document.getElementById('upgradeModalTitle').textContent=lang==='ar'?`الترقية إلى ${targetName}`:lang==='fr'?`Passer à ${targetName}`:`Upgrade to ${targetName}`;
+ document.getElementById('upgradeModalSub').textContent=lang==='ar'
+  ?'سيتم تحويلك إلى صفحة دفع Lemon Squeezy الآمنة لإتمام الاشتراك.'
   :lang==='fr'
-  ?`Offre actuelle : <b>${current}</b><br>Offre souhaitée : <b>${targetName}</b><div class="secureCheckoutNote">${switching?'🔁 Votre abonnement actuel sera modifié. Aucun deuxième abonnement ne sera créé.<br><small>v0.8.1</small>':'🔒 Le paiement est traité de façon sécurisée par Lemon Squeezy. Votre compte AllWorld Factures est automatiquement lié à l’achat.<br><small>v0.8.1</small>'}</div>`
-  :`Current plan: <b>${current}</b><br>Requested plan: <b>${targetName}</b><div class="secureCheckoutNote">${switching?'🔁 Your existing subscription will be changed. No second subscription will be created.<br><small>v0.8.1</small>':'🔒 Payment is processed securely by Lemon Squeezy. Your AllWorld Factures account ID is linked automatically to the purchase.<br><small>v0.8.1</small>'}</div>`;
+  ?'Vous serez redirigé vers le paiement sécurisé Lemon Squeezy pour finaliser l’abonnement.'
+  :'You will be redirected to Lemon Squeezy secure checkout to complete the subscription.';
+ document.getElementById('upgradeModalText').innerHTML=lang==='ar'
+  ?`خطتك الحالية: <b>${current}</b><br>الخطة المطلوبة: <b>${targetName}</b><div class="secureCheckoutNote">🔒 تتم معالجة الدفع بأمان عبر Lemon Squeezy، ويتم ربط حساب AllWorld Factures بعملية الشراء تلقائيًا.</div>`
+  :lang==='fr'
+  ?`Offre actuelle : <b>${current}</b><br>Offre souhaitée : <b>${targetName}</b><div class="secureCheckoutNote">🔒 Le paiement est traité de façon sécurisée par Lemon Squeezy. Votre compte AllWorld Factures est automatiquement lié à l’achat.</div>`
+  :`Current plan: <b>${current}</b><br>Requested plan: <b>${targetName}</b><div class="secureCheckoutNote">🔒 Payment is processed securely by Lemon Squeezy. Your AllWorld Factures account ID is linked automatically to the purchase.</div>`;
  const go=document.getElementById('upgradeGoBilling');
- if(go)go.textContent=switching
-  ?(lang==='ar'?'إدارة الاشتراك الحالي':lang==='fr'?'Gérer l’abonnement actuel':'Manage current subscription')
-  :(lang==='ar'?'المتابعة إلى الدفع الآمن':lang==='fr'?'Continuer vers le paiement sécurisé':'Continue to secure checkout');
+ if(go)go.textContent=lang==='ar'?'المتابعة إلى الدفع الآمن':lang==='fr'?'Continuer vers le paiement sécurisé':'Continue to secure checkout';
  modal.classList.remove('hidden');phoneLayout();
 }
 function closeUpgradeModal(){document.getElementById('upgradeModal')?.classList.add('hidden')}
