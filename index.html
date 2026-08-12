@@ -57,6 +57,28 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .paymentGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px}
 .paymentGrid div{min-width:0;overflow-wrap:anywhere}
 .paymentInstructions{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);color:var(--muted)}
+.directEditBar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbfcfd}
+.directEditBar .left{display:flex;align-items:center;gap:8px;min-width:0}
+.directEditBar small{color:var(--muted);font-size:10px;line-height:1.4}
+.directEditBar .actionsMini{display:flex;gap:6px;flex:0 0 auto}
+.directEditBar button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 10px;font-size:11px;font-weight:800}
+.directEditBar button.active{background:#eaf8f6;border-color:#b8e7e1;color:#08766d}
+.directEditBar .reset{display:none}
+.directEditBar.editing .reset{display:inline-flex}
+.preview.directEditMode [data-edit-key]{outline:1px dashed #15a89d88;outline-offset:2px;border-radius:3px;cursor:text;min-width:8px}
+.preview.directEditMode [data-edit-key]:focus{outline:2px solid #0e9f94;background:#f4fffd}
+.preview [data-edit-key][contenteditable="true"]{caret-color:#08766d}
+.editableMultiline{white-space:pre-line}
+@media(max-width:620px){
+ .directEditBar{align-items:flex-start;flex-direction:column}
+ .directEditBar .actionsMini{width:100%}
+ .directEditBar button{flex:1}
+}
+@media print{
+ .directEditBar{display:none!important}
+ .preview.directEditMode [data-edit-key]{outline:none!important;background:transparent!important}
+}
+
 .formHelp{font-size:12px;color:var(--muted);line-height:1.55;margin-top:7px}
 .legalSectionNote{padding:10px 12px;border-radius:10px;background:#f3fbfa;color:#166f6a;font-size:12px;line-height:1.55;margin-bottom:12px}
 @media(max-width:620px){.paymentGrid{grid-template-columns:1fr}}
@@ -808,29 +830,39 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
         </div>
 
         <div id="previewCard" class="card preview template-modern">
+          <div class="directEditBar" id="directEditBar">
+            <div class="left">
+              <span>✎</span>
+              <small id="directEditHint">You can edit any visible text directly on the invoice.</small>
+            </div>
+            <div class="actionsMini">
+              <button type="button" id="directEditToggle" onclick="toggleDirectEdit()">Direct edit</button>
+              <button type="button" class="reset" id="directEditReset" onclick="resetDirectEdits()">Reset edits</button>
+            </div>
+          </div>
           <div class="previewtop">
-            <div><img id="invoiceLogo" class="invoiceLogo hidden" alt="Logo"><small id="invoiceWord">INVOICE</small><h2 id="pBusiness"></h2><div id="pBusinessMeta" style="font-size:10px;opacity:.8;margin-top:6px"></div></div>
-            <div style="text-align:right"><b id="pInv"></b><div id="pDates" style="margin-top:6px;font-size:10px;opacity:.8"></div></div>
+            <div><img id="invoiceLogo" class="invoiceLogo hidden" alt="Logo"><small id="invoiceWord" data-edit-key="invoiceWord">INVOICE</small><h2 id="pBusiness" data-edit-key="businessName"></h2><div id="pBusinessMeta" class="editableMultiline" data-edit-key="businessMeta" style="font-size:10px;opacity:.8;margin-top:6px"></div></div>
+            <div style="text-align:right"><b id="pInv" data-edit-key="invoiceNumber"></b><div id="pDates" class="editableMultiline" data-edit-key="invoiceDates" style="margin-top:6px;font-size:10px;opacity:.8"></div></div>
           </div>
           <div class="previewbody">
-            <div class="previewmeta"><div><b>Bill to</b><br><span id="pClient"></span></div><div><b>Compliance</b><br><span id="pCountry"></span></div></div>
-            <div class="tablewrap" style="margin-top:14px"><table style="min-width:0"><thead><tr><th>Item</th><th>Qty</th><th>Total</th></tr></thead><tbody id="pItems"></tbody></table></div>
+            <div class="previewmeta"><div><b data-edit-key="billToLabel">Bill to</b><br><span id="pClient" class="editableMultiline" data-edit-key="clientBlock"></span></div><div><b data-edit-key="complianceLabel">Compliance</b><br><span id="pCountry" class="editableMultiline" data-edit-key="complianceBlock"></span></div></div>
+            <div class="tablewrap" style="margin-top:14px"><table style="min-width:0"><thead><tr><th data-edit-key="itemHeader">Item</th><th data-edit-key="qtyHeader">Qty</th><th data-edit-key="itemTotalHeader">Total</th></tr></thead><tbody id="pItems"></tbody></table></div>
             <div style="margin-top:14px;font-size:11px">
-              <div class="sumrow"><span id="pSubtotalLabel">Subtotal</span><b id="pSubtotal"></b></div>
-              <div class="sumrow previewDiscountRow" id="pDiscountRow"><span id="pDiscountLabel">Discount</span><b id="pDiscount"></b></div>
-              <div class="sumrow previewTaxRow" id="pTaxRow"><span id="pTaxLabel">Tax</span><b id="pTax"></b></div>
-              <div class="sumrow previewShippingRow" id="pShippingRow"><span id="pShippingLabel">Shipping</span><b id="pShipping"></b></div>
+              <div class="sumrow"><span id="pSubtotalLabel" data-edit-key="subtotalLabel">Subtotal</span><b id="pSubtotal" data-edit-key="subtotalValue"></b></div>
+              <div class="sumrow previewDiscountRow" id="pDiscountRow"><span id="pDiscountLabel" data-edit-key="discountLabel">Discount</span><b id="pDiscount" data-edit-key="discountValue"></b></div>
+              <div class="sumrow previewTaxRow" id="pTaxRow"><span id="pTaxLabel" data-edit-key="taxLabel">Tax</span><b id="pTax" data-edit-key="taxValue"></b></div>
+              <div class="sumrow previewShippingRow" id="pShippingRow"><span id="pShippingLabel" data-edit-key="shippingLabel">Shipping</span><b id="pShipping" data-edit-key="shippingValue"></b></div>
             </div>
-            <div class="previewtotal"><span id="pTotalLabel">Total due</span><span id="pTotal"></span></div>
-            <p id="pNotes" style="font-size:11px;color:var(--muted)"></p>
+            <div class="previewtotal"><span id="pTotalLabel" data-edit-key="totalLabel">Total due</span><span id="pTotal" data-edit-key="totalValue"></span></div>
+            <p id="pNotes" class="editableMultiline" data-edit-key="notesBlock" style="font-size:11px;color:var(--muted)"></p>
             <div class="amountWords" id="pAmountWordsBox">
-              <b id="pAmountWordsTitle">Total amount in words</b>
-              <span id="pAmountWords"></span>
+              <b id="pAmountWordsTitle" data-edit-key="amountWordsTitle">Total amount in words</b>
+              <span id="pAmountWords" class="editableMultiline" data-edit-key="amountWordsText"></span>
             </div>
             <div class="paymentBox hidden" id="pPaymentBox">
-              <b id="pPaymentTitle">Payment details</b>
+              <b id="pPaymentTitle" data-edit-key="paymentTitle">Payment details</b>
               <div class="paymentGrid" id="pPaymentGrid"></div>
-              <div class="paymentInstructions hidden" id="pPaymentInstructions"></div>
+              <div class="paymentInstructions hidden editableMultiline" id="pPaymentInstructions" data-edit-key="paymentInstructions"></div>
             </div>
             <div class="actions" style="margin-top:15px">
               <button class="btn secondary" onclick="saveDraft()">Save draft</button>
@@ -1213,6 +1245,8 @@ let currentUser=null;
 let authMode='login';
 let itemData=[];
 let invoiceCompanySnapshot=null;
+let previewOverrides={};
+let directEditMode=false;
 
 function t(key){const lang=state?.settings?.language||'en';return translations[lang]?.[key]||translations.en[key]||key}
 
@@ -1623,11 +1657,13 @@ function newInvoice(){
   number:generateInvoiceNumber(),clientId:'',clientName:'',clientEmail:'',clientPhone:'',clientAddress:'',clientTaxId:'',clientRegistrationNumber:'',issueDate:issue,dueDate:addDays(issue,state.settings.terms),
   country:state.settings.country,currency:countryBy(state.settings.country).cur,taxRate:countryBy(state.settings.country).rate,discount:0,shipping:0,status:'draft',notes:state.settings.notes,items:itemData,
   companyName:state.settings.business||'',companyEmail:state.settings.email||'',companyPhone:state.settings.phone||'',companyAddress:state.settings.address||'',companyTaxId:state.settings.taxId||'',companyRegistrationNumber:state.settings.registrationNumber||'',companyStatisticalId:state.settings.statisticalId||'',companySecondaryTaxId:state.settings.secondaryTaxId||'',
-  bankName:state.settings.bankName||'',accountHolder:state.settings.accountHolder||'',accountNumber:state.settings.accountNumber||'',iban:state.settings.iban||'',swiftBic:state.settings.swiftBic||'',paymentInstructions:state.settings.paymentInstructions||''
+  bankName:state.settings.bankName||'',accountHolder:state.settings.accountHolder||'',accountNumber:state.settings.accountNumber||'',iban:state.settings.iban||'',swiftBic:state.settings.swiftBic||'',paymentInstructions:state.settings.paymentInstructions||'',previewOverrides:{}
  });
  return true;
 }
 function showEditor(inv){
+ previewOverrides={...(inv.previewOverrides||{})};
+ directEditMode=false;
  const mobileNav=document.querySelector('.mobile');if(mobileNav)mobileNav.style.setProperty('display','none','important');
  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('invoiceEditor').classList.remove('hidden');document.getElementById('topTitle').textContent=t('createInvoice');
  document.getElementById('editorTitle').textContent=editingInvoiceId?'Edit invoice':'Create invoice';
@@ -1679,7 +1715,8 @@ function collectInvoice(statusOverride){
   companyName:document.getElementById('business').value.trim()||invoiceCompanySnapshot?.companyName||state.settings.business||'',
   companyEmail:invoiceCompanySnapshot?.companyEmail||state.settings.email||'',companyPhone:invoiceCompanySnapshot?.companyPhone||state.settings.phone||'',companyAddress:invoiceCompanySnapshot?.companyAddress||state.settings.address||'',
   companyTaxId:invoiceCompanySnapshot?.companyTaxId||state.settings.taxId||'',companyRegistrationNumber:invoiceCompanySnapshot?.companyRegistrationNumber||state.settings.registrationNumber||'',companyStatisticalId:invoiceCompanySnapshot?.companyStatisticalId||state.settings.statisticalId||'',companySecondaryTaxId:invoiceCompanySnapshot?.companySecondaryTaxId||state.settings.secondaryTaxId||'',
-  bankName:invoiceCompanySnapshot?.bankName||state.settings.bankName||'',accountHolder:invoiceCompanySnapshot?.accountHolder||state.settings.accountHolder||'',accountNumber:invoiceCompanySnapshot?.accountNumber||state.settings.accountNumber||'',iban:invoiceCompanySnapshot?.iban||state.settings.iban||'',swiftBic:invoiceCompanySnapshot?.swiftBic||state.settings.swiftBic||'',paymentInstructions:invoiceCompanySnapshot?.paymentInstructions||state.settings.paymentInstructions||''
+  bankName:invoiceCompanySnapshot?.bankName||state.settings.bankName||'',accountHolder:invoiceCompanySnapshot?.accountHolder||state.settings.accountHolder||'',accountNumber:invoiceCompanySnapshot?.accountNumber||state.settings.accountNumber||'',iban:invoiceCompanySnapshot?.iban||state.settings.iban||'',swiftBic:invoiceCompanySnapshot?.swiftBic||state.settings.swiftBic||'',paymentInstructions:invoiceCompanySnapshot?.paymentInstructions||state.settings.paymentInstructions||'',
+  previewOverrides:{...(previewOverrides||{})}
  };
  inv.total=invoiceTotal(inv);return inv;
 }
@@ -1710,7 +1747,7 @@ function saveInvoice(statusOverride){
 function duplicateInvoice(id){
  if(!requireCapacity('invoices'))return;
  const src=state.invoices.find(i=>i.id===id);if(!src)return;
- const issue=todayISO();const copy={...src,id:uid('inv'),number:generateInvoiceNumber(),issueDate:issue,dueDate:addDays(issue,state.settings.terms),status:'draft',items:src.items.map(i=>({...i,id:uid('item')}))};
+ const issue=todayISO();const copy={...src,id:uid('inv'),number:generateInvoiceNumber(),issueDate:issue,dueDate:addDays(issue,state.settings.terms),status:'draft',previewOverrides:{...(src.previewOverrides||{})},items:src.items.map(i=>({...i,id:uid('item')}))};
  state.invoices.push(copy);state.settings.nextNo++;persist();renderInvoiceList();
 }
 function markPaid(id){const i=state.invoices.find(x=>x.id===id);if(i){i.status='paid';persist();renderInvoiceList();renderDashboard()}}
@@ -1914,7 +1951,7 @@ function amountInWords(amount,cur,lang){
  if(lang==='ar'){
   let s=`${intToArabic(major)} ${majorName}`;
   if(minor)s+=` و${intToArabic(minor)} ${minorName}`;
-  return s+' فقط لا غير';
+  return s+' فقط';
  }
  if(lang==='fr'){
   let s=`${intToFrench(major)} ${majorName}`;
@@ -1959,6 +1996,70 @@ function invoicePreviewLabels(c,rate,lang){
  };
 }
 
+
+function directEditLocale(){
+ const lang=state.settings.language||'en';
+ const btn=document.getElementById('directEditToggle'),reset=document.getElementById('directEditReset'),hint=document.getElementById('directEditHint');
+ if(btn)btn.textContent=directEditMode
+  ?(lang==='ar'?'إنهاء التعديل':lang==='fr'?'Terminer la modification':'Finish editing')
+  :(lang==='ar'?'تعديل مباشر':lang==='fr'?'Modifier directement':'Direct edit');
+ if(reset)reset.textContent=lang==='ar'?'إلغاء التعديلات':lang==='fr'?'Réinitialiser':'Reset edits';
+ if(hint)hint.textContent=directEditMode
+  ?(lang==='ar'?'اضغط على أي نص داخل الفاتورة وعدّله مباشرة.':lang==='fr'?'Touchez n’importe quel texte de la facture pour le modifier.':'Tap any invoice text to edit it directly.')
+  :(lang==='ar'?'يمكنك تعديل أي نص ظاهر داخل الفاتورة مباشرة.':lang==='fr'?'Vous pouvez modifier directement tout texte visible sur la facture.':'You can edit any visible text directly on the invoice.');
+ const bar=document.getElementById('directEditBar');
+ if(bar)bar.classList.toggle('editing',directEditMode);
+ if(btn)btn.classList.toggle('active',directEditMode);
+}
+
+function bindDirectEditables(){
+ document.querySelectorAll('#previewCard [data-edit-key]').forEach(el=>{
+  el.setAttribute('contenteditable',directEditMode?'true':'false');
+  el.setAttribute('spellcheck','false');
+  if(!el.dataset.directEditBound){
+   el.dataset.directEditBound='1';
+   el.addEventListener('blur',()=>{
+    if(!directEditMode)return;
+    const key=el.dataset.editKey;
+    if(!key)return;
+    previewOverrides[key]=(el.innerText??el.textContent??'').replace(/\u00a0/g,' ').trim();
+   });
+   el.addEventListener('keydown',e=>{
+    if(!directEditMode)return;
+    if(e.key==='Escape'){e.preventDefault();el.blur()}
+   });
+  }
+ });
+}
+
+function applyPreviewOverrides(){
+ const all=[...document.querySelectorAll('#previewCard [data-edit-key]')];
+ Object.entries(previewOverrides||{}).forEach(([key,value])=>{
+  const el=all.find(x=>x.dataset.editKey===key);
+  if(el)el.textContent=value??'';
+ });
+ bindDirectEditables();
+ directEditLocale();
+}
+
+function toggleDirectEdit(force){
+ directEditMode=typeof force==='boolean'?force:!directEditMode;
+ const card=document.getElementById('previewCard');
+ if(card)card.classList.toggle('directEditMode',directEditMode);
+ bindDirectEditables();
+ directEditLocale();
+}
+
+function resetDirectEdits(){
+ const lang=state.settings.language||'en';
+ const ok=confirm(lang==='ar'?'هل تريد حذف كل التعديلات المباشرة والعودة إلى القيم الآلية؟':lang==='fr'?'Supprimer toutes les modifications directes et revenir aux valeurs automatiques ?':'Remove all direct edits and return to automatic values?');
+ if(!ok)return;
+ previewOverrides={};
+ directEditMode=false;
+ const card=document.getElementById('previewCard');if(card)card.classList.remove('directEditMode');
+ renderPreview();
+}
+
 function renderPreview(){
  if(!document.getElementById('currency'))return;
  updateLogoDisplays();
@@ -1983,7 +2084,7 @@ function renderPreview(){
  if(clientReg)clientRows.push(`${esc(cp.reg)}: ${esc(clientReg)}`);
  document.getElementById('pClient').innerHTML=clientRows.join('<br>');
  document.getElementById('pCountry').innerHTML=`${c.flag} ${esc(c.name)}<br>${esc(c.tax)} · ${esc(cur)}`;
- document.getElementById('pItems').innerHTML=itemData.map(i=>`<tr><td>${esc(i.d)}</td><td>${Number(i.q)}</td><td>${money(Number(i.q)*Number(i.p),cur)}</td></tr>`).join('');
+ document.getElementById('pItems').innerHTML=itemData.map(i=>`<tr><td data-edit-key="itemDesc:${i.id}">${esc(i.d)}</td><td data-edit-key="itemQty:${i.id}">${Number(i.q)}</td><td data-edit-key="itemTotal:${i.id}">${money(Number(i.q)*Number(i.p),cur)}</td></tr>`).join('');
  const rate=Number(document.getElementById('tax').value||0),lang=state.settings.language||'en',lbl=invoicePreviewLabels(c,rate,lang);
  document.getElementById('pSubtotalLabel').textContent=lbl.subtotal;
  document.getElementById('pDiscountLabel').textContent=lbl.discount;
@@ -2008,15 +2109,16 @@ function renderPreview(){
  const live=money(tot.total,cur);
  const wt=document.getElementById('wizardTotal'),bt=document.getElementById('bottomInvoiceTotal');if(wt)wt.textContent=live;if(bt)bt.textContent=live;
  const pl=paymentLabels(lang),ps=invoiceCompanySnapshot||state.settings||{},payRows=[];
- if(ps.bankName)payRows.push(`<div><strong>${esc(pl.bank)}:</strong> ${esc(ps.bankName)}</div>`);
- if(ps.accountHolder)payRows.push(`<div><strong>${esc(pl.holder)}:</strong> ${esc(ps.accountHolder)}</div>`);
- if(ps.accountNumber)payRows.push(`<div><strong>${esc(pl.account)}:</strong> ${esc(ps.accountNumber)}</div>`);
- if(ps.iban)payRows.push(`<div><strong>${esc(pl.iban)}:</strong> ${esc(ps.iban)}</div>`);
- if(ps.swiftBic)payRows.push(`<div><strong>${esc(pl.swift)}:</strong> ${esc(ps.swiftBic)}</div>`);
+ if(ps.bankName)payRows.push(`<div data-edit-key="paymentBank">${esc(pl.bank)}: ${esc(ps.bankName)}</div>`);
+ if(ps.accountHolder)payRows.push(`<div data-edit-key="paymentHolder">${esc(pl.holder)}: ${esc(ps.accountHolder)}</div>`);
+ if(ps.accountNumber)payRows.push(`<div data-edit-key="paymentAccount">${esc(pl.account)}: ${esc(ps.accountNumber)}</div>`);
+ if(ps.iban)payRows.push(`<div data-edit-key="paymentIban">${esc(pl.iban)}: ${esc(ps.iban)}</div>`);
+ if(ps.swiftBic)payRows.push(`<div data-edit-key="paymentSwift">${esc(pl.swift)}: ${esc(ps.swiftBic)}</div>`);
  const pbox=document.getElementById('pPaymentBox'),pgrid=document.getElementById('pPaymentGrid'),pins=document.getElementById('pPaymentInstructions');
  if(pbox){pbox.classList.toggle('hidden',!payRows.length&&!ps.paymentInstructions);document.getElementById('pPaymentTitle').textContent=pl.title}
  if(pgrid)pgrid.innerHTML=payRows.join('');
  if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
+ applyPreviewOverrides();
 }
 
 function renderClients(){
@@ -2466,7 +2568,7 @@ function workspacePayload(){
    country_code:inv.country||'DZ',currency_code:inv.currency||'DZD',tax_rate:Number(inv.taxRate||0),discount_rate:Number(inv.discount||0),shipping:Number(inv.shipping||0),
    status:inv.status||'draft',notes:inv.notes||'',template_id:inv.template||state.template||'modern',subtotal:sub,tax_amount:tax,discount_amount:disc,total,
    company_name:inv.companyName||state.settings.business||'',company_email:inv.companyEmail||state.settings.email||'',company_phone:inv.companyPhone||state.settings.phone||'',company_address:inv.companyAddress||state.settings.address||'',company_tax_id:inv.companyTaxId||state.settings.taxId||'',company_registration_number:inv.companyRegistrationNumber||state.settings.registrationNumber||'',company_statistical_id:inv.companyStatisticalId||state.settings.statisticalId||'',company_secondary_tax_id:inv.companySecondaryTaxId||state.settings.secondaryTaxId||'',
-   bank_name:inv.bankName||state.settings.bankName||'',account_holder:inv.accountHolder||state.settings.accountHolder||'',account_number:inv.accountNumber||state.settings.accountNumber||'',iban:inv.iban||state.settings.iban||'',swift_bic:inv.swiftBic||state.settings.swiftBic||'',payment_instructions:inv.paymentInstructions||state.settings.paymentInstructions||'',
+   bank_name:inv.bankName||state.settings.bankName||'',account_holder:inv.accountHolder||state.settings.accountHolder||'',account_number:inv.accountNumber||state.settings.accountNumber||'',iban:inv.iban||state.settings.iban||'',swift_bic:inv.swiftBic||state.settings.swiftBic||'',payment_instructions:inv.paymentInstructions||state.settings.paymentInstructions||'',preview_overrides:inv.previewOverrides||{},
    items:(inv.items||[]).map((x,n)=>({description:x.d||'',quantity:Number(x.q||0),unit_price:Number(x.p||0),line_total:Number(x.q||0)*Number(x.p||0),sort_order:n}))
   }
  });
@@ -2500,7 +2602,7 @@ async function loadCloudWorkspace(userId){
   if(hasCloudData){
    const itemGroups={};(items||[]).forEach(x=>(itemGroups[x.invoice_id]||(itemGroups[x.invoice_id]=[])).push(x));
    state.clients=(clients||[]).map(c=>({id:c.id,name:c.name,email:c.email||'',phone:c.phone||'',country:c.country_code||'DZ',address:c.address||'',taxId:c.tax_id||'',registrationNumber:c.registration_number||''}));
-   state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',clientPhone:i.client_phone||'',clientAddress:i.client_address||'',clientTaxId:i.client_tax_id||'',clientRegistrationNumber:i.client_registration_number||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),companyName:i.company_name||'',companyEmail:i.company_email||'',companyPhone:i.company_phone||'',companyAddress:i.company_address||'',companyTaxId:i.company_tax_id||'',companyRegistrationNumber:i.company_registration_number||'',companyStatisticalId:i.company_statistical_id||'',companySecondaryTaxId:i.company_secondary_tax_id||'',bankName:i.bank_name||'',accountHolder:i.account_holder||'',accountNumber:i.account_number||'',iban:i.iban||'',swiftBic:i.swift_bic||'',paymentInstructions:i.payment_instructions||'',items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
+   state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',clientPhone:i.client_phone||'',clientAddress:i.client_address||'',clientTaxId:i.client_tax_id||'',clientRegistrationNumber:i.client_registration_number||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),companyName:i.company_name||'',companyEmail:i.company_email||'',companyPhone:i.company_phone||'',companyAddress:i.company_address||'',companyTaxId:i.company_tax_id||'',companyRegistrationNumber:i.company_registration_number||'',companyStatisticalId:i.company_statistical_id||'',companySecondaryTaxId:i.company_secondary_tax_id||'',bankName:i.bank_name||'',accountHolder:i.account_holder||'',accountNumber:i.account_number||'',iban:i.iban||'',swiftBic:i.swift_bic||'',paymentInstructions:i.payment_instructions||'',previewOverrides:i.preview_overrides||{},items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
   }
   if(profile){
    state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',phone:profile.company_phone||'',address:profile.address||'',taxId:profile.tax_id||'',registrationNumber:profile.registration_number||'',statisticalId:profile.statistical_id||'',secondaryTaxId:profile.secondary_tax_id||'',bankName:profile.bank_name||'',accountHolder:profile.account_holder||'',accountNumber:profile.account_number||'',iban:profile.iban||'',swiftBic:profile.swift_bic||'',paymentInstructions:profile.payment_instructions||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
