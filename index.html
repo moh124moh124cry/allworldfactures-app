@@ -78,7 +78,15 @@ td{padding:12px 10px;border-bottom:1px solid #f0f2f5;font-size:13px}tr:last-chil
 .dzLegalCell b{display:block;font-size:10px;overflow-wrap:anywhere}
 .signatureArea{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:18px;min-height:82px}
 .signatureBox{border-top:1px solid var(--line);padding-top:8px;text-align:center;color:var(--muted);font-size:10px}
-.signatureSpace{height:46px}
+.signatureSpace{height:58px;display:flex;align-items:center;justify-content:center}
+.signatureSpace img{max-width:120px;max-height:54px;object-fit:contain;display:block}
+.brandAssetGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.brandAssetCard{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfcfd}
+.brandAssetPreview{height:96px;border:1px dashed #cfd7df;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;color:var(--muted);font-size:12px;margin-bottom:10px}
+.brandAssetPreview img{max-width:100%;max-height:100%;object-fit:contain}
+.brandAssetCard .btnrow{display:flex;gap:7px;margin-top:8px}
+.brandAssetCard .btnrow button{flex:1}
+@media(max-width:700px){.brandAssetGrid{grid-template-columns:1fr}}
 .invoiceFooterNote{margin-top:14px;padding-top:9px;border-top:1px solid var(--line);text-align:center;font-size:8.5px;color:var(--muted)}
 .preview.a4Ready{background:#fff}
 @media(max-width:620px){
@@ -795,7 +803,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
 
-      <div class="buildProof" id="buildProof">v1.2.1 ✓ — التعديل المباشر الكامل للفاتورة</div>
+      <div class="buildProof" id="buildProof">v1.3.0 ✓ — الختم والإمضاء داخل الفاتورة</div>
 
       <div class="invoiceWizard" id="invoiceWizard">
         <button type="button" data-step="1" onclick="setInvoiceStep(1)">1 · Client</button>
@@ -906,8 +914,8 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
               <div class="paymentInstructions hidden editableMultiline" id="pPaymentInstructions" data-edit-key="paymentInstructions"></div>
             </div>
             <div class="signatureArea" id="signatureArea">
-              <div class="signatureBox"><div class="signatureSpace"></div><b data-edit-key="stampLabel">Company stamp</b></div>
-              <div class="signatureBox"><div class="signatureSpace"></div><b data-edit-key="signatureLabel">Authorized signature</b></div>
+              <div class="signatureBox"><div class="signatureSpace"><img id="invoiceStampImage" class="hidden" alt="Company stamp"></div><b data-edit-key="stampLabel">Company stamp</b></div>
+              <div class="signatureBox"><div class="signatureSpace"><img id="invoiceSignatureImage" class="hidden" alt="Authorized signature"></div><b data-edit-key="signatureLabel">Authorized signature</b></div>
             </div>
             <div class="invoiceFooterNote editableMultiline" data-edit-key="invoiceFooterNote" id="invoiceFooterNote">Thank you for your business.</div>
             <div class="actions" style="margin-top:15px">
@@ -1109,10 +1117,26 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
           <div class="field"><label>SWIFT / BIC</label><input id="setSwift" class="input"></div>
           <div class="field"><label>PAYMENT INSTRUCTIONS</label><textarea id="setPaymentInstructions" class="input" rows="3"></textarea></div>
         </div><div class="formHelp">Only completed payment fields are displayed on the invoice.</div></div>
-        <div class="section"><h3 id="brandingHeading">Branding</h3><div class="formgrid">
-          <div><div id="logoPreview" class="logoPreview">Logo</div></div>
-          <div><div class="field"><label id="logoLabel">COMPANY LOGO</label><input id="logoFile" class="input" type="file" accept="image/*" onchange="loadLogoFile(this.files[0])"></div><div class="actions" style="margin-top:9px"><button id="removeLogoBtn" class="btn secondary small" onclick="removeLogo()">Remove logo</button></div><div id="logoHint" class="muted" style="margin-top:8px">Stored locally in this browser. Use a small PNG/JPG.</div></div>
-        </div></div>
+        <div class="section"><h3 id="brandingHeading">Branding, stamp & signature</h3>
+          <div class="brandAssetGrid">
+            <div class="brandAssetCard">
+              <div id="logoPreview" class="brandAssetPreview">Logo</div>
+              <div class="field"><label id="logoLabel">COMPANY LOGO</label><input id="logoFile" class="input" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'logo')"></div>
+              <div class="btnrow"><button id="removeLogoBtn" class="btn secondary small" type="button" onclick="removeBrandAsset('logo')">Remove</button></div>
+            </div>
+            <div class="brandAssetCard">
+              <div id="stampPreview" class="brandAssetPreview">Stamp</div>
+              <div class="field"><label>COMPANY STAMP</label><input id="stampFile" class="input" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'stamp')"></div>
+              <div class="btnrow"><button class="btn secondary small" type="button" onclick="removeBrandAsset('stamp')">Remove</button></div>
+            </div>
+            <div class="brandAssetCard">
+              <div id="signaturePreview" class="brandAssetPreview">Signature</div>
+              <div class="field"><label>AUTHORIZED SIGNATURE</label><input id="signatureFile" class="input" type="file" accept="image/*" onchange="loadBrandAsset(this.files[0],'signature')"></div>
+              <div class="btnrow"><button class="btn secondary small" type="button" onclick="removeBrandAsset('signature')">Remove</button></div>
+            </div>
+          </div>
+          <div id="logoHint" class="muted" style="margin-top:10px">PNG/JPG/WebP. Images are resized automatically and synchronized to your account.</div>
+        </div>
         <div class="section"><h3 id="invoiceDefaultsHeading">Invoice defaults</h3><div class="formgrid cols3">
           <div class="field"><label>DEFAULT COUNTRY</label><select id="setCountry" class="input" onchange="updateLegalFieldLabels()"></select></div>
           <div class="field"><label>DEFAULT LANGUAGE</label><select id="setLanguage" class="input"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div>
@@ -1259,7 +1283,7 @@ function defaultState(){
  const issue=todayISO();
  return {
   subscription:{plan:'free',status:'active',startedAt:'',trialEndsAt:'',renewsAt:'',endsAt:'',updatePaymentUrl:'',subscriptionId:null},
-  settings:{business:'Your Business LLC',email:'billing@yourbusiness.com',phone:'',address:'123 Business Avenue',taxId:'',registrationNumber:'',statisticalId:'',secondaryTaxId:'',bankName:'',accountHolder:'',accountNumber:'',iban:'',swiftBic:'',paymentInstructions:'',country:'DZ',language:'en',prefix:'INV-2026-',terms:30,nextNo:1001,notes:'Thank you for your business!',logo:''},
+  settings:{business:'Your Business LLC',email:'billing@yourbusiness.com',phone:'',address:'123 Business Avenue',taxId:'',registrationNumber:'',statisticalId:'',secondaryTaxId:'',bankName:'',accountHolder:'',accountNumber:'',iban:'',swiftBic:'',paymentInstructions:'',country:'DZ',language:'en',prefix:'INV-2026-',terms:30,nextNo:1001,notes:'Thank you for your business!',logo:'',stampImage:'',signatureImage:''},
   template:'modern',
   clients:[
    {id:'c1',name:'Acme Corporation',email:'billing@acmecorp.com',phone:'',country:'US',address:'New York, USA',taxId:'',registrationNumber:''},
@@ -2188,11 +2212,12 @@ function renderPreview(){
  if(pgrid)pgrid.innerHTML=payRows.join('');
  if(pins){pins.textContent=ps.paymentInstructions||'';pins.classList.toggle('hidden',!ps.paymentInstructions)}
  const proof=document.getElementById('buildProof');
- if(proof)proof.textContent=lang==='ar'?'v1.2.1 ✓ — التعديل المباشر الكامل للفاتورة':lang==='fr'?'v1.2.1 ✓ — modification complète de la facture':'v1.2.1 ✓ — full direct invoice editing';
+ if(proof)proof.textContent=lang==='ar'?'v1.2.1 ✓ — التعديل المباشر الكامل للفاتورة':lang==='fr'?'v1.3.0 ✓ — cachet et signature sur la facture':'v1.3.0 ✓ — stamp and signature on invoice';
  const stampEl=document.querySelector('[data-edit-key="stampLabel"]'),sigEl=document.querySelector('[data-edit-key="signatureLabel"]'),footEl=document.getElementById('invoiceFooterNote');
  if(stampEl)stampEl.textContent=lang==='ar'?'ختم المؤسسة':lang==='fr'?'Cachet de l’entreprise':'Company stamp';
  if(sigEl)sigEl.textContent=lang==='ar'?'الإمضاء':lang==='fr'?'Signature autorisée':'Authorized signature';
  if(footEl)footEl.textContent=lang==='ar'?'شكراً لتعاملكم معنا.':lang==='fr'?'Merci pour votre confiance.':'Thank you for your business.';
+ updateBrandAssetDisplays();
  applyPreviewOverrides();
 }
 
@@ -2232,7 +2257,7 @@ function renderCountries(){
 
 function loadSettingsForm(){
  populateSelectors();const s=state.settings;
- updateLogoDisplays();
+ updateLogoDisplays();updateBrandAssetDisplays();
  document.getElementById('setBusiness').value=s.business||'';document.getElementById('setEmail').value=s.email||'';document.getElementById('setPhone').value=s.phone||'';document.getElementById('setAddress').value=s.address||'';document.getElementById('setTaxId').value=s.taxId||'';document.getElementById('setRegNo').value=s.registrationNumber||'';document.getElementById('setStatId').value=s.statisticalId||'';document.getElementById('setSecondaryTaxId').value=s.secondaryTaxId||'';
  document.getElementById('setBankName').value=s.bankName||'';document.getElementById('setAccountHolder').value=s.accountHolder||'';document.getElementById('setAccountNumber').value=s.accountNumber||'';document.getElementById('setIban').value=s.iban||'';document.getElementById('setSwift').value=s.swiftBic||'';document.getElementById('setPaymentInstructions').value=s.paymentInstructions||'';
  document.getElementById('setCountry').value=s.country||'DZ';document.getElementById('setLanguage').value=s.language||'en';document.getElementById('setPrefix').value=s.prefix||'INV-';document.getElementById('setTerms').value=s.terms||30;document.getElementById('setNextNo').value=s.nextNo||1;document.getElementById('setNotes').value=s.notes||'';
@@ -2240,7 +2265,7 @@ function loadSettingsForm(){
 }
 function saveSettings(){
  state.settings={...state.settings,business:document.getElementById('setBusiness').value.trim(),email:document.getElementById('setEmail').value.trim(),phone:document.getElementById('setPhone').value.trim(),address:document.getElementById('setAddress').value.trim(),taxId:document.getElementById('setTaxId').value.trim(),registrationNumber:document.getElementById('setRegNo').value.trim(),statisticalId:document.getElementById('setStatId').value.trim(),secondaryTaxId:document.getElementById('setSecondaryTaxId').value.trim(),bankName:document.getElementById('setBankName').value.trim(),accountHolder:document.getElementById('setAccountHolder').value.trim(),accountNumber:document.getElementById('setAccountNumber').value.trim(),iban:document.getElementById('setIban').value.trim(),swiftBic:document.getElementById('setSwift').value.trim(),paymentInstructions:document.getElementById('setPaymentInstructions').value.trim(),country:document.getElementById('setCountry').value,language:document.getElementById('setLanguage').value,prefix:document.getElementById('setPrefix').value.trim()||'INV-',terms:Number(document.getElementById('setTerms').value||30),nextNo:Number(document.getElementById('setNextNo').value||1),notes:document.getElementById('setNotes').value};
- persist();setLanguage(state.settings.language);updateLogoDisplays();alert('Settings saved ✓');
+ persist();setLanguage(state.settings.language);updateLogoDisplays();updateBrandAssetDisplays();saveBrandAssetsCloud();alert('Settings saved ✓');
 }
 
 
@@ -2680,7 +2705,7 @@ async function loadCloudWorkspace(userId){
    state.invoices=(invoices||[]).map(i=>({id:i.id,number:i.number,clientId:i.client_id||'',clientName:i.client_name||'',clientEmail:i.client_email||'',clientPhone:i.client_phone||'',clientAddress:i.client_address||'',clientTaxId:i.client_tax_id||'',clientRegistrationNumber:i.client_registration_number||'',issueDate:i.issue_date||'',dueDate:i.due_date||'',country:i.country_code||'DZ',currency:i.currency_code||'DZD',taxRate:Number(i.tax_rate||0),discount:Number(i.discount_rate||0),shipping:Number(i.shipping||0),status:i.status||'draft',notes:i.notes||'',template:i.template_id||'modern',total:Number(i.total||0),companyName:i.company_name||'',companyEmail:i.company_email||'',companyPhone:i.company_phone||'',companyAddress:i.company_address||'',companyTaxId:i.company_tax_id||'',companyRegistrationNumber:i.company_registration_number||'',companyStatisticalId:i.company_statistical_id||'',companySecondaryTaxId:i.company_secondary_tax_id||'',bankName:i.bank_name||'',accountHolder:i.account_holder||'',accountNumber:i.account_number||'',iban:i.iban||'',swiftBic:i.swift_bic||'',paymentInstructions:i.payment_instructions||'',previewOverrides:i.preview_overrides||{},items:(itemGroups[i.id]||[]).map(x=>({id:uid('item'),d:x.description,q:Number(x.quantity||0),p:Number(x.unit_price||0)}))}));
   }
   if(profile){
-   state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',phone:profile.company_phone||'',address:profile.address||'',taxId:profile.tax_id||'',registrationNumber:profile.registration_number||'',statisticalId:profile.statistical_id||'',secondaryTaxId:profile.secondary_tax_id||'',bankName:profile.bank_name||'',accountHolder:profile.account_holder||'',accountNumber:profile.account_number||'',iban:profile.iban||'',swiftBic:profile.swift_bic||'',paymentInstructions:profile.payment_instructions||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
+   state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',phone:profile.company_phone||'',address:profile.address||'',taxId:profile.tax_id||'',registrationNumber:profile.registration_number||'',statisticalId:profile.statistical_id||'',secondaryTaxId:profile.secondary_tax_id||'',bankName:profile.bank_name||'',accountHolder:profile.account_holder||'',accountNumber:profile.account_number||'',iban:profile.iban||'',swiftBic:profile.swift_bic||'',paymentInstructions:profile.payment_instructions||'',logo:profile.logo_image||state.settings.logo||'',stampImage:profile.stamp_image||'',signatureImage:profile.signature_image||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
    state.subscription={
     plan:profile.plan_code||'free',
     status:profile.subscription_status||'active',
@@ -2713,16 +2738,70 @@ function updateUserUI(){const init=initials(currentUser?.name||state.settings.bu
 function renderProfile(){
  if(!document.getElementById('profileName'))return;updateUserUI();document.getElementById('profileName').textContent=currentUser?.name||state.settings.business||'Account';document.getElementById('profileEmail').textContent=currentUser?.email||state.settings.email||'';document.getElementById('profileInvoiceCount').textContent=state.invoices.length;document.getElementById('profileClientCount').textContent=state.clients.length;document.getElementById('profileTemplateName').textContent=templateDefs.find(x=>x.id===state.template)?.name||state.template;document.getElementById('profileLanguage').value=state.settings.language||'en';
 }
-function loadLogoFile(file){
- if(!file)return;if(file.size>900000){alert('Please choose an image smaller than 900 KB.');return}
- const r=new FileReader();r.onload=()=>{state.settings.logo=r.result;persist();updateLogoDisplays();};r.readAsDataURL(file);
+async function compressBrandImage(file){
+ if(!file)return '';
+ if(!String(file.type||'').startsWith('image/')){
+  alert(state.settings.language==='ar'?'اختر ملف صورة صالحاً.':state.settings.language==='fr'?'Choisissez une image valide.':'Choose a valid image file.');
+  return '';
+ }
+ if(file.size>5*1024*1024){
+  alert(state.settings.language==='ar'?'حجم الصورة كبير جداً. اختر صورة أقل من 5 MB.':state.settings.language==='fr'?'Image trop volumineuse. Maximum 5 Mo.':'Image is too large. Maximum 5 MB.');
+  return '';
+ }
+ const data=await new Promise((resolve,reject)=>{
+  const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);
+ });
+ const img=await new Promise((resolve,reject)=>{
+  const i=new Image();i.onload=()=>resolve(i);i.onerror=reject;i.src=data;
+ });
+ const maxSide=900,scale=Math.min(1,maxSide/Math.max(img.width,img.height));
+ const canvas=document.createElement('canvas');
+ canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+ const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
+ try{return canvas.toDataURL('image/webp',0.86)}catch(e){return canvas.toDataURL('image/png')}
 }
-function removeLogo(){state.settings.logo='';persist();updateLogoDisplays()}
+async function loadBrandAsset(file,type){
+ if(!file)return;
+ const value=await compressBrandImage(file);if(!value)return;
+ if(type==='logo')state.settings.logo=value;
+ if(type==='stamp')state.settings.stampImage=value;
+ if(type==='signature')state.settings.signatureImage=value;
+ persist();updateLogoDisplays();updateBrandAssetDisplays();
+}
+function removeBrandAsset(type){
+ if(type==='logo')state.settings.logo='';
+ if(type==='stamp')state.settings.stampImage='';
+ if(type==='signature')state.settings.signatureImage='';
+ persist();updateLogoDisplays();updateBrandAssetDisplays();
+}
+async function saveBrandAssetsCloud(){
+ if(!currentUser?.id)return;
+ const payload={logo_image:state.settings.logo||'',stamp_image:state.settings.stampImage||'',signature_image:state.settings.signatureImage||''};
+ const {error}=await sb.from('profiles').update(payload).eq('id',currentUser.id);
+ if(error)console.error('Brand assets sync error',error);
+}
+function updateBrandAssetDisplays(){
+ const items=[
+  ['logoPreview',state.settings.logo,'Logo'],
+  ['stampPreview',state.settings.stampImage,'Stamp'],
+  ['signaturePreview',state.settings.signatureImage,'Signature']
+ ];
+ items.forEach(([id,value,label])=>{
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=value?`<img src="${value}" alt="${label}">`:label;
+ });
+ const stamp=document.getElementById('invoiceStampImage'),sig=document.getElementById('invoiceSignatureImage');
+ if(stamp){stamp.src=state.settings.stampImage||'';stamp.classList.toggle('hidden',!state.settings.stampImage)}
+ if(sig){sig.src=state.settings.signatureImage||'';sig.classList.toggle('hidden',!state.settings.signatureImage)}
+}
+function loadLogoFile(file){loadBrandAsset(file,'logo')}
+function removeLogo(){removeBrandAsset('logo')}
 function updateLogoDisplays(){
  const logo=state.settings.logo||'',preview=document.getElementById('logoPreview'),brand=document.getElementById('brandMark'),inv=document.getElementById('invoiceLogo');
  if(preview)preview.innerHTML=logo?`<img src="${logo}" alt="Logo">`:'Logo';
  if(brand)brand.innerHTML=logo?`<img class="brandLogo" src="${logo}" alt="Logo">`:'▧';
  if(inv){inv.src=logo||'';inv.classList.toggle('hidden',!logo)}
+ updateBrandAssetDisplays();
 }
 async function resetDemoData(){if(confirm('Reset invoices, clients and cloud workspace data?')){state=defaultState();persist();await syncWorkspaceCloud();populateSelectors();loadSettingsForm();renderDashboard();alert('Workspace reset.')}}
 
@@ -2735,7 +2814,7 @@ sb.auth.onAuthStateChange((event,session)=>{
 });
 
 async function boot(){
- phoneLayout();populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();updateLogoDisplays();setLanguage(state.settings.language||'en');
+ phoneLayout();populateSelectors();renderTemplates();renderCountries();renderClients();renderDashboard();updateLogoDisplays();updateBrandAssetDisplays();setLanguage(state.settings.language||'en');
  const restored=await restoreSession();if(!restored)switchAuth('login');
 }
 boot();
