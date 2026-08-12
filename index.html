@@ -485,6 +485,13 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .phoneMode .billingHero{grid-template-columns:1fr}.phoneMode .planGrid{grid-template-columns:1fr}.phoneMode .billingCurrent,.phoneMode .usageBox,.phoneMode .planCard{padding:16px}
 .phoneMode .billingInfo{grid-template-columns:1fr;padding:14px}.phoneMode .planCard h3{font-size:20px}
 
+
+/* v0.7.1 — payment checkout polish */
+.secureCheckoutNote{display:flex;align-items:flex-start;gap:9px;margin:12px 0 0;padding:10px 12px;border-radius:11px;background:#eef9f7;color:#0a6e66;font-size:11px;line-height:1.55}
+.billingManage{margin-top:12px}
+.billingManage .btn{width:100%}
+.phoneMode .secureCheckoutNote{font-size:10px}
+
 </style>
 </head>
 <body>
@@ -537,7 +544,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
     <h3 id="upgradeModalTitle">Upgrade plan</h3>
     <p id="upgradeModalSub">Your subscription foundation is ready. Secure payment checkout will be connected in the next billing step.</p>
     <div id="upgradeModalText" class="limitModalText"></div>
-    <button id="upgradeGoBilling" class="btn primary" style="width:100%" onclick="closeUpgradeModal();showPage('billing')">View plans</button>
+    <button id="upgradeGoBilling" class="btn primary" style="width:100%" onclick="startCheckout()">Continue to secure checkout</button>
   </div>
 </div>
 
@@ -628,7 +635,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
         <div><h1 id="editorTitle">Create invoice</h1><p>Build and save the invoice. Print/PDF uses the preview on the right.</p></div>
         <div class="actions"><button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="saveInvoice('pending')">Save invoice</button><button class="btn secondary" onclick="window.print()">Print / PDF</button></div>
       </div>
-      <div class="notice">Version 0.7: company plans, usage limits, billing overview and server-backed plan enforcement are active.</div>
+      <div class="notice">Version 0.7.1: real Lemon Squeezy checkout links, account-linked subscriptions and webhook-ready billing are active.</div>
       <div class="invoicegrid">
         <div class="card form editor">
           <div class="section"><h3>Business & client</h3><div class="formgrid">
@@ -814,7 +821,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
       <div class="card billingInfo">
         <div><small>SUBSCRIPTION STATUS</small><b id="billingStatus">Active</b></div>
         <div><small>PLAN STARTED</small><b id="billingStarted">—</b></div>
-        <div><small>PAYMENTS</small><b id="billingPayments">Checkout connection is next</b></div>
+        <div><small>PAYMENTS</small><b id="billingPayments">Lemon Squeezy secure checkout</b></div>
       </div>
     </section>
 
@@ -962,7 +969,7 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function defaultState(){
  const issue=todayISO();
  return {
-  subscription:{plan:'free',status:'active',startedAt:'',trialEndsAt:''},
+  subscription:{plan:'free',status:'active',startedAt:'',trialEndsAt:'',renewsAt:'',endsAt:'',updatePaymentUrl:'',subscriptionId:null},
   settings:{business:'Your Business LLC',email:'billing@yourbusiness.com',address:'123 Business Avenue',taxId:'',country:'DZ',language:'en',prefix:'INV-2026-',terms:30,nextNo:1001,notes:'Thank you for your business!',logo:''},
   template:'modern',
   clients:[
@@ -996,6 +1003,33 @@ let authMode='login';
 let itemData=[];
 
 function t(key){const lang=state?.settings?.language||'en';return translations[lang]?.[key]||translations.en[key]||key}
+
+
+const CHECKOUT_URLS={
+ pro:'https://allworldfactures.lemonsqueezy.com/checkout/buy/1b32f362-6ade-495a-a072-2cd4870b1fcc',
+ business:'https://allworldfactures.lemonsqueezy.com/checkout/buy/f8fd9e69-73b2-49fe-9501-d6d1a723b554'
+};
+let pendingCheckoutPlan='pro';
+
+function checkoutUrlFor(plan){
+ const base=CHECKOUT_URLS[plan];
+ if(!base)return '';
+ const u=new URL(base);
+ if(currentUser?.id)u.searchParams.set('checkout[custom][user_id]',currentUser.id);
+ if(currentUser?.email)u.searchParams.set('checkout[email]',currentUser.email);
+ if(currentUser?.name)u.searchParams.set('checkout[name]',currentUser.name);
+ return u.toString();
+}
+function startCheckout(plan=pendingCheckoutPlan){
+ if(!currentUser?.id){
+  alert(state.settings.language==='ar'?'يجب تسجيل الدخول قبل الاشتراك.':state.settings.language==='fr'?'Connectez-vous avant de vous abonner.':'Please sign in before subscribing.');
+  return;
+ }
+ const url=checkoutUrlFor(plan);
+ if(!url)return;
+ closeUpgradeModal();
+ window.location.assign(url);
+}
 
 const PLAN_LIMITS={
  free:{invoices:30,clients:20},
@@ -1231,7 +1265,9 @@ function renderBilling(){
  usages.forEach(([prefix,count,limit])=>{
   const text=document.getElementById(prefix+'UsageText'),bar=document.getElementById(prefix+'UsageBar');
   const unlimited=limit===null;
-  if(text)text.textContent=unlimited?(lang==='ar'?`${count} / غير محدود`:lang==='fr'?`${count} / illimité`:`${count} / unlimited`):`${count} / ${limit}`;
+  if(text)text.textContent=unlimited
+   ?(lang==='ar'?`${count} / غير محدود`:lang==='fr'?`${count} / illimité`:`${count} / unlimited`)
+   :(lang==='ar'?`${count} من ${limit}`:`${count} / ${limit}`);
   const pct=unlimited?Math.min(35,count?10:0):Math.min(100,count/Math.max(1,limit)*100);
   if(bar){bar.style.width=pct+'%';bar.className=`usageFill ${usageClass(pct)}`.trim()}
  });
@@ -1239,6 +1275,11 @@ function renderBilling(){
  const statusLabels={active:'Active',trialing:'Trialing',past_due:'Past due',canceled:'Canceled'};
  const st=document.getElementById('billingStatus');if(st)st.textContent=uiPhrase(statusLabels[status]||status);
  const started=document.getElementById('billingStarted');if(started)started.textContent=formatSubscriptionDate(state.subscription?.startedAt);
+ const pay=document.getElementById('billingPayments');
+ if(pay){
+  if(state.subscription?.renewsAt)pay.textContent=(lang==='ar'?'التجديد: ':lang==='fr'?'Renouvellement : ':'Renews: ')+formatSubscriptionDate(state.subscription.renewsAt);
+  else pay.textContent=uiPhrase('Lemon Squeezy secure checkout');
+ }
  ['free','pro','business'].forEach(code=>{
   const card=document.getElementById('planCard-'+code);if(!card)return;
   const btn=card.querySelector('.btn');
@@ -1253,19 +1294,22 @@ function renderBilling(){
  translateStaticUI();
 }
 function openUpgradeModal(target='pro'){
+ pendingCheckoutPlan=target;
  const lang=state.settings.language||'en',modal=document.getElementById('upgradeModal');
  const targetName=planName(target),current=planName();
  document.getElementById('upgradeModalTitle').textContent=lang==='ar'?`الترقية إلى ${targetName}`:lang==='fr'?`Passer à ${targetName}`:`Upgrade to ${targetName}`;
  document.getElementById('upgradeModalSub').textContent=lang==='ar'
-  ?'نظام الخطط والحدود جاهز الآن. سنربط الدفع الآمن في المرحلة التالية قبل السماح بتغيير الخطة تلقائيًا.'
+  ?'سيتم تحويلك إلى صفحة دفع Lemon Squeezy الآمنة لإتمام الاشتراك.'
   :lang==='fr'
-  ?'Le système des offres et des limites est prêt. Le paiement sécurisé sera connecté à l’étape suivante avant tout changement automatique.'
-  :'Plans and limits are ready. Secure payment checkout will be connected next before automatic plan changes are enabled.';
- document.getElementById('upgradeModalText').textContent=lang==='ar'
-  ?`خطتك الحالية: ${current}. الخطة المطلوبة: ${targetName}. لن تتغير خطتك الآن بدون عملية دفع موثوقة.`
+  ?'Vous serez redirigé vers le paiement sécurisé Lemon Squeezy pour finaliser l’abonnement.'
+  :'You will be redirected to Lemon Squeezy secure checkout to complete the subscription.';
+ document.getElementById('upgradeModalText').innerHTML=lang==='ar'
+  ?`خطتك الحالية: <b>${current}</b><br>الخطة المطلوبة: <b>${targetName}</b><div class="secureCheckoutNote">🔒 تتم معالجة الدفع بأمان عبر Lemon Squeezy، ويتم ربط حساب AllWorld Factures بعملية الشراء تلقائيًا.</div>`
   :lang==='fr'
-  ?`Offre actuelle : ${current}. Offre souhaitée : ${targetName}. Votre offre ne sera pas modifiée sans paiement vérifié.`
-  :`Current plan: ${current}. Requested plan: ${targetName}. Your plan will not change without verified payment.`;
+  ?`Offre actuelle : <b>${current}</b><br>Offre souhaitée : <b>${targetName}</b><div class="secureCheckoutNote">🔒 Le paiement est traité de façon sécurisée par Lemon Squeezy. Votre compte AllWorld Factures est automatiquement lié à l’achat.</div>`
+  :`Current plan: <b>${current}</b><br>Requested plan: <b>${targetName}</b><div class="secureCheckoutNote">🔒 Payment is processed securely by Lemon Squeezy. Your AllWorld Factures account ID is linked automatically to the purchase.</div>`;
+ const go=document.getElementById('upgradeGoBilling');
+ if(go)go.textContent=lang==='ar'?'المتابعة إلى الدفع الآمن':lang==='fr'?'Continuer vers le paiement sécurisé':'Continue to secure checkout';
  modal.classList.remove('hidden');phoneLayout();
 }
 function closeUpgradeModal(){document.getElementById('upgradeModal')?.classList.add('hidden')}
@@ -1509,6 +1553,9 @@ const uiPhrases={
  'PLAN STARTED':{fr:'DÉBUT DE L’OFFRE',ar:'بداية الخطة'},
  'PAYMENTS':{fr:'PAIEMENTS',ar:'المدفوعات'},
  'Checkout connection is next':{fr:'Connexion du paiement à la prochaine étape',ar:'ربط الدفع هو الخطوة التالية'},
+ 'Lemon Squeezy secure checkout':{fr:'Paiement sécurisé Lemon Squeezy',ar:'دفع آمن عبر Lemon Squeezy'},
+ 'Continue to secure checkout':{fr:'Continuer vers le paiement sécurisé',ar:'المتابعة إلى الدفع الآمن'},
+ 'Payment is processed securely by Lemon Squeezy. Your AllWorld Factures account ID is linked automatically to the purchase.':{fr:'Le paiement est traité de façon sécurisée par Lemon Squeezy. Votre compte AllWorld Factures est automatiquement lié à l’achat.',ar:'تتم معالجة الدفع بأمان عبر Lemon Squeezy، ويتم ربط حساب AllWorld Factures بعملية الشراء تلقائيًا.'},
  'Active':{fr:'Actif',ar:'نشط'},
  'Trialing':{fr:'Essai',ar:'تجريبي'},
  'Past due':{fr:'Paiement en retard',ar:'دفع متأخر'},
@@ -1874,7 +1921,16 @@ async function loadCloudWorkspace(userId){
   }
   if(profile){
    state.settings={...state.settings,business:profile.company_name||state.settings.business,email:profile.business_email||currentUser?.email||'',address:profile.address||'',taxId:profile.tax_id||'',country:profile.country_code||'DZ',language:profile.language||state.settings.language||'en',prefix:profile.invoice_prefix||state.settings.prefix,terms:Number(profile.payment_terms||30),nextNo:Number(profile.next_invoice_number||1),notes:profile.default_notes||state.settings.notes};
-   state.subscription={plan:profile.plan_code||'free',status:profile.subscription_status||'active',startedAt:profile.subscription_started_at||'',trialEndsAt:profile.trial_ends_at||''};
+   state.subscription={
+    plan:profile.plan_code||'free',
+    status:profile.subscription_status||'active',
+    startedAt:profile.subscription_started_at||'',
+    trialEndsAt:profile.trial_ends_at||'',
+    renewsAt:profile.lemon_renews_at||'',
+    endsAt:profile.lemon_ends_at||'',
+    updatePaymentUrl:profile.lemon_update_payment_url||'',
+    subscriptionId:profile.lemon_subscription_id||null
+   };
    currentUser.name=profile.full_name||currentUser.name;currentUser.company=profile.company_name||currentUser.company;
   }
   if(!hasCloudData && (state.clients.length||state.invoices.length)){
